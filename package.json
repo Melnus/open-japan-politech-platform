@@ -29,9 +29,11 @@
     "db:seed": "pnpm --filter @ojpp/db seed",
     "db:reset": "pnpm --filter @ojpp/db reset",
     "db:studio": "pnpm --filter @ojpp/db studio",
+    "dev:seatmap": "pnpm --filter seatmap-web dev",
     "ingest:finance": "pnpm --filter @ojpp/ingestion ingest:finance",
     "ingest:parliament": "pnpm --filter @ojpp/ingestion ingest:parliament",
     "ingest:manifesto": "pnpm --filter @ojpp/ingestion ingest:manifesto",
+    "ingest:elections": "pnpm --filter @ojpp/ingestion ingest:elections",
     "ingest:all": "pnpm --filter @ojpp/ingestion ingest:all",
     "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
   },

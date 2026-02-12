@@ -68,6 +68,7 @@ pnpm dev
 | policydiff-web | 3002 | PolicyDiff 公開画面 |
 | parliscope-web | 3003 | ParliScope 公開画面 |
 | parliscope-admin | 3004 | ParliScope 管理画面 |
+| seatmap-web | 3005 | SeatMap 公開画面 |
 
 ## Pull Requestの作り方
 

@@ -9,7 +9,8 @@
     "ingest:finance": "dotenv -e ../../.env -- tsx src/political-finance/ingest.ts",
     "ingest:parliament": "dotenv -e ../../.env -- tsx src/kokkai/ingest-sessions.ts && dotenv -e ../../.env -- tsx src/kokkai/ingest-bills.ts",
     "ingest:manifesto": "dotenv -e ../../.env -- tsx src/manifesto/seed-policies.ts",
-    "ingest:all": "pnpm ingest:finance && pnpm ingest:parliament && pnpm ingest:manifesto",
+    "ingest:elections": "dotenv -e ../../.env -- tsx src/elections/seed-elections.ts",
+    "ingest:all": "pnpm ingest:finance && pnpm ingest:parliament && pnpm ingest:manifesto && pnpm ingest:elections",
     "test": "vitest run"
   },
   "dependencies": {

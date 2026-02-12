@@ -40,6 +40,7 @@ PD_COLOR='\033[38;5;48m'    # PolicyDiff  — neon green
 PS_COLOR='\033[38;5;141m'   # ParliScope  — vivid purple
 MGA_COLOR='\033[38;5;75m'   # MG Admin    — soft blue
 PSA_COLOR='\033[38;5;183m'  # PS Admin    — lavender
+SM_COLOR='\033[38;5;208m'   # SeatMap     — orange
 
 # Rainbow hues
 RAINBOW_HUES=(196 202 208 214 220 226 190 154 118 82 46 47 48 49 50 51 45 39 33 27 21 57 93 129 165 201 200 199 198 197)
@@ -50,7 +51,7 @@ SKIP_DOCKER=false
 COMPOSE=""
 TOTAL_START=$SECONDS
 STEP=0
-TOTAL_STEPS=11
+TOTAL_STEPS=12
 APP_PIDS=()
 
 # Ensure cursor is visible on exit
@@ -301,12 +302,19 @@ install_docker_mac() {
     ok "Docker Desktop インストール完了 🐳🎉"
     echo ""
     echo -e "  ${GOLD}┌───────────────────────────────────────────────────────────${R}"
-    echo -e "  ${GOLD}│${R}  ${B}🐳 Docker Desktop を起動してね！${R}"
     echo -e "  ${GOLD}│${R}"
-    echo -e "  ${GOLD}│${R}  ${CYN}  open -a Docker${R}"
+    echo -e "  ${GOLD}│${R}  ${B}🐳 Docker がインストールできたよ！${R}"
     echo -e "  ${GOLD}│${R}"
-    echo -e "  ${GOLD}│${R}  メニューバーに 🐳 アイコンが出たら:"
-    echo -e "  ${GOLD}│${R}  ${CYN}  bash setup.sh${R}  ${GRAY}← もう一回これ実行♪${R}"
+    echo -e "  ${GOLD}│${R}  ${WHT}あと少し！次の2ステップだけ：${R}"
+    echo -e "  ${GOLD}│${R}"
+    echo -e "  ${GOLD}│${R}  ${GOLD}①${R} メニューバー右上のクジラ 🐳 マークをクリック"
+    echo -e "  ${GOLD}│${R}"
+    echo -e "  ${GOLD}│${R}  ${GOLD}②${R} 下のコマンドをコピペして実行してね："
+    echo -e "  ${GOLD}│${R}"
+    echo -e "  ${GOLD}│${R}     ${CYN}bash setup.sh${R}"
+    echo -e "  ${GOLD}│${R}"
+    echo -e "  ${GOLD}│${R}  ${GRAY}（クジラマークが見えなかったら少し待ってね 30秒くらい）${R}"
+    echo -e "  ${GOLD}│${R}"
     echo -e "  ${GOLD}└───────────────────────────────────────────────────────────${R}"
     echo ""
     rainbow_bar
@@ -356,7 +364,108 @@ if ! docker info >> "$LOG" 2>&1; then
         "${_frames[$((_fi % 10))]}" "$_e"
       _fi=$((_fi + 1))
       sleep 1
-      if [ "$_e" -gt 60 ]; then printf "${SHOW}"; die "Docker タイムアウト (60s)\n     Docker Desktop を手動で起動してから ${CYN}bash setup.sh${R}"; fi
+      if [ "$_e" -gt 60 ]; then
+        printf "${SHOW}\r  ${DGRAY}│${R}  ${GOLD}⚡${R} 60秒待ったけどまだ…リカバリーしてみるね！${CLR}\n"
+
+        # Recovery step 1: Remove quarantine attribute (malware block)
+        msg "${SKY}🔧 セキュリティブロックを解除してみるよ...${R}"
+        xattr -cr /Applications/Docker.app 2>/dev/null || true
+
+        # Recovery step 2: Kill all Docker processes
+        msg "${SKY}🔧 Docker プロセスを全部止めて再起動するね...${R}"
+        killall Docker 2>/dev/null || true
+        killall com.docker.vmnetd 2>/dev/null || true
+        sleep 2
+
+        # Recovery step 3: Restart Docker
+        open -a Docker 2>/dev/null || true
+
+        # Recovery step 4: Wait another 45 seconds
+        _fi2=0; _start2=$SECONDS
+        printf "${HIDE}"
+        _docker_ok=false
+        while [ $((SECONDS - _start2)) -lt 45 ]; do
+          _e2=$((SECONDS - _start2))
+          printf "\r  ${DGRAY}│${R}  \033[38;5;%sm%s${R} 🐳 リカバリー中...もうちょっと待ってね ${GRAY}(%ds/45s)${R}${CLR}" \
+            "${RAINBOW_HUES[$((_fi2 % ${#RAINBOW_HUES[@]}))]}" \
+            "${_frames[$((_fi2 % 10))]}" "$_e2"
+          _fi2=$((_fi2 + 1))
+          if docker info >> "$LOG" 2>&1; then
+            _docker_ok=true
+            break
+          fi
+          sleep 1
+        done
+        printf "${SHOW}"
+
+        if [ "$_docker_ok" = true ]; then
+          printf "\r  ${DGRAY}│${R}  ${GRN}✔${R} 🐳 リカバリー成功！Docker 起きたよ！${CLR}\n"
+          break
+        fi
+
+        # Recovery step 5: If brew is available, try reinstalling Docker
+        if command -v brew &>/dev/null; then
+          echo ""
+          msg "${GOLD}🍺 brew で Docker を再インストールしてみるね...${R}"
+          killall Docker 2>/dev/null || true
+          sleep 1
+          if brew reinstall --cask docker 2>&1 | while IFS= read -r line; do
+              echo -e "  ${DGRAY}│${R}  ${GRAY}${line}${R}"
+            done; then
+            ok "Docker 再インストール完了！起動するね..."
+
+            # Recovery step 6: Start Docker after reinstall, wait 60s
+            open -a Docker 2>/dev/null || true
+            _fi3=0; _start3=$SECONDS
+            printf "${HIDE}"
+            _docker_ok2=false
+            while [ $((SECONDS - _start3)) -lt 60 ]; do
+              _e3=$((SECONDS - _start3))
+              printf "\r  ${DGRAY}│${R}  \033[38;5;%sm%s${R} 🐳 再インストール後の起動待ち... ${GRAY}(%ds/60s)${R}${CLR}" \
+                "${RAINBOW_HUES[$((_fi3 % ${#RAINBOW_HUES[@]}))]}" \
+                "${_frames[$((_fi3 % 10))]}" "$_e3"
+              _fi3=$((_fi3 + 1))
+              if docker info >> "$LOG" 2>&1; then
+                _docker_ok2=true
+                break
+              fi
+              sleep 1
+            done
+            printf "${SHOW}"
+
+            if [ "$_docker_ok2" = true ]; then
+              printf "\r  ${DGRAY}│${R}  ${GRN}✔${R} 🐳 再インストール後の起動成功！やったね！${CLR}\n"
+              break
+            fi
+          fi
+        fi
+
+        # Recovery step 7: All recovery failed — show super friendly error
+        echo ""
+        echo -e "  ${PINK}┌───────────────────────────────────────────────────────────${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${HOT}(>_<)${R}  ${B}Docker がどうしても起きてくれない...${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${WHT}こうしてみてね（かんたん3ステップ）:${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${GOLD}①${R} Docker Desktop アプリを手動で開いてみて"
+        echo -e "  ${PINK}│${R}     ${GRAY}Finder → アプリケーション → Docker をダブルクリック${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${GOLD}②${R} 画面右上のメニューバーに 🐳 クジラが出るまで待ってね"
+        echo -e "  ${PINK}│${R}     ${GRAY}（30秒〜1分くらいかかるよ）${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${GOLD}③${R} クジラが出たらこのコマンドをもう一回："
+        echo -e "  ${PINK}│${R}     ${CYN}bash setup.sh${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${GRAY}💡 それでもダメなら:${R}"
+        echo -e "  ${PINK}│${R}  ${GRAY}   Mac を再起動してからもう一度やってみてね${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}│${R}  ${GRAY}📋 ログ →${R} ${CYN}${LOG}${R}"
+        echo -e "  ${PINK}│${R}"
+        echo -e "  ${PINK}└───────────────────────────────────────────────────────────${R}"
+        echo ""
+        exit 1
+      fi
     done
     printf "${SHOW}\r  ${DGRAY}│${R}  ${GRN}✔${R} 🐳 Docker Desktop 起きた！おはよう！${CLR}\n"
   else
@@ -511,7 +620,7 @@ section "🚀 アプリをぜんぶ起動するよ！ワクワク"
 run_spin "🧹 キャッシュをピカピカにお掃除" bash -c "rm -rf apps/*/.next apps/*/.turbo .turbo node_modules/.cache 2>/dev/null; echo ok"
 
 # Kill any leftover OJPP processes on default ports
-kill_ports 3000 3001 3002 3003 3004
+kill_ports 3000 3001 3002 3003 3004 3005
 sleep 0.5
 
 # Find 5 free ports — auto-assign if defaults are occupied
@@ -520,12 +629,13 @@ PORT_MGA=$(find_free_port $((PORT_MG + 1)))
 PORT_PD=$(find_free_port $((PORT_MGA + 1)))
 PORT_PS=$(find_free_port $((PORT_PD + 1)))
 PORT_PSA=$(find_free_port $((PORT_PS + 1)))
+PORT_SM=$(find_free_port $((PORT_PSA + 1)))
 
-if [ "$PORT_MG" -ne 3000 ] || [ "$PORT_MGA" -ne 3001 ] || [ "$PORT_PD" -ne 3002 ] || [ "$PORT_PS" -ne 3003 ] || [ "$PORT_PSA" -ne 3004 ]; then
+if [ "$PORT_MG" -ne 3000 ] || [ "$PORT_MGA" -ne 3001 ] || [ "$PORT_PD" -ne 3002 ] || [ "$PORT_PS" -ne 3003 ] || [ "$PORT_PSA" -ne 3004 ] || [ "$PORT_SM" -ne 3005 ]; then
   wrn "一部のポートが使用中 → 空いてるポートを見つけたよ！"
 fi
 
-ok "🎯 ポート割り当て: ${CYN}${PORT_MG}${R} ${CYN}${PORT_MGA}${R} ${CYN}${PORT_PD}${R} ${CYN}${PORT_PS}${R} ${CYN}${PORT_PSA}${R}"
+ok "🎯 ポート割り当て: ${CYN}${PORT_MG}${R} ${CYN}${PORT_MGA}${R} ${CYN}${PORT_PD}${R} ${CYN}${PORT_PS}${R} ${CYN}${PORT_PSA}${R} ${CYN}${PORT_SM}${R}"
 
 # Start each Next.js app individually with the assigned port
 NEXT_BIN=""
@@ -553,6 +663,7 @@ start_all_apps() {
   start_one_app "apps/policydiff-web"    "$PORT_PD"  "pd-web"
   start_one_app "apps/parliscope-web"    "$PORT_PS"  "ps-web"
   start_one_app "apps/parliscope-admin"  "$PORT_PSA" "ps-admin"
+  [ -d "apps/seatmap-web" ] && start_one_app "apps/seatmap-web" "$PORT_SM" "sm-web"
 }
 
 start_all_apps
@@ -567,7 +678,7 @@ cleanup() {
   for pid in "${APP_PIDS[@]}"; do
     wait "$pid" 2>/dev/null || true
   done
-  kill_ports "$PORT_MG" "$PORT_MGA" "$PORT_PD" "$PORT_PS" "$PORT_PSA"
+  kill_ports "$PORT_MG" "$PORT_MGA" "$PORT_PD" "$PORT_PS" "$PORT_PSA" "$PORT_SM"
   if [ "$SKIP_DOCKER" = false ]; then
     $COMPOSE down >> "$LOG" 2>&1 || true
   fi
@@ -615,7 +726,7 @@ wait_for_app() {
         RETRY_DONE=true
         printf "${SHOW}\r  ${DGRAY}│${R}  ${GOLD}⚡${R} アプリ再起動するね...ちょっと待って${CLR}\n"
         rm -rf apps/*/.next 2>/dev/null || true
-        kill_ports "$PORT_MG" "$PORT_MGA" "$PORT_PD" "$PORT_PS" "$PORT_PSA"
+        kill_ports "$PORT_MG" "$PORT_MGA" "$PORT_PD" "$PORT_PS" "$PORT_PSA" "$PORT_SM"
         sleep 1
         start_all_apps
         sleep 2
@@ -641,6 +752,7 @@ wait_for_app() {
 wait_for_app "$PORT_MG"  "MoneyGlass"  "🏦" "$MG_COLOR"
 wait_for_app "$PORT_PD"  "PolicyDiff"  "📋" "$PD_COLOR"
 wait_for_app "$PORT_PS"  "ParliScope"  "🏛️ " "$PS_COLOR"
+[ -d "apps/seatmap-web" ] && wait_for_app "$PORT_SM" "SeatMap" "💺" "$SM_COLOR"
 step_pct
 
 # =============================================================================
@@ -672,17 +784,20 @@ echo ""
 echo ""
 
 # Dynamic URL display
-echo -e "  ${DGRAY}╔══════════════════════════════════════════════════════════════╗${R}"
-echo -e "  ${DGRAY}║${R}                                                              ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}    🏦 ${MG_COLOR}${B}MoneyGlass${R}    ${CYN}${UL}http://localhost:${PORT_MG}${R}    ${PEACH}政治資金の流れ${R}   ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}                                                              ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}    📋 ${PD_COLOR}${B}PolicyDiff${R}    ${CYN}${UL}http://localhost:${PORT_PD}${R}    ${MINT}政策を比較${R}       ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}                                                              ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}    🏛️  ${PS_COLOR}${B}ParliScope${R}    ${CYN}${UL}http://localhost:${PORT_PS}${R}    ${LAVD}国会を可視化${R}     ${DGRAY}║${R}"
-echo -e "  ${DGRAY}║${R}                                                              ${DGRAY}║${R}"
-echo -e "  ${DGRAY}╚══════════════════════════════════════════════════════════════╝${R}"
-
+echo -e "  ${MG_COLOR}${B}🏦 MoneyGlass${R}   ${DGRAY}→${R}  ${CYN}${UL}http://localhost:${PORT_MG}${R}"
+echo -e "     ${PEACH}政治資金の流れを可視化${R}"
 echo ""
+echo -e "  ${PD_COLOR}${B}📋 PolicyDiff${R}   ${DGRAY}→${R}  ${CYN}${UL}http://localhost:${PORT_PD}${R}"
+echo -e "     ${MINT}政策を比較する${R}"
+echo ""
+echo -e "  ${PS_COLOR}${B}🏛️  ParliScope${R}   ${DGRAY}→${R}  ${CYN}${UL}http://localhost:${PORT_PS}${R}"
+echo -e "     ${LAVD}国会を可視化する${R}"
+echo ""
+if [ -d "apps/seatmap-web" ]; then
+echo -e "  ${SM_COLOR}${B}💺 SeatMap${R}      ${DGRAY}→${R}  ${CYN}${UL}http://localhost:${PORT_SM}${R}"
+echo -e "     ${ORNG}議席配置を可視化する${R}"
+echo ""
+fi
 echo -e "  ${DGRAY}管理画面${R}  ${MGA_COLOR}localhost:${PORT_MGA}${R} (MoneyGlass)  ${PSA_COLOR}localhost:${PORT_PSA}${R} (ParliScope)"
 echo ""
 
@@ -690,11 +805,9 @@ echo -ne "  "; rainbow "(ﾉ◕ヮ◕)ﾉ*:・ﾟ✧  セットアップ完了�
 echo -e "  ${WHT}${B}${MINS}分${SECS}秒${R}${GRAY}で全環境が整ったよ！さあ政治を見に行こう！${R}"
 echo ""
 
-echo -e "  ${DGRAY}┌──────────────────────────────────────────────────┐${R}"
-echo -e "  ${DGRAY}│${R}  ${GRAY}停止${R}      ${WHT}Ctrl+C${R}                              ${DGRAY}│${R}"
-echo -e "  ${DGRAY}│${R}  ${GRAY}再起動${R}    ${WHT}bash setup.sh${R}                       ${DGRAY}│${R}"
-echo -e "  ${DGRAY}│${R}  ${GRAY}DB削除${R}    ${WHT}docker compose down -v${R}              ${DGRAY}│${R}"
-echo -e "  ${DGRAY}└──────────────────────────────────────────────────┘${R}"
+echo -e "  ${GRAY}やめるとき${R}      ${DGRAY}→${R}  ${WHT}Ctrl+C${R}"
+echo -e "  ${GRAY}もう一回やる${R}    ${DGRAY}→${R}  ${WHT}bash setup.sh${R}"
+echo -e "  ${GRAY}データも消す${R}    ${DGRAY}→${R}  ${WHT}docker compose down -v${R}"
 echo ""
 rainbow_bar
 echo ""

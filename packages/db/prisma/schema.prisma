@@ -29,7 +29,8 @@ model Party {
 
   politicians   Politician[]
   organizations PoliticalOrganization[]
-  policies      Policy[]
+  policies        Policy[]
+  electionResults ElectionResult[]
 
   @@map("parties")
 }
@@ -349,4 +350,46 @@ enum Stance {
   FOR
   AGAINST
   NEUTRAL
+}
+
+// ============================================
+// 選挙・議席（SeatMap）
+// ============================================
+
+/// 選挙
+model Election {
+  id          String       @id @default(cuid())
+  name        String       // 第50回衆議院議員総選挙
+  chamber     Chamber      // HOUSE_OF_REPRESENTATIVES or HOUSE_OF_COUNCILLORS
+  date        DateTime     // 投票日
+  totalSeats  Int          // 総定数
+  districtSeats Int?       // 小選挙区/選挙区定数
+  proportionalSeats Int?   // 比例代表定数
+  turnout     Float?       // 投票率
+  sourceUrl   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  results     ElectionResult[]
+
+  @@unique([chamber, date])
+  @@map("elections")
+}
+
+/// 選挙結果（政党別）
+model ElectionResult {
+  id              String   @id @default(cuid())
+  electionId      String
+  election        Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  partyId         String
+  party           Party    @relation(fields: [partyId], references: [id])
+  seatsWon        Int      // 獲得議席数
+  districtSeats   Int?     // 小選挙区/選挙区獲得
+  proportionalSeats Int?   // 比例代表獲得
+  totalVotes      BigInt?  // 総得票数
+  voteShare       Float?   // 得票率
+  createdAt       DateTime @default(now())
+
+  @@unique([electionId, partyId])
+  @@map("election_results")
 }
