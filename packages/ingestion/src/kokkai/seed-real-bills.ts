@@ -2,20 +2,21 @@
  * seed-real-bills.ts
  *
  * 実際の国会法案データを投入するシードスクリプト。
- * 第211回〜第216回国会（2023〜2024年）の主要法案を含む。
+ * 第210回〜第220回国会（2022〜2026年）の主要法案を含む。
  *
  * データソース:
  *   - 内閣法制局 (https://www.clb.go.jp/recent-laws/)
  *   - 衆議院 議案情報 (https://www.shugiin.go.jp/)
  *   - 参議院 議案情報 (https://www.sangiin.go.jp/)
  *   - 内閣官房 国会提出法案 (https://www.cas.go.jp/jp/houan/)
+ *   - 各省庁 国会提出法案ページ
  */
 
 import type { BillStatus, SessionType } from "@ojpp/db";
 import { prisma } from "@ojpp/db";
 
 // ============================================
-// 国会会期データ（第211回〜第216回）
+// 国会会期データ（第210回〜第220回）
 // ============================================
 
 interface SessionData {
@@ -26,6 +27,13 @@ interface SessionData {
 }
 
 const SESSIONS: SessionData[] = [
+  // 第210回 臨時国会（2022年秋）岸田内閣
+  {
+    number: 210,
+    type: "EXTRAORDINARY",
+    startDate: "2022-10-03",
+    endDate: "2022-12-10",
+  },
   // 第211回 通常国会（2023年）岸田内閣
   {
     number: 211,
@@ -68,6 +76,34 @@ const SESSIONS: SessionData[] = [
     startDate: "2024-11-28",
     endDate: "2024-12-24",
   },
+  // 第217回 通常国会（2025年）石破内閣
+  {
+    number: 217,
+    type: "ORDINARY",
+    startDate: "2025-01-24",
+    endDate: "2025-06-22",
+  },
+  // 第218回 臨時国会（2025年8月）参院選後・5日間
+  {
+    number: 218,
+    type: "EXTRAORDINARY",
+    startDate: "2025-08-01",
+    endDate: "2025-08-05",
+  },
+  // 第219回 臨時国会（2025年秋）
+  {
+    number: 219,
+    type: "EXTRAORDINARY",
+    startDate: "2025-10-21",
+    endDate: "2025-12-17",
+  },
+  // 第220回 通常国会（2026年）召集日に衆院解散
+  {
+    number: 220,
+    type: "ORDINARY",
+    startDate: "2026-01-23",
+    endDate: "2026-01-23",
+  },
 ];
 
 // ============================================
@@ -88,6 +124,71 @@ interface RealBill {
 }
 
 const REAL_BILLS: RealBill[] = [
+  // ============================================================
+  // 第210回国会（2022年臨時国会）— 岸田内閣
+  // 閣法14本成立
+  // ============================================================
+  {
+    sessionNumber: 210,
+    number: "210-閣法-1",
+    title: "感染症の予防及び感染症の患者に対する医療に関する法律等の一部を改正する法律案",
+    summary:
+      "次の感染症危機に備えた医療提供体制の強化。都道府県と医療機関との間の協定締結の仕組み等を規定。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2022-10-07",
+    passedAt: "2022-12-02",
+  },
+  {
+    sessionNumber: 210,
+    number: "210-閣法-5",
+    title: "国家安全保障戦略等を踏まえた防衛省設置法等の一部を改正する法律案",
+    summary:
+      "防衛3文書（国家安全保障戦略・国家防衛戦略・防衛力整備計画）を踏まえた防衛省の組織改編等。",
+    proposer: "内閣",
+    category: "安全保障",
+    status: "ENACTED",
+    submittedAt: "2022-10-24",
+    passedAt: "2022-12-02",
+  },
+  {
+    sessionNumber: 210,
+    number: "210-閣法-8",
+    title: "法人等による寄附の不当な勧誘の防止等に関する法律案",
+    summary:
+      "旧統一教会被害者救済法。法人等による寄附の不当な勧誘を防止し、被害者の救済を図る。マインドコントロール下での寄附等に対する取消権等を規定。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2022-11-08",
+    passedAt: "2022-12-10",
+  },
+  {
+    sessionNumber: 210,
+    number: "210-閣法-3",
+    title: "一般職の職員の給与に関する法律等の一部を改正する法律案",
+    summary:
+      "人事院勧告に基づく国家公務員の給与改定。3年ぶりのボーナス引上げ等。",
+    proposer: "内閣",
+    category: "行政",
+    status: "ENACTED",
+    submittedAt: "2022-10-28",
+    passedAt: "2022-11-22",
+  },
+  {
+    sessionNumber: 210,
+    number: "210-閣法-12",
+    title: "民法等の一部を改正する法律案",
+    summary:
+      "嫡出推定制度の見直し。女性の再婚禁止期間の廃止、嫡出否認制度の見直し等。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2022-10-14",
+    passedAt: "2022-12-10",
+  },
+
   // ============================================================
   // 第211回国会（2023年通常国会）— 岸田内閣 主要法案
   // 閣法60本提出・全法成立
@@ -591,42 +692,6 @@ const REAL_BILLS: RealBill[] = [
   },
   {
     sessionNumber: 213,
-    number: "213-閣法-40",
-    title: "デジタル社会の形成を図るための規制改革を推進するためのデジタル社会形成基本法等の一部を改正する法律案",
-    summary:
-      "アナログ規制見直し第2弾。AI・ドローン等の新技術に対応した規制の合理化。テクノロジーマップの活用推進。",
-    proposer: "内閣",
-    category: "行政",
-    status: "ENACTED",
-    submittedAt: "2024-03-05",
-    passedAt: "2024-05-24",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-42",
-    title: "地球温暖化対策の推進に関する法律の一部を改正する法律案",
-    summary:
-      "温対法改正。GX推進の一環として、地方自治体の計画策定義務化、再エネ促進区域の設定等。",
-    proposer: "内閣",
-    category: "環境",
-    status: "ENACTED",
-    submittedAt: "2024-03-05",
-    passedAt: "2024-05-22",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-44",
-    title: "公益社団法人及び公益財団法人の認定等に関する法律の一部を改正する法律案",
-    summary:
-      "公益法人制度改革。財務規律の柔軟化（公益目的事業比率の見直し）、行政手続の簡素化、ガバナンス強化等。",
-    proposer: "内閣",
-    category: "行政",
-    status: "ENACTED",
-    submittedAt: "2024-03-15",
-    passedAt: "2024-05-31",
-  },
-  {
-    sessionNumber: 213,
     number: "213-閣法-47",
     title: "民法等の一部を改正する法律案",
     summary:
@@ -648,18 +713,6 @@ const REAL_BILLS: RealBill[] = [
     status: "ENACTED",
     submittedAt: "2024-03-12",
     passedAt: "2024-05-24",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-56",
-    title: "金融商品取引法及び投資信託及び投資法人に関する法律の一部を改正する法律案",
-    summary:
-      "資産運用立国実現のための金商法改正。資産運用業への新規参入の促進、非上場株式の取引活性化、四半期開示の見直し等。",
-    proposer: "内閣",
-    category: "経済",
-    status: "ENACTED",
-    submittedAt: "2024-03-15",
-    passedAt: "2024-05-22",
   },
   {
     sessionNumber: 213,
@@ -701,14 +754,27 @@ const REAL_BILLS: RealBill[] = [
   },
   {
     sessionNumber: 213,
-    number: "213-閣法-53",
-    title: "海洋再生可能エネルギー発電設備の整備に係る海域の利用の促進に関する法律の一部を改正する法律案",
+    number: "213-閣法-23",
+    title: "産業競争力強化法等の一部を改正する法律案",
     summary:
-      "洋上風力促進法改正。一般海域における洋上風力発電の促進区域指定の迅速化、環境影響評価手続きの合理化。",
+      "半導体・蓄電池等の戦略分野の国内投資促進。大規模投資に対する減税措置（最大10年間・税額控除40%）、中堅企業の成長支援等。",
     proposer: "内閣",
-    category: "環境",
-    status: "SUBMITTED",
-    submittedAt: "2024-03-12",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2024-02-27",
+    passedAt: "2024-05-22",
+  },
+  {
+    sessionNumber: 213,
+    number: "213-閣法-30",
+    title: "銃砲刀剣類所持等取締法の一部を改正する法律案",
+    summary:
+      "銃刀法改正。クロスボウ（ボーガン）の所持許可制の導入、模造銃規制の強化、猟銃所持の厳格化。2023年長野事件を受けた対策。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2024-02-27",
+    passedAt: "2024-06-05",
   },
   // 第213回 議員立法
   {
@@ -722,102 +788,6 @@ const REAL_BILLS: RealBill[] = [
     status: "ENACTED",
     submittedAt: "2024-05-31",
     passedAt: "2024-06-19",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-9",
-    title: "生活困窮者自立支援法等の一部を改正する法律案",
-    summary:
-      "生活困窮者の自立支援体制の強化。住居確保給付金の拡充、子どもの学習・生活支援事業の充実等。",
-    proposer: "内閣",
-    category: "社会保障",
-    status: "ENACTED",
-    submittedAt: "2024-02-09",
-    passedAt: "2024-04-17",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-10",
-    title: "雇用保険法等の一部を改正する法律案",
-    summary:
-      "雇用保険の適用拡大。週所定労働時間10時間以上の者を新たに適用対象に追加。教育訓練給付の充実、育児休業給付の引上げ等。",
-    proposer: "内閣",
-    category: "社会保障",
-    status: "ENACTED",
-    submittedAt: "2024-02-09",
-    passedAt: "2024-05-10",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-23",
-    title: "産業競争力強化法等の一部を改正する法律案",
-    summary:
-      "半導体・蓄電池等の戦略分野の国内投資促進。大規模投資に対する減税措置（最大10年間・税額控除40%）、中堅企業の成長支援等。",
-    proposer: "内閣",
-    category: "経済",
-    status: "ENACTED",
-    submittedAt: "2024-02-27",
-    passedAt: "2024-05-22",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-34",
-    title: "特定電気通信役務提供者の損害賠償責任の制限及び発信者情報の開示に関する法律の一部を改正する法律案",
-    summary:
-      "プロバイダ責任制限法改正。SNS等での誹謗中傷対策として、大規模プラットフォーム事業者に対し、投稿の削除等の迅速な対応を義務付け。",
-    proposer: "内閣",
-    category: "行政",
-    status: "ENACTED",
-    submittedAt: "2024-03-01",
-    passedAt: "2024-05-10",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-35",
-    title: "学校教育法の一部を改正する法律案",
-    summary:
-      "教員の処遇改善。教職調整額の引上げ、教員業務支援員の配置拡充、部活動の地域移行推進等。",
-    proposer: "内閣",
-    category: "教育",
-    status: "ENACTED",
-    submittedAt: "2024-03-01",
-    passedAt: "2024-05-17",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-51",
-    title: "建設業法及び公共工事の入札及び契約の適正化の促進に関する法律の一部を改正する法律案",
-    summary:
-      "建設業法改正。担い手確保のための労働環境改善、適正な請負代金の確保、ICT活用の推進。",
-    proposer: "内閣",
-    category: "経済",
-    status: "ENACTED",
-    submittedAt: "2024-03-08",
-    passedAt: "2024-06-07",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-25",
-    title: "経済施策を一体的に講ずることによる安全保障の確保の推進に関する法律の一部を改正する法律案",
-    summary:
-      "経済安全保障推進法改正。特定重要技術の研究開発支援の強化、サプライチェーン調査の迅速化等。",
-    proposer: "内閣",
-    category: "安全保障",
-    status: "ENACTED",
-    submittedAt: "2024-02-27",
-    passedAt: "2024-04-17",
-  },
-  {
-    sessionNumber: 213,
-    number: "213-閣法-30",
-    title: "銃砲刀剣類所持等取締法の一部を改正する法律案",
-    summary:
-      "銃刀法改正。クロスボウ（ボーガン）の所持許可制の導入、模造銃規制の強化、猟銃所持の厳格化。2023年長野事件を受けた対策。",
-    proposer: "内閣",
-    category: "司法",
-    status: "ENACTED",
-    submittedAt: "2024-02-27",
-    passedAt: "2024-06-05",
   },
   // 議員立法 否決・未了分
   {
@@ -847,7 +817,7 @@ const REAL_BILLS: RealBill[] = [
   // 第214回国会（2024年10月臨時国会）— 石破内閣発足
   // 実質審議なし。首相指名後、10月9日に衆議院解散。
   // ============================================================
-  // 第214回は石破内閣不信任決議案が否決された程度で、法案審議は行われていない
+  // 第214回は法案審議は行われていない
 
   // ============================================================
   // 第215回国会（2024年11月特別国会）— 第50回衆院選後
@@ -967,6 +937,348 @@ const REAL_BILLS: RealBill[] = [
     status: "ENACTED",
     submittedAt: "2024-12-09",
     passedAt: "2024-12-19",
+  },
+
+  // ============================================================
+  // 第217回国会（2025年通常国会）— 石破内閣
+  // 閣法59本中58本成立、議員立法17本成立、計75本成立
+  // ============================================================
+  {
+    sessionNumber: 217,
+    number: "217-閣法-1",
+    title: "所得税法等の一部を改正する法律案",
+    summary:
+      "令和7年度税制改正。いわゆる「103万円の壁」の見直し（基礎控除・給与所得控除の引上げ）、防衛特別法人税の創設、賃上げ税制の延長等。与党修正を経て成立。",
+    proposer: "内閣",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2025-02-04",
+    passedAt: "2025-03-31",
+    sourceUrl:
+      "https://www.mof.go.jp/about_mof/bills/217diet/index.html",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-2",
+    title: "地方税法及び地方税法等の一部を改正する法律の一部を改正する法律案",
+    summary:
+      "個人住民税の基礎控除引上げ等、所得税法改正に連動した地方税の改正。",
+    proposer: "内閣",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2025-02-04",
+    passedAt: "2025-03-31",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-4",
+    title: "重要電子計算機に対する不正な行為による被害の防止に関する法律案",
+    summary:
+      "サイバー対処能力強化法（能動的サイバー防御法）。基幹インフラ事業者のサイバーセキュリティ対策を強化し、政府の能動的サイバー防御を可能とする制度を創設。衆院修正。",
+    proposer: "内閣",
+    category: "安全保障",
+    status: "ENACTED",
+    submittedAt: "2025-02-07",
+    passedAt: "2025-05-16",
+    sourceUrl:
+      "https://www.cas.go.jp/jp/houan/217.html",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-5",
+    title: "重要電子計算機に対する不正な行為による被害の防止に関する法律の施行に伴う関係法律の整備等に関する法律案",
+    summary:
+      "サイバー対処能力強化法整備法。能動的サイバー防御法の施行に伴い、電気通信事業法等の関連法律を改正。通信の秘密に関する例外規定等を整備。",
+    proposer: "内閣",
+    category: "安全保障",
+    status: "ENACTED",
+    submittedAt: "2025-02-07",
+    passedAt: "2025-05-16",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-8",
+    title: "大学等における修学の支援に関する法律の一部を改正する法律案",
+    summary:
+      "高等教育の修学支援制度の拡充。給付型奨学金・授業料減免の対象拡大、多子世帯への支援強化等。",
+    proposer: "内閣",
+    category: "教育",
+    status: "ENACTED",
+    submittedAt: "2025-02-07",
+    passedAt: "2025-04-04",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-16",
+    title: "防衛省設置法等の一部を改正する法律案",
+    summary:
+      "防衛省の組織強化。自衛官定数の見直し、サイバー防衛体制の拡充等。防衛力整備計画に基づく体制強化。",
+    proposer: "内閣",
+    category: "安全保障",
+    status: "ENACTED",
+    submittedAt: "2025-02-14",
+    passedAt: "2025-04-11",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-21",
+    title: "医療法等の一部を改正する法律案",
+    summary:
+      "医師の働き方改革の推進、地域医療構想の実現に向けた医療提供体制の改革等。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-02-18",
+    passedAt: "2025-05-16",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-29",
+    title: "人工知能関連技術の研究開発及び活用の推進に関する法律案",
+    summary:
+      "AI推進法（AI新法）。人工知能関連技術の研究開発・活用推進のための基本理念、人工知能戦略本部の設置、基本計画の策定等を規定。日本初のAI基本法。",
+    proposer: "内閣",
+    category: "科学技術",
+    status: "ENACTED",
+    submittedAt: "2025-02-28",
+    passedAt: "2025-05-28",
+    sourceUrl:
+      "https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-36",
+    title: "日本学術会議法案",
+    summary:
+      "日本学術会議の組織改革。会員選考プロセスの透明化、外部有識者による選考委員会の設置等。会員任命問題を受けた制度改革。",
+    proposer: "内閣",
+    category: "科学技術",
+    status: "ENACTED",
+    submittedAt: "2025-03-07",
+    passedAt: "2025-06-18",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-59",
+    title: "社会経済の変化を踏まえた年金制度の機能強化のための国民年金法等の一部を改正する等の法律案",
+    summary:
+      "年金制度改革法。いわゆる「106万円の壁」の撤廃（厚生年金の適用拡大）、在職老齢年金制度の見直し、基礎年金の給付水準底上げ等。衆院修正を経て成立。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-05-16",
+    passedAt: "2025-06-13",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-3",
+    title: "関税定率法等の一部を改正する法律案",
+    summary:
+      "関税率の改定。暫定税率の延長、知的財産侵害物品の水際取締り強化等。",
+    proposer: "内閣",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2025-02-07",
+    passedAt: "2025-03-31",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-37",
+    title: "環境影響評価法の一部を改正する法律案",
+    summary:
+      "環境アセスメント制度の合理化。再エネ発電設備設置に関する環境影響評価手続の迅速化等。",
+    proposer: "内閣",
+    category: "環境",
+    status: "ENACTED",
+    submittedAt: "2025-03-07",
+    passedAt: "2025-05-28",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-42",
+    title: "盗難特定金属等の処分の防止等に関する法律案",
+    summary:
+      "金属盗難対策法。銅線等の金属の盗難が相次いでいることを受け、盗難金属の処分防止、古物営業法の適用強化等。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2025-03-14",
+    passedAt: "2025-06-13",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-閣法-44",
+    title: "災害対策基本法の一部を改正する法律案",
+    summary:
+      "能登半島地震の教訓を踏まえた災害対策の強化。国のプッシュ型支援の制度化、応急対応の迅速化等。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-03-14",
+    passedAt: "2025-05-09",
+  },
+  // 第217回 議員立法
+  {
+    sessionNumber: 217,
+    number: "217-衆法-7",
+    title: "ギャンブル等依存症対策基本法の一部を改正する法律案",
+    summary:
+      "ギャンブル依存症対策の強化。オンラインカジノ等の新たな依存リスクへの対応、相談・治療体制の充実等。",
+    proposer: "立憲民主党・日本維新の会",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-03-18",
+    passedAt: "2025-06-18",
+  },
+  {
+    sessionNumber: 217,
+    number: "217-衆法-11",
+    title: "手話言語法案",
+    summary:
+      "手話を言語として法的に位置づけ、手話の普及・研究・利用促進に関する施策を規定。",
+    proposer: "超党派",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-04-22",
+    passedAt: "2025-06-18",
+  },
+
+  // ============================================================
+  // 第219回国会（2025年秋臨時国会）
+  // 閣法11本・議員立法5本、計16本成立
+  // ============================================================
+  {
+    sessionNumber: 219,
+    number: "219-閣法-1",
+    title: "一般職の職員の給与に関する法律等の一部を改正する法律案",
+    summary:
+      "人事院勧告に基づく国家公務員の給与改定。月例給・ボーナスの引上げ。",
+    proposer: "内閣",
+    category: "行政",
+    status: "ENACTED",
+    submittedAt: "2025-10-31",
+    passedAt: "2025-11-28",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-2",
+    title: "特別職の職員の給与に関する法律の一部を改正する法律案",
+    summary:
+      "内閣総理大臣・国務大臣等の特別職の給与改定。一般職の改定に準じた引上げ。",
+    proposer: "内閣",
+    category: "行政",
+    status: "ENACTED",
+    submittedAt: "2025-10-31",
+    passedAt: "2025-11-28",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-5",
+    title: "防衛省の職員の給与等に関する法律の一部を改正する法律案",
+    summary:
+      "自衛官等の給与改定。一般職国家公務員の給与改定に準じた処遇改善。",
+    proposer: "内閣",
+    category: "安全保障",
+    status: "ENACTED",
+    submittedAt: "2025-10-31",
+    passedAt: "2025-11-28",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-3",
+    title: "更生保護法の一部を改正する法律案",
+    summary:
+      "保護司法改正。保護司の処遇改善、なり手不足への対応等。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2025-10-28",
+    passedAt: "2025-12-05",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-6",
+    title: "ストーカー行為等の規制等に関する法律の一部を改正する法律案",
+    summary:
+      "改正ストーカー規制法。GPS機器を用いた位置情報の取得規制強化、SNS等を通じたつきまとい行為への対応強化。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2025-11-04",
+    passedAt: "2025-12-10",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-7",
+    title: "配偶者からの暴力の防止及び被害者の保護等に関する法律の一部を改正する法律案",
+    summary:
+      "改正DV防止法。接近禁止命令の対象拡大、精神的DV（モラハラ）に対する保護命令の適用等。",
+    proposer: "内閣",
+    category: "司法",
+    status: "ENACTED",
+    submittedAt: "2025-11-04",
+    passedAt: "2025-12-10",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-8",
+    title: "気象業務法及び水防法の一部を改正する法律案",
+    summary:
+      "線状降水帯等の予測精度向上に向けた観測体制の強化、水防情報の高度化等。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-11-04",
+    passedAt: "2025-12-05",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-9",
+    title: "医療法の一部を改正する法律案",
+    summary:
+      "医療法改正。地域医療構想の推進、医療DXの加速等。",
+    proposer: "内閣",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-11-07",
+    passedAt: "2025-12-12",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-閣法-10",
+    title: "地方交付税法及び特別会計に関する法律の一部を改正する法律案",
+    summary:
+      "令和7年度補正予算に伴う地方財政措置。地方交付税の追加交付等。",
+    proposer: "内閣",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2025-11-21",
+    passedAt: "2025-12-17",
+  },
+  // 第219回 議員立法
+  {
+    sessionNumber: 219,
+    number: "219-衆法-1",
+    title: "揮発油税等の税率の特例規定の廃止に関する法律案",
+    summary:
+      "ガソリン税暫定税率の廃止。旧暫定税率（1リットルあたり約25円）を廃止し、ガソリン価格の引下げを実現。与野党協議を経て成立。",
+    proposer: "自由民主党・立憲民主党・国民民主党",
+    category: "経済",
+    status: "ENACTED",
+    submittedAt: "2025-12-01",
+    passedAt: "2025-12-12",
+  },
+  {
+    sessionNumber: 219,
+    number: "219-衆法-3",
+    title: "高次脳機能障害者支援法案",
+    summary:
+      "高次脳機能障害者の支援に関する基本法。支援体制の整備、社会参加の促進等を規定。",
+    proposer: "超党派",
+    category: "社会保障",
+    status: "ENACTED",
+    submittedAt: "2025-11-14",
+    passedAt: "2025-12-12",
   },
 ];
 
@@ -1095,18 +1407,18 @@ async function printStats() {
 }
 
 async function main() {
-  console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║  実データシード: 国会法案データ (第211回〜第216回)  ║");
-  console.log("╚══════════════════════════════════════════════════╝\n");
+  console.log("========================================================");
+  console.log("  実データシード: 国会法案データ (第210回〜第220回)");
+  console.log("========================================================\n");
 
   try {
     await seedSessions();
     await seedBills();
     await printStats();
 
-    console.log("\n✓ シードが正常に完了しました。");
+    console.log("\nシードが正常に完了しました。");
   } catch (error) {
-    console.error("\n✗ シード実行中にエラーが発生しました:", error);
+    console.error("\nシード実行中にエラーが発生しました:", error);
     throw error;
   } finally {
     await prisma.$disconnect();

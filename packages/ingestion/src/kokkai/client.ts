@@ -1,4 +1,6 @@
-const KOKKAI_BASE = "https://kokkai.ndl.go.jp/api/1.0";
+// NOTE: The old endpoint /api/1.0 now returns 301 → /api (version prefix removed).
+// Node.js fetch follows redirects by default, but we use the canonical URL to avoid latency.
+const KOKKAI_BASE = "https://kokkai.ndl.go.jp/api";
 
 const RATE_LIMIT_MS = 3000;
 let lastRequestTime = 0;
@@ -45,7 +47,7 @@ function buildUrl(endpoint: string, params: Record<string, string | number | und
 }
 
 export async function fetchSpeeches(params: KokkaiSpeechParams = {}) {
-  const url = buildUrl("/speech", params);
+  const url = buildUrl("/speech", params as Record<string, string | number | undefined>);
   const res = await rateLimitedFetch(url);
   if (!res.ok) {
     throw new Error(`Kokkai API error: ${res.status} ${res.statusText}`);
@@ -54,7 +56,7 @@ export async function fetchSpeeches(params: KokkaiSpeechParams = {}) {
 }
 
 export async function fetchMeetings(params: KokkaiMeetingParams = {}) {
-  const url = buildUrl("/meeting", params);
+  const url = buildUrl("/meeting", params as Record<string, string | number | undefined>);
   const res = await rateLimitedFetch(url);
   if (!res.ok) {
     throw new Error(`Kokkai API error: ${res.status} ${res.statusText}`);
@@ -63,7 +65,7 @@ export async function fetchMeetings(params: KokkaiMeetingParams = {}) {
 }
 
 export async function fetchMeetingList(params: KokkaiMeetingParams = {}) {
-  const url = buildUrl("/meeting_list", params);
+  const url = buildUrl("/meeting_list", params as Record<string, string | number | undefined>);
   const res = await rateLimitedFetch(url);
   if (!res.ok) {
     throw new Error(`Kokkai API error: ${res.status} ${res.statusText}`);
