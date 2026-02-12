@@ -29,6 +29,7 @@ export default function RootLayout({
         <main>{children}</main>
         <footer className="border-t bg-white py-8 text-center text-sm text-gray-500">
           <p>AIエージェント時代の政治資金監視 — 人間が見ていなくても、エージェントが見ている</p>
+          <p className="mt-1">政党にも企業にもよらない、完全オープンな政治テクノロジー基盤</p>
           <p className="mt-1">Open Japan PoliTech Platform | AGPL-3.0</p>
         </footer>
       </body>
