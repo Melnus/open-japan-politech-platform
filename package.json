@@ -30,6 +30,7 @@
     "db:reset": "pnpm --filter @ojpp/db reset",
     "db:studio": "pnpm --filter @ojpp/db studio",
     "dev:seatmap": "pnpm --filter seatmap-web dev",
+    "ingest:prefectures": "pnpm --filter @ojpp/ingestion ingest:prefectures",
     "ingest:finance": "pnpm --filter @ojpp/ingestion ingest:finance",
     "ingest:parliament": "pnpm --filter @ojpp/ingestion ingest:parliament",
     "ingest:manifesto": "pnpm --filter @ojpp/ingestion ingest:manifesto",
