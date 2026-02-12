@@ -1,6 +1,7 @@
 {
   "name": "parliscope-admin",
   "version": "0.1.0",
+  "description": "ParliScope Admin — 法案データ・議論の管理画面",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3004",

@@ -1,6 +1,7 @@
 {
   "name": "parliscope-web",
   "version": "0.1.0",
+  "description": "ParliScope — 議会を、すべての人とエージェントに開く（公開フロントエンド）",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3003",

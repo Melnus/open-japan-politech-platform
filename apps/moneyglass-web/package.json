@@ -1,6 +1,7 @@
 {
   "name": "moneyglass-web",
   "version": "0.1.0",
+  "description": "MoneyGlass — 政治資金を、ガラスのように透明に（公開フロントエンド）",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",

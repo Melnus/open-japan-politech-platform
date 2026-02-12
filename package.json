@@ -2,7 +2,16 @@
   "name": "open-japan-politech-platform",
   "version": "0.1.0",
   "private": true,
+  "description": "AIエージェント時代の政治インフラ — 政党にも企業にもよらない、完全オープンな政治テクノロジー基盤",
   "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ochyai/open-japan-politech-platform.git"
+  },
+  "homepage": "https://github.com/ochyai/open-japan-politech-platform#readme",
+  "bugs": {
+    "url": "https://github.com/ochyai/open-japan-politech-platform/issues"
+  },
   "packageManager": "pnpm@10.4.0",
   "scripts": {
     "dev": "pnpm --parallel --recursive run dev",

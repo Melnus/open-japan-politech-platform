@@ -32,7 +32,7 @@ cd open-japan-politech-platform
 cp .env.example .env
 # .env に DATABASE_URL 等を設定（.env.example を参照）
 
-# Supabase ローカル開発の場合（任意）
+# Supabase ローカル開発（推奨 — .env の変更不要でDB接続可能）
 npx supabase start
 
 # 依存関係のインストール
@@ -40,7 +40,7 @@ pnpm install
 
 # データベースのセットアップ
 pnpm db:generate
-pnpm db:migrate
+pnpm --filter @ojpp/db push
 pnpm db:seed
 
 # データ取り込み（全データソース一括）

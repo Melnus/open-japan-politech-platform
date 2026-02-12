@@ -10,6 +10,20 @@ export const metadata: Metadata = {
   title: "MoneyGlass - 政治資金を、ガラスのように透明に",
   description:
     "全政党・全政治団体の資金の流れを可視化。AIエージェントが24時間監視・分析し、誰もが政治資金の実態にアクセスできる。",
+  openGraph: {
+    title: "MoneyGlass - 政治資金を、ガラスのように透明に",
+    description:
+      "全政党・全政治団体の資金の流れを可視化。AIエージェントが24時間監視・分析し、誰もが政治資金の実態にアクセスできる。",
+    siteName: "Open Japan PoliTech Platform",
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MoneyGlass - 政治資金を、ガラスのように透明に",
+    description:
+      "全政党・全政治団体の資金の流れを可視化。AIエージェントが24時間監視・分析し、誰もが政治資金の実態にアクセスできる。",
+  },
 };
 
 const NAV_ITEMS = [

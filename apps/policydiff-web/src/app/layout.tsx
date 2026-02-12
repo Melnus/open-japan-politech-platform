@@ -10,6 +10,20 @@ export const metadata: Metadata = {
   title: "PolicyDiff - 全政党の政策を、差分で比較する",
   description:
     "全政党のマニフェスト・政策をバージョン管理。AIエージェントが変更を追跡し、誰もが政策の違いと変遷を即座に把握できる。",
+  openGraph: {
+    title: "PolicyDiff - 全政党の政策を、差分で比較する",
+    description:
+      "全政党のマニフェスト・政策をバージョン管理。AIエージェントが変更を追跡し、誰もが政策の違いと変遷を即座に把握できる。",
+    siteName: "Open Japan PoliTech Platform",
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PolicyDiff - 全政党の政策を、差分で比較する",
+    description:
+      "全政党のマニフェスト・政策をバージョン管理。AIエージェントが変更を追跡し、誰もが政策の違いと変遷を即座に把握できる。",
+  },
 };
 
 const NAV_ITEMS = [

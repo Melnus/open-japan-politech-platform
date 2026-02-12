@@ -43,7 +43,7 @@ GitHub リポジトリ (モノレポ)
 - [Vercel アカウント](https://vercel.com/signup)
 - [Supabase アカウント](https://supabase.com/dashboard)
 - GitHub リポジトリへのアクセス権
-- ローカル環境に Node.js 20+ / pnpm 10.4.0 がインストール済み
+- ローカル環境に Node.js 22+ / pnpm 10.4.0 がインストール済み
 
 ---
 

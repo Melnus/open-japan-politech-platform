@@ -1,6 +1,7 @@
 {
   "name": "@ojpp/db",
   "version": "0.1.0",
+  "description": "OJPP データベース — Prisma スキーマ（21モデル・10 enum）・シード・マイグレーション",
   "private": true,
   "main": "./src/index.ts",
   "scripts": {

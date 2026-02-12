@@ -1,6 +1,7 @@
 {
   "name": "moneyglass-admin",
   "version": "0.1.0",
+  "description": "MoneyGlass Admin — 政治資金データの取り込み・管理画面",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3001",

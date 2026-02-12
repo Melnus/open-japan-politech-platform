@@ -150,7 +150,7 @@ npx supabase start
 # 依存関係インストール + DB準備
 pnpm install
 pnpm db:generate
-pnpm db:migrate
+pnpm --filter @ojpp/db push
 pnpm db:seed
 
 # データ取り込み（全データソース一括）
@@ -186,6 +186,7 @@ pnpm dev:parliscope    # ParliScope (port 3003 + 3004)
 | `pnpm db:studio` | Prisma Studio（DB GUI） |
 | `pnpm db:reset` | DB リセット + 再シード |
 | `pnpm db:generate` | Prisma Client 再生成 |
+| `pnpm --filter @ojpp/db push` | スキーマをDBに直接反映（開発用） |
 | `pnpm db:migrate` | マイグレーション実行 |
 
 ---
@@ -225,8 +226,8 @@ curl http://localhost:3000/api/organizations?limit=2
   "pagination": {
     "page": 1,
     "limit": 2,
-    "total": 2360,
-    "totalPages": 1180
+    "total": 150,
+    "totalPages": 75
   }
 }
 ```
@@ -324,9 +325,9 @@ AIエージェント時代に、政党や企業が独占してきた政治プロ
 |---|---|
 | **API-First** | 全データをRESTful APIで提供。エージェントが直接アクセス |
 | **機械可読データ** | JSON構造化データを標準。人間用UIとエージェント用APIの両方 |
-| **エージェント認証** | AIエージェント用の認証・権限管理。エージェントは一級市民 |
-| **MCP対応** | Model Context Protocol による外部AIとのシームレスな連携 |
-| **監査ログ** | 全操作のトレーサビリティを保証。エージェントの行動も完全に透明 |
+| **エージェント認証** *(v0.2予定)* | AIエージェント用の認証・権限管理。エージェントは一級市民 |
+| **MCP対応** *(v0.2予定)* | Model Context Protocol による外部AIとのシームレスな連携 |
+| **監査ログ** *(v0.2予定)* | 全操作のトレーサビリティを保証。エージェントの行動も完全に透明 |
 
 ---
 
@@ -419,7 +420,7 @@ open-japan-politech-platform/
 - [ ] GraphQL API
 - [ ] リアルタイム通知（政策変更・法案ステータス）
 - [ ] 多言語対応（英語）
-- [ ] デプロイ（Vercel / Fly.io）
+- [x] デプロイ（Vercel）
 
 ---
 

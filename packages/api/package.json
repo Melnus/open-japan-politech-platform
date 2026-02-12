@@ -1,6 +1,7 @@
 {
   "name": "@ojpp/api",
   "version": "0.1.0",
+  "description": "OJPP共有APIユーティリティ — ページネーション・エラー処理・CORS・BigInt変換",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",

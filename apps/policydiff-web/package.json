@@ -1,6 +1,7 @@
 {
   "name": "policydiff-web",
   "version": "0.1.0",
+  "description": "PolicyDiff — 全政党の政策を、差分で比較する（公開フロントエンド）",
   "private": true,
   "scripts": {
     "dev": "next dev --port 3002",
