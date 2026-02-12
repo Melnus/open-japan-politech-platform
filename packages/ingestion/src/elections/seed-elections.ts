@@ -1,5 +1,5 @@
 /**
- * 選挙データのシード — 衆議院・参議院の実選挙結果（2013〜2025）
+ * 選挙データのシード — 衆議院・参議院の実選挙結果（2013〜2026）
  *
  * 総務省選挙関連資料に基づく実データ。
  * https://www.soumu.go.jp/senkyo/
@@ -75,6 +75,24 @@ const HISTORICAL_PARTIES: HistoricalParty[] = [
     color: "#4AA657",
     founded: "1996-01-19",
   },
+  {
+    name: "中道改革連合",
+    shortName: "中道",
+    color: "#1B5DA6",
+    founded: "2025-11-01",
+  },
+  {
+    name: "減税日本・ゆうこく連合",
+    shortName: "減税ゆ",
+    color: "#FFD700",
+    founded: "2025-12-01",
+  },
+  {
+    name: "安楽死制度を考える会",
+    shortName: "安楽死",
+    color: "#9370DB",
+    founded: "2020-06-01",
+  },
 ];
 
 // ============================================
@@ -90,6 +108,10 @@ interface PartyResult {
   districtSeats: number;
   /** 比例代表の獲得議席数 */
   proportionalSeats: number;
+  /** 比例代表得票数 */
+  totalVotes?: bigint;
+  /** 比例代表得票率 (%) */
+  voteShare?: number;
 }
 
 interface ElectionData {
@@ -104,7 +126,7 @@ interface ElectionData {
 }
 
 // ============================================
-// 衆議院選挙データ（2014〜2024）
+// 衆議院選挙データ（2014〜2026）
 // ============================================
 
 const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
@@ -183,6 +205,27 @@ const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
       { partyName: "参政党", seatsWon: 3, districtSeats: 0, proportionalSeats: 3 },
       { partyName: "日本保守党", seatsWon: 3, districtSeats: 3, proportionalSeats: 0 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 1, proportionalSeats: 0 },
+    ],
+  },
+  {
+    name: "第51回衆議院議員総選挙",
+    chamber: "HOUSE_OF_REPRESENTATIVES",
+    date: "2026-02-08",
+    totalSeats: 465,
+    districtSeats: 289,
+    proportionalSeats: 176,
+    turnout: 56.26,
+    results: [
+      { partyName: "自由民主党", seatsWon: 316, districtSeats: 249, proportionalSeats: 67, totalVotes: 21026139n, voteShare: 36.72 },
+      { partyName: "中道改革連合", seatsWon: 49, districtSeats: 7, proportionalSeats: 42, totalVotes: 10438801n, voteShare: 18.23 },
+      { partyName: "日本維新の会", seatsWon: 36, districtSeats: 20, proportionalSeats: 16, totalVotes: 4943331n, voteShare: 8.63 },
+      { partyName: "国民民主党", seatsWon: 28, districtSeats: 8, proportionalSeats: 20, totalVotes: 5572951n, voteShare: 9.73 },
+      { partyName: "参政党", seatsWon: 15, districtSeats: 0, proportionalSeats: 15, totalVotes: 4260620n, voteShare: 7.44 },
+      { partyName: "チームみらい", seatsWon: 11, districtSeats: 0, proportionalSeats: 11, totalVotes: 3813749n, voteShare: 6.66 },
+      { partyName: "日本共産党", seatsWon: 4, districtSeats: 0, proportionalSeats: 4, totalVotes: 2519807n, voteShare: 4.40 },
+      { partyName: "れいわ新選組", seatsWon: 1, districtSeats: 0, proportionalSeats: 1, totalVotes: 1672499n, voteShare: 2.92 },
+      { partyName: "減税日本・ゆうこく連合", seatsWon: 1, districtSeats: 1, proportionalSeats: 0, totalVotes: 814874n, voteShare: 1.42 },
+      { partyName: "無所属", seatsWon: 4, districtSeats: 4, proportionalSeats: 0 },
     ],
   },
 ];
@@ -433,6 +476,8 @@ export async function seedElections(): Promise<void> {
           seatsWon: result.seatsWon,
           districtSeats: result.districtSeats,
           proportionalSeats: result.proportionalSeats,
+          ...(result.totalVotes != null ? { totalVotes: result.totalVotes } : {}),
+          ...(result.voteShare != null ? { voteShare: result.voteShare } : {}),
         },
         create: {
           electionId: election.id,
@@ -440,6 +485,8 @@ export async function seedElections(): Promise<void> {
           seatsWon: result.seatsWon,
           districtSeats: result.districtSeats,
           proportionalSeats: result.proportionalSeats,
+          ...(result.totalVotes != null ? { totalVotes: result.totalVotes } : {}),
+          ...(result.voteShare != null ? { voteShare: result.voteShare } : {}),
         },
       });
 

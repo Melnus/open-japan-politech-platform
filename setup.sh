@@ -626,8 +626,8 @@ if node -e "$DB_CHECK_SCRIPT" >> "$LOG" 2>&1; then
   ok "🔗 Prisma → PostgreSQL 接続OK！データも確認済み"
 else
   wrn "Prisma 接続に問題あり — 念のため接続をリセットするね"
-  # Kill idle connections to free slots
-  docker exec supabase_db_open-japan-politech-platform psql -U postgres -d postgres \
+  # Kill idle connections to free slots (use docker compose exec to auto-resolve container name)
+  $COMPOSE exec -T db psql -U postgres -d postgres \
     -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND pid <> pg_backend_pid();" \
     >> "$LOG" 2>&1 || true
   sleep 1
