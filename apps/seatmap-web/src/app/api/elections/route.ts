@@ -1,3 +1,4 @@
+import { serializeBigInt } from "@ojpp/api";
 import { prisma } from "@ojpp/db";
 import { NextResponse } from "next/server";
 
@@ -11,5 +12,5 @@ export async function GET() {
     },
     orderBy: { date: "desc" },
   });
-  return NextResponse.json(elections);
+  return NextResponse.json(serializeBigInt(elections));
 }
