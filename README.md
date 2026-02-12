@@ -14,7 +14,7 @@
 
 ---
 
-## 1行で起動
+## 1行で起動。ターミナルに以下を貼り付けて。
 
 > **必要なもの**: [Docker](https://docs.docker.com/get-docker/) と [Git](https://git-scm.com/) だけ。Node.js / pnpm は自動インストールされます。
 
