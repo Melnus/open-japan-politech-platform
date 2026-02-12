@@ -81,15 +81,26 @@ GitHub リポジトリ (モノレポ)
 | **anon (public) key** | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
 | **service_role key** | `SUPABASE_SERVICE_ROLE_KEY` |
 
-### 4. マイグレーションの実行
+### 4. データベースのセットアップ
 
-ローカルから本番DBに対してマイグレーションを実行する:
+ローカルから本番DBに対してスキーマ反映と初期データ投入を行う:
 
 ```bash
-# .env に本番の DATABASE_URL / DIRECT_URL を設定した上で
-pnpm db:generate
-pnpm --filter @ojpp/db migrate:deploy
+# 1. ルートの .env に本番の DATABASE_URL / DIRECT_URL を設定
+#    例: DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+#    例: DIRECT_URL="postgresql://postgres.[ref]:[password]@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres"
+
+# 2. Prisma Client 生成
+pnpm --filter @ojpp/db generate
+
+# 3. スキーマを本番DBに反映（テーブル作成）
+pnpm --filter @ojpp/db push
+
+# 4. 初期データ投入（政党15党・都道府県47・サンプル議員・法案等）
+pnpm --filter @ojpp/db seed
 ```
+
+> **注意**: `db push` はスキーマを直接DBに反映するコマンドです。本番運用が本格化したら `prisma migrate` への移行を推奨します。
 
 ---
 
