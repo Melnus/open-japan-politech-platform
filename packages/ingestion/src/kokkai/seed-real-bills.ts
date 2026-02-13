@@ -826,7 +826,7 @@ const REAL_BILLS: RealBill[] = [
     proposer: "内閣",
     category: "行政",
     status: "ENACTED",
-    submittedAt: "2024-11-28",
+    submittedAt: "2024-12-09",
     passedAt: "2024-12-17",
   },
   {
@@ -838,7 +838,7 @@ const REAL_BILLS: RealBill[] = [
     proposer: "内閣",
     category: "行政",
     status: "ENACTED",
-    submittedAt: "2024-11-28",
+    submittedAt: "2024-12-09",
     passedAt: "2024-12-17",
   },
   {
@@ -850,7 +850,7 @@ const REAL_BILLS: RealBill[] = [
     proposer: "内閣",
     category: "行政",
     status: "ENACTED",
-    submittedAt: "2024-11-28",
+    submittedAt: "2024-12-09",
     passedAt: "2024-12-20",
   },
   {
@@ -874,7 +874,7 @@ const REAL_BILLS: RealBill[] = [
     proposer: "内閣",
     category: "安全保障",
     status: "ENACTED",
-    submittedAt: "2024-11-28",
+    submittedAt: "2024-12-09",
     passedAt: "2024-12-17",
   },
   // 第216回 議員立法（政治改革関連）
