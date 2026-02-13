@@ -7,8 +7,17 @@ export interface ServiceDefinition {
   glowColor: string;
   port: number;
   url: string;
+  prodUrl: string;
   gridSpan: 1 | 2;
   kpiLabels: string[];
+}
+
+/** ローカル開発時は localhost、本番では Vercel URL を返す */
+export function getServiceUrl(service: ServiceDefinition): string {
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost") {
+    return service.prodUrl;
+  }
+  return `http://localhost:${service.port}`;
 }
 
 export const SERVICES: ServiceDefinition[] = [
@@ -21,6 +30,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(255, 107, 53, 0.15)",
     port: 3000,
     url: "/moneyglass",
+    prodUrl: "https://ojpp-moneyglass-web-ochyais-projects.vercel.app",
     gridSpan: 2,
     kpiLabels: ["総収入", "総支出", "団体数", "報告書数"],
   },
@@ -33,6 +43,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(168, 85, 247, 0.15)",
     port: 3003,
     url: "/parliscope",
+    prodUrl: "https://ojpp-parliscope-web-ochyais-projects.vercel.app",
     gridSpan: 2,
     kpiLabels: ["法案数", "議員数", "会期数", "投票数"],
   },
@@ -45,6 +56,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(59, 130, 246, 0.15)",
     port: 3002,
     url: "/policydiff",
+    prodUrl: "https://ojpp-policydiff-web-ochyais-projects.vercel.app",
     gridSpan: 1,
     kpiLabels: ["政策数", "カテゴリ数", "提案数"],
   },
@@ -57,6 +69,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(6, 214, 214, 0.15)",
     port: 3005,
     url: "/seatmap",
+    prodUrl: "https://ojpp-seatmap-web-ochyais-projects.vercel.app",
     gridSpan: 1,
     kpiLabels: ["衆院議席", "参院議席", "選挙数"],
   },
@@ -69,6 +82,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(251, 191, 36, 0.15)",
     port: 3006,
     url: "/culturescope",
+    prodUrl: "https://ojpp-culturescope-web-ochyais-projects.vercel.app",
     gridSpan: 1,
     kpiLabels: ["文化予算総額", "プログラム数", "政党スタンス数"],
   },
@@ -81,6 +95,7 @@ export const SERVICES: ServiceDefinition[] = [
     glowColor: "rgba(52, 211, 153, 0.15)",
     port: 3007,
     url: "/socialguard",
+    prodUrl: "https://ojpp-socialguard-web-ochyais-projects.vercel.app",
     gridSpan: 1,
     kpiLabels: ["社会保障費総額", "制度数", "都道府県数"],
   },

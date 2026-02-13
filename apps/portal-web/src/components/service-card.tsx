@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatedCounter, StaggerItem } from "@ojpp/ui";
-import type { ServiceDefinition } from "@/lib/constants";
+import { type ServiceDefinition, getServiceUrl } from "@/lib/constants";
 import { DataPulse } from "./data-pulse";
 
 interface KpiData {
@@ -20,11 +20,14 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service, kpis, heroValue, heroSuffix, heroLabel }: ServiceCardProps) {
   const maxKpi = Math.max(...kpis.map((k) => k.value), 1);
+  const href = getServiceUrl(service);
 
   return (
     <StaggerItem className={service.gridSpan === 2 ? "sm:col-span-2" : ""}>
       <a
-        href={`http://localhost:${service.port}`}
+        href={href}
+        target={href.startsWith("http://localhost") ? undefined : "_blank"}
+        rel={href.startsWith("http://localhost") ? undefined : "noopener noreferrer"}
         className="svc-glow-card block h-full border border-[var(--border)] bg-[var(--bg-card)] p-5 pl-7"
         style={{ "--svc-color": service.color } as React.CSSProperties}
       >
@@ -89,7 +92,9 @@ export function ServiceCard({ service, kpis, heroValue, heroSuffix, heroLabel }:
 
         {/* Footer */}
         <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="mono text-[0.5rem] text-[var(--text-ghost)]">:{service.port}</span>
+          <span className="mono text-[0.5rem] text-[var(--text-ghost)]">
+            {href.startsWith("http://localhost") ? `:${service.port}` : service.name.toLowerCase()}
+          </span>
           <span
             className="mono text-[0.55rem] font-bold tracking-[1.5px] transition-colors"
             style={{ color: service.color }}
