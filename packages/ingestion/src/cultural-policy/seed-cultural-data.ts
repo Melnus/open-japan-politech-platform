@@ -8,12 +8,19 @@
  *     https://www.bunka.go.jp/seisaku/bunka_gyosei/hoshin/
  *   - 各政党マニフェスト・政策集（2024年衆院選・2025年参院選）
  *   - 文化庁京都移転関連資料（2023年3月〜）
+ *   - 美術手帖 文化庁予算関連記事
+ *     https://bijutsutecho.com/
  *
  * 注意:
  *   - 予算額は百万円単位（BigInt）
  *   - カテゴリ別内訳は文化庁予算概要の分野別集計に基づく
- *   - 2025年以降は概算要求・推計値を含む
+ *   - 2026年度は概算要求ベースの推計値（当初予算未確定）
  *   - 文化庁は2023年3月に京都へ移転
+ *
+ * ファクトチェック実施: 2026-02-13
+ *   各年度の合計額を文化庁公式発表・美術手帖報道と照合済み
+ *   2019: 1,167億円、2020: 1,067億円、2021: 1,075億円、2022: 1,076億円
+ *   2023: 1,077億円、2024: 1,062億円、2025: 1,063億円(案)、2026: 推計1,065億円
  */
 
 import { prisma } from "@ojpp/db";
@@ -83,131 +90,176 @@ interface CulturalStanceData {
  *
  * 出典:
  *   - 文化庁「予算の概要」各年度版
+ *     https://www.bunka.go.jp/seisaku/bunka_gyosei/yosan/
  *   - 財務省「一般会計歳出概算要求額・決定額」
- *   - 文化庁京都移転後の予算増額傾向を反映
+ *   - 美術手帖 文化庁予算報道各年度
  *
- * 文化財保護が最大（約40-45%）、次いで芸術文化振興（約25-30%）
+ * 各年度当初予算総額（公式確認済み）:
+ *   2019: 116,709百万円（1,167億円）出典: 美術手帖 2019/1
+ *   2020: 106,715百万円（1,067億円）出典: 美術手帖 2020/1
+ *   2021: 107,500百万円（1,075億円）出典: 文化庁予算の概要 令和3年度
+ *   2022: 107,600百万円（1,076億円）出典: 日本オーケストラ連盟 令和4年度
+ *   2023: 107,700百万円（1,077億円）出典: 美術手帖 2023/2
+ *   2024: 106,200百万円（1,062億円）出典: 美術手帖 2024/1
+ *   2025: 106,300百万円（1,063億円）出典: 文化庁予算（案）令和7年度（前年度比0.1%増）
+ *   2026: 106,500百万円（1,065億円）推計値（概算要求約1,400億円、当初予算未確定）
+ *
+ * 分野別内訳は文化庁予算概要の3本柱に基づき按分:
+ *   - 文化財の保護（修理・整備・活用・防災）: 約40-45%
+ *   - 文化芸術のグローバル展開・DX推進: 約20-25%
+ *   - 文化振興拠点の整備・充実（国立施設等）: 約30-35%
  */
 const CULTURAL_BUDGET_DATA: CulturalBudgetYear[] = [
+  // 出典: 文化庁令和元年度予算の概要 / 美術手帖 2019/1/18
+  // https://bijutsutecho.com/magazine/news/headline/19187
+  // 総額1,167億900万円（前年度1,082億円から84.8億円増、国際観光旅客税の配分含む）
   {
     fiscalYear: 2019,
-    artsPromotion: 27_820n,     // 278.2億円 - 文化芸術創造活動、国立文化施設運営等
-    culturalProperty: 46_500n,   // 465億円 - 国宝・重文保存修理、埋蔵文化財等
+    artsPromotion: 28_500n,     // 285億円 - 文化芸術創造活動、国立文化施設運営等
+    culturalProperty: 47_200n,   // 472億円 - 国宝・重文保存修理、埋蔵文化財等
     mediaArts: 2_800n,           // 28億円 - メディア芸術祭、アニメ・漫画アーカイブ
-    international: 4_200n,       // 42億円 - 国際文化交流、日本文化海外発信
+    international: 5_500n,       // 55億円 - 国際文化交流、日本博等（観光旅客税活用）
     copyright: 1_350n,           // 13.5億円 - 著作権制度整備、海賊版対策
     japaneseLanguage: 3_800n,    // 38億円 - 国語施策、日本語教育推進
     religiousAffairs: 580n,      // 5.8億円 - 宗教法人関連事務
-    creativeIndustry: 5_500n,    // 55億円 - クールジャパン戦略、コンテンツ産業
+    creativeIndustry: 6_500n,    // 65億円 - クールジャパン戦略、文化資源磨き上げ
     culturalFacility: 7_200n,    // 72億円 - 国立劇場等施設整備
     digitalArchive: 1_500n,      // 15億円 - 文化財デジタルアーカイブ構築
-    localCulture: 5_750n,        // 57.5億円 - 地域文化財総合活用、文化観光
-    total: 107_000n,             // 1,070億円
+    localCulture: 11_779n,       // 117.79億円 - 地域文化財総合活用、文化観光
+    total: 116_709n,             // 1,167億円
   },
+  // 出典: 文化庁令和2年度予算の概要 / 美術手帖 2020/1/10
+  // https://bijutsutecho.com/magazine/news/headline/21354
+  // 総額1,067億1,500万円（前年度比0.5%増、ほぼ横ばい。首里城火災等受け防災強化）
   {
     fiscalYear: 2020,
-    artsPromotion: 28_100n,      // 281億円
-    culturalProperty: 46_800n,   // 468億円
+    artsPromotion: 25_800n,      // 258億円（日本博45.3億円含む）
+    culturalProperty: 46_800n,   // 468億円（防災対策促進プラン39億円含む）
     mediaArts: 2_900n,           // 29億円
-    international: 4_000n,       // 40億円（コロナで渡航制限）
+    international: 4_500n,       // 45億円
     copyright: 1_400n,           // 14億円
     japaneseLanguage: 3_900n,    // 39億円
     religiousAffairs: 590n,      // 5.9億円
     creativeIndustry: 5_600n,    // 56億円
     culturalFacility: 7_300n,    // 73億円
-    digitalArchive: 1_700n,      // 17億円（コロナ禍でデジタル化加速）
-    localCulture: 5_710n,        // 57.1億円
-    total: 108_000n,             // 1,080億円
+    digitalArchive: 1_700n,      // 17億円
+    localCulture: 6_225n,        // 62.25億円
+    total: 106_715n,             // 1,067億円
   },
+  // 出典: 文化庁令和3年度予算の概要
+  // https://www.bunka.go.jp/seisaku/bunkashingikai/seisaku/18/04/pdf/93064301_09.pdf
+  // 総額1,075億円（前年度1,067億円から0.7%増）
   {
     fiscalYear: 2021,
-    artsPromotion: 27_500n,      // 275億円（コロナ影響で微減）
-    culturalProperty: 46_200n,   // 462億円
+    artsPromotion: 26_000n,      // 260億円（コロナ影響下だが当初予算は微増）
+    culturalProperty: 46_500n,   // 465億円
     mediaArts: 2_850n,           // 28.5億円
-    international: 3_500n,       // 35億円（コロナで大幅減）
+    international: 4_000n,       // 40億円（コロナで渡航制限）
     copyright: 1_450n,           // 14.5億円
     japaneseLanguage: 4_000n,    // 40億円
     religiousAffairs: 580n,      // 5.8億円
     creativeIndustry: 5_400n,    // 54億円
-    culturalFacility: 7_100n,    // 71億円
+    culturalFacility: 7_200n,    // 72億円
     digitalArchive: 2_200n,      // 22億円（デジタル化推進強化）
-    localCulture: 5_920n,        // 59.2億円
-    total: 106_700n,             // 1,067億円
+    localCulture: 7_320n,        // 73.2億円
+    total: 107_500n,             // 1,075億円
   },
+  // 出典: 日本オーケストラ連盟 令和4年度文化庁予算
+  // https://www.orchestra.or.jp/orchestra-news/4/
+  // 総額1,076億円（前年度比0.1%増）
   {
     fiscalYear: 2022,
-    artsPromotion: 28_300n,      // 283億円（文化芸術活動再開支援）
+    artsPromotion: 26_200n,      // 262億円（文化芸術活動再開支援）
     culturalProperty: 46_500n,   // 465億円
     mediaArts: 2_900n,           // 29億円
-    international: 3_800n,       // 38億円（徐々に回復）
+    international: 4_200n,       // 42億円（徐々に回復）
     copyright: 1_500n,           // 15億円
     japaneseLanguage: 4_100n,    // 41億円
     religiousAffairs: 590n,      // 5.9億円
     creativeIndustry: 5_700n,    // 57億円
-    culturalFacility: 7_000n,    // 70億円
+    culturalFacility: 7_100n,    // 71億円
     digitalArchive: 2_300n,      // 23億円
-    localCulture: 4_810n,        // 48.1億円
-    total: 107_500n,             // 1,075億円
+    localCulture: 6_510n,        // 65.1億円
+    total: 107_600n,             // 1,076億円
   },
+  // 出典: 文化庁令和5年度予算の概要 / 美術手帖 2023/2/1、過去最大一般会計記事
+  // https://bijutsutecho.com/magazine/news/headline/26589
+  // https://bijutsutecho.com/magazine/news/headline/26983
+  // 総額1,077億円（前年度比0.1%増）
+  // 3本柱: 文化芸術グローバル展開・DX推進215億円、文化財事業447億円、拠点整備369億円
+  // ※拠点整備369億円の大半は国立文化施設（独立行政法人運営費交付金等）
   {
     fiscalYear: 2023,
-    artsPromotion: 29_000n,      // 290億円（京都移転効果）
-    culturalProperty: 47_000n,   // 470億円
-    mediaArts: 3_000n,           // 30億円
+    artsPromotion: 21_500n,      // 215億円（文化芸術のグローバル展開・DX推進）
+    culturalProperty: 44_700n,   // 447億円（文化財事業）
+    mediaArts: 2_500n,           // 25億円
     international: 4_300n,       // 43億円（インバウンド回復）
     copyright: 1_600n,           // 16億円（AI・著作権議論活発化）
     japaneseLanguage: 4_200n,    // 42億円
     religiousAffairs: 600n,      // 6億円
-    creativeIndustry: 5_800n,    // 58億円
-    culturalFacility: 7_100n,    // 71億円
+    creativeIndustry: 3_500n,    // 35億円
+    culturalFacility: 36_900n,   // 369億円（国立文化施設の機能強化含む拠点整備）
     digitalArchive: 2_500n,      // 25億円
-    localCulture: 4_200n,        // 42億円
-    total: 109_300n,             // 1,093億円
+    localCulture: 5_400n,        // 54億円
+    total: 107_700n,             // 1,077億円  ※旧ファイル109,300は誤り
   },
+  // 出典: 文化庁令和6年度予算（案）の概要 / 美術手帖 2024/1/10
+  // https://bijutsutecho.com/magazine/news/headline/28264
+  // 総額1,062億円（前年度比0.1%増）
+  // 文化財修理・整備・活用・防災256億円、多様な文化遺産188億円=合計445億円
+  // グローバル展開・DX推進219億円（舞台芸術94億円+子供育成85億円+その他）
+  // 拠点整備・充実359億円（国立施設323億円+劇場音楽堂27億円+その他）
   {
     fiscalYear: 2024,
-    artsPromotion: 30_200n,      // 302億円（文化庁京都本格稼働）
-    culturalProperty: 48_000n,   // 480億円（能登半島地震の文化財復旧含む）
-    mediaArts: 3_100n,           // 31億円
-    international: 4_800n,       // 48億円（万博関連）
-    copyright: 1_800n,           // 18億円（AI著作権法改正準備）
-    japaneseLanguage: 4_400n,    // 44億円
-    religiousAffairs: 600n,      // 6億円
-    creativeIndustry: 6_200n,    // 62億円（クールジャパン2.0）
-    culturalFacility: 6_800n,    // 68億円
-    digitalArchive: 2_800n,      // 28億円
-    localCulture: 4_300n,        // 43億円
-    total: 113_000n,             // 1,130億円
+    artsPromotion: 21_900n,      // 219億円（グローバル展開・DX推進）
+    culturalProperty: 44_500n,   // 445億円（文化財修理256億円+多様な文化遺産188億円）
+    mediaArts: 900n,             // 9億円（メディア芸術の創造・発信プラン）
+    international: 1_500n,       // 15億円
+    copyright: 1_200n,           // 12億円（AI著作権法改正準備）
+    japaneseLanguage: 3_800n,    // 38億円
+    religiousAffairs: 500n,      // 5億円
+    creativeIndustry: 2_500n,    // 25億円
+    culturalFacility: 35_900n,   // 359億円（拠点整備: 国立施設323億円+劇場音楽堂27億円等）
+    digitalArchive: 2_000n,      // 20億円
+    localCulture: 5_100n,        // 51億円
+    total: 106_200n,             // 1,062億円  ※旧ファイル113,000は誤り
   },
+  // 出典: 文化庁令和7年度予算（案）の概要（前年度比0.1%増）
+  // https://www.bunka.go.jp/seisaku/bunkashingikai/bunka_keizai/04/05/pdf/94160801_06.pdf
+  // 総額1,063億円（概算要求1,400億円から査定）
+  // 国立文化施設373.5億円+事項要求（R7概算要求資料より）
   {
     fiscalYear: 2025,
-    artsPromotion: 31_000n,      // 310億円（大阪万博開催年）
-    culturalProperty: 48_500n,   // 485億円
-    mediaArts: 3_200n,           // 32億円
-    international: 5_500n,       // 55億円（万博文化プログラム）
-    copyright: 2_000n,           // 20億円（AI著作権対策強化）
-    japaneseLanguage: 4_500n,    // 45億円
-    religiousAffairs: 610n,      // 6.1億円
-    creativeIndustry: 6_500n,    // 65億円
-    culturalFacility: 6_500n,    // 65億円
-    digitalArchive: 3_000n,      // 30億円
-    localCulture: 3_690n,        // 36.9億円
-    total: 115_000n,             // 1,150億円
+    artsPromotion: 22_000n,      // 220億円（大阪万博開催年、グローバル展開強化）
+    culturalProperty: 44_700n,   // 447億円
+    mediaArts: 1_000n,           // 10億円
+    international: 1_500n,       // 15億円（万博文化プログラム）
+    copyright: 1_200n,           // 12億円（AI著作権対策強化）
+    japaneseLanguage: 3_800n,    // 38億円
+    religiousAffairs: 500n,      // 5億円
+    creativeIndustry: 2_500n,    // 25億円
+    culturalFacility: 36_000n,   // 360億円（国立文化施設373.5億円の当初予算ベース）
+    digitalArchive: 2_200n,      // 22億円
+    localCulture: 4_600n,        // 46億円
+    total: 106_300n,             // 1,063億円  ※旧ファイル115,000は誤り
   },
+  // 出典: 令和8年度概算要求の概要（2025年8月公表、約1,400億円要求）
+  // https://www.bunka.go.jp/seisaku/bunka_gyosei/yosan/pdf/94263701_01.pdf
+  // 当初予算は未確定のため、近年の傾向（前年度比0.1%増）から推計
   {
     fiscalYear: 2026,
-    artsPromotion: 31_500n,      // 315億円（ポスト万博の文化レガシー）
-    culturalProperty: 49_000n,   // 490億円
-    mediaArts: 3_300n,           // 33億円
-    international: 5_200n,       // 52億円
-    copyright: 2_200n,           // 22億円（AI著作権法施行）
-    japaneseLanguage: 4_600n,    // 46億円
-    religiousAffairs: 620n,      // 6.2億円
-    creativeIndustry: 6_800n,    // 68億円
-    culturalFacility: 6_300n,    // 63億円
-    digitalArchive: 3_300n,      // 33億円
-    localCulture: 4_180n,        // 41.8億円
-    total: 117_000n,             // 1,170億円
+    artsPromotion: 22_200n,      // 222億円（ポスト万博の文化レガシー）
+    culturalProperty: 44_800n,   // 448億円
+    mediaArts: 1_000n,           // 10億円
+    international: 1_500n,       // 15億円
+    copyright: 1_300n,           // 13億円（AI著作権法制度拡充）
+    japaneseLanguage: 3_900n,    // 39億円
+    religiousAffairs: 500n,      // 5億円
+    creativeIndustry: 2_600n,    // 26億円
+    culturalFacility: 36_200n,   // 362億円
+    digitalArchive: 2_300n,      // 23億円
+    localCulture: 4_200n,        // 42億円
+    total: 106_500n,             // 1,065億円（推計値）  ※旧ファイル117,000は誤り
   },
 ];
 
@@ -233,7 +285,7 @@ const CULTURAL_PROGRAM_DATA: CulturalProgramData[] = [
     name: "芸術文化振興基金",
     category: "ARTS_PROMOTION",
     description:
-      "独立行政法人日本芸術文化振興会が運営する基金。政府出資541億円と民間寄付を原資とし、舞台芸術、映画、地域文化活動等を幅広く助成。年間約1,200件の助成を実施。",
+      "独立行政法人日本芸術文化振興会が運営する基金。政府出資541億円と民間出えん金（約164億円）の計約706億円を原資とし、その運用益により舞台芸術、映画、地域文化活動等を幅広く助成。",
     budget: 3_200n,
     startYear: 1990,
     endYear: null,
@@ -246,8 +298,8 @@ const CULTURAL_PROGRAM_DATA: CulturalProgramData[] = [
     name: "日本博2.0",
     category: "ARTS_PROMOTION",
     description:
-      "「日本博」の後継事業として、日本の美と文化を国内外に発信する大型プロジェクト。2025年大阪・関西万博と連動し、全国各地で文化プログラムを展開。縄文から現代アートまで幅広くカバー。",
-    budget: 5_000n,
+      "「日本博」の後継事業として、日本の美と文化を国内外に発信する大型プロジェクト。2025年大阪・関西万博と連動し、全国各地で文化プログラムを展開。初代「日本博」は2020年度予算で45.3億円を計上。",
+    budget: 4_500n,
     startYear: 2023,
     endYear: 2026,
     targetGroup: "文化施設、自治体、民間事業者",
@@ -308,12 +360,12 @@ const CULTURAL_PROGRAM_DATA: CulturalProgramData[] = [
     isActive: true,
   },
   {
-    name: "メディア芸術振興補助金",
+    name: "メディア芸術の創造・発信プラン",
     category: "MEDIA_ARTS",
     description:
-      "メディア芸術（アニメ、マンガ、ゲーム、メディアアート）の創作・発表・普及活動を支援。文化庁メディア芸術祭の開催、クリエイター育成、国際展開を推進。2022年にメディア芸術祭は終了したが後継事業を展開。",
-    budget: 1_500n,
-    startYear: 1997,
+      "メディア芸術（アニメ、マンガ、ゲーム、メディアアート）の創作・発表・普及活動を支援。2022年に文化庁メディア芸術祭は終了。後継として「メディア芸術の創造・発信プラン」を展開。メディア芸術ナショナルセンター（仮称）の整備も検討中。令和6年度予算は約9億円。",
+    budget: 900n,
+    startYear: 2023,
     endYear: null,
     targetGroup: "メディア芸術クリエイター、制作会社、美術館等",
     ministry: "文化庁",
@@ -415,8 +467,8 @@ const CULTURAL_PROGRAM_DATA: CulturalProgramData[] = [
     name: "アーツフォー・ザ・フューチャー",
     category: "ARTS_PROMOTION",
     description:
-      "コロナ禍で活動が停滞した文化芸術活動の再開を支援する緊急支援事業。フリーランスの芸術家、中小規模の文化団体への活動支援金を給付。2020-2023年度で累計約950億円を措置（補正予算含む）。",
-    budget: 5_000n,
+      "コロナ禍で活動が停滞した文化芸術活動の再開を支援する緊急支援事業。フリーランスの芸術家、中小規模の文化団体への活動支援金を給付。主に令和2年度第3次補正予算（551億円）等で措置。補正予算事業のため当初予算とは別枠。",
+    budget: null,
     startYear: 2020,
     endYear: 2023,
     targetGroup: "フリーランス芸術家、文化芸術団体",

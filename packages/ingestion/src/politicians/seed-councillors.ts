@@ -177,7 +177,7 @@ const LDP_MEMBERS: CouncillorData[] = [
   { name: "山谷えり子", nameKana: "ヤマタニ エリコ", party: "自由民主党", district: "比例代表", prefecture: null },
 
   // === 無所属で自民会派に参加 ===
-  { name: "寺田静", nameKana: "テラダ シズカ", party: "自由民主党", district: "秋田県", prefecture: "秋田県" },
+  { name: "寺田静", nameKana: "テラダ シズカ", party: "無所属", district: "秋田県", prefecture: "秋田県" },
   { name: "出川桃子", nameKana: "デガワ モモコ", party: "自由民主党", district: "鳥取県・島根県", prefecture: null },
   { name: "宮本和宏", nameKana: "ミヤモト カズヒロ", party: "自由民主党", district: "滋賀県", prefecture: "滋賀県" },
 ];
@@ -207,7 +207,7 @@ const CDP_MEMBERS: CouncillorData[] = [
   { name: "斎藤嘉隆", nameKana: "サイトウ ヨシタカ", party: "立憲民主党", district: "愛知県", prefecture: "愛知県" },
   { name: "田島麻衣子", nameKana: "タジマ マイコ", party: "立憲民主党", district: "愛知県", prefecture: "愛知県" },
   { name: "小島とも子", nameKana: "コジマ トモコ", party: "立憲民主党", district: "三重県", prefecture: "三重県" },
-  { name: "泉房穂", nameKana: "イズミ フサホ", party: "立憲民主党", district: "兵庫県", prefecture: "兵庫県" },
+  { name: "泉房穂", nameKana: "イズミ フサホ", party: "無所属", district: "兵庫県", prefecture: "兵庫県" },
   { name: "三上えり", nameKana: "ミカミ エリ", party: "立憲民主党", district: "広島県", prefecture: "広島県" },
   { name: "森本真治", nameKana: "モリモト シンジ", party: "立憲民主党", district: "広島県", prefecture: "広島県" },
   { name: "広田一", nameKana: "ヒロタ ハジメ", party: "立憲民主党", district: "徳島県・高知県", prefecture: null },
@@ -395,8 +395,8 @@ const HOSHU_MEMBERS: CouncillorData[] = [
 // ============================================
 
 const OKINAWA_MEMBERS: CouncillorData[] = [
-  { name: "伊波洋一", nameKana: "イハ ヨウイチ", party: "沖縄社会大衆党", district: "沖縄県", prefecture: "沖縄県" },
-  { name: "高良沙哉", nameKana: "タカラ サヤ", party: "沖縄社会大衆党", district: "沖縄県", prefecture: "沖縄県" },
+  { name: "伊波洋一", nameKana: "イハ ヨウイチ", party: "無所属", district: "沖縄県", prefecture: "沖縄県" },
+  { name: "高良沙哉", nameKana: "タカラ サチカ", party: "無所属", district: "沖縄県", prefecture: "沖縄県" },
 ];
 
 // ============================================
@@ -422,12 +422,12 @@ const SDP_MEMBERS: CouncillorData[] = [
 // ============================================
 
 const INDEPENDENT_MEMBERS: CouncillorData[] = [
-  { name: "関口昌一", nameKana: "セキグチ マサカズ", party: "無所属", district: "埼玉県", prefecture: "埼玉県" },
+  { name: "関口昌一", nameKana: "セキグチ マサカズ", party: "自由民主党", district: "埼玉県", prefecture: "埼玉県" },    // 参議院議長のため会派離脱
   { name: "平山佐知子", nameKana: "ヒラヤマ サチコ", party: "無所属", district: "静岡県", prefecture: "静岡県" },
-  { name: "福山哲郎", nameKana: "フクヤマ テツロウ", party: "無所属", district: "京都府", prefecture: "京都府" },
+  { name: "福山哲郎", nameKana: "フクヤマ テツロウ", party: "立憲民主党", district: "京都府", prefecture: "京都府" },    // 参議院副議長のため会派離脱
   { name: "ながえ孝子", nameKana: "ナガエ タカコ", party: "無所属", district: "愛媛県", prefecture: "愛媛県" },
   { name: "望月良男", nameKana: "モチヅキ ヨシオ", party: "無所属", district: "和歌山県", prefecture: "和歌山県" },
-  { name: "齊藤健一郎", nameKana: "サイトウ ケンイチロウ", party: "無所属", district: "比例代表", prefecture: null },
+  { name: "齊藤健一郎", nameKana: "サイトウ ケンイチロウ", party: "無所属", district: "比例代表", prefecture: null },    // 元NHK党、離党して無所属
 ];
 
 // ============================================

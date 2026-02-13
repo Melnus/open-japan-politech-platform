@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@ojpp/ui";
+import { StaggerGrid, StaggerItem, motion } from "@ojpp/ui";
 import { useCallback, useEffect, useState } from "react";
 import { FilterBar } from "@/components/filter-bar";
 import { SearchInput } from "@/components/search-input";
@@ -74,7 +74,7 @@ export function OrganizationList() {
 
   return (
     <div>
-      <div className="mb-6 space-y-4">
+      <div className="mb-8 space-y-4">
         <SearchInput placeholder="団体名で検索..." onSearch={handleSearch} defaultValue={search} />
         <FilterBar
           filters={[
@@ -99,55 +99,80 @@ export function OrganizationList() {
       </div>
 
       {!filteredData ? (
-        <p className="text-center text-gray-500">読み込み中...</p>
+        <div className="glass-card rounded-xl p-12">
+          <p className="text-center text-[#8b949e]">読み込み中...</p>
+        </div>
       ) : filteredData.length === 0 ? (
-        <p className="text-center text-gray-500">該当する団体がありません</p>
+        <div className="glass-card rounded-xl p-12">
+          <p className="text-center text-[#8b949e]">該当する団体がありません</p>
+        </div>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredData.map((org) => (
-              <a key={org.id} href={`/organizations/${org.id}`}>
-                <Card className="transition-shadow hover:shadow-md">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold">{org.name}</h3>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {ORG_TYPE_LABELS[org.type] ?? org.type}
-                      </p>
-                    </div>
-                    {org.party && (
-                      <span
-                        className="rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                        style={{ backgroundColor: org.party.color ?? "#6B7280" }}
-                      >
-                        {org.party.shortName ?? org.party.name}
-                      </span>
-                    )}
-                  </div>
-                  {org.address && <p className="mt-2 text-xs text-gray-400">{org.address}</p>}
-                </Card>
-              </a>
-            ))}
-          </div>
+          <StaggerGrid className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {filteredData.map((org) => {
+              const partyColor = org.party?.color ?? "#6B7280";
+              return (
+                <StaggerItem key={org.id}>
+                  <a href={`/organizations/${org.id}`} className="block">
+                    <motion.div
+                      className="group relative overflow-hidden rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] backdrop-blur-sm transition-all duration-300"
+                      whileHover={{
+                        scale: 1.02,
+                        boxShadow: `0 0 20px rgba(255, 107, 53, 0.1)`,
+                        transition: { duration: 0.2 },
+                      }}
+                    >
+                      {/* Shimmer overlay on hover */}
+                      <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                      <div className="p-6">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="truncate font-semibold text-[#f0f0f0]">{org.name}</h3>
+                            <p className="mt-1 text-sm text-[#8b949e]">
+                              {ORG_TYPE_LABELS[org.type] ?? org.type}
+                            </p>
+                          </div>
+                          {org.party && (
+                            <span
+                              className="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium text-white"
+                              style={{
+                                backgroundColor: partyColor,
+                                boxShadow: `0 0 8px ${partyColor}40`,
+                              }}
+                            >
+                              {org.party.shortName ?? org.party.name}
+                            </span>
+                          )}
+                        </div>
+                        {org.address && (
+                          <p className="mt-2 text-xs text-[#6e7681]">{org.address}</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  </a>
+                </StaggerItem>
+              );
+            })}
+          </StaggerGrid>
 
           {data && data.pagination.totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-2">
+            <div className="mt-10 flex items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
-                className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+                className="rounded-lg border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.04)] px-4 py-2 text-sm font-medium text-[#c9d1d9] transition-all hover:border-[rgba(255,107,53,0.3)] hover:bg-[rgba(255,107,53,0.08)] disabled:opacity-30"
               >
                 前へ
               </button>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-[#8b949e]">
                 {page} / {data.pagination.totalPages}
               </span>
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.min(data.pagination.totalPages, p + 1))}
                 disabled={page === data.pagination.totalPages}
-                className="rounded border px-3 py-1 text-sm disabled:opacity-50"
+                className="rounded-lg border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.04)] px-4 py-2 text-sm font-medium text-[#c9d1d9] transition-all hover:border-[rgba(255,107,53,0.3)] hover:bg-[rgba(255,107,53,0.08)] disabled:opacity-30"
               >
                 次へ
               </button>

@@ -41,13 +41,14 @@ export function BudgetTrendChart({ data, categoryKeys, colorMap }: TrendChartPro
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis dataKey="year" tick={{ fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis dataKey="year" tick={{ fontSize: 12, fill: "#6B7280" }} stroke="rgba(255,255,255,0.06)" />
             <YAxis
               tickFormatter={(v: number) =>
                 v >= 10000 ? `${(v / 10000).toFixed(0)}兆` : `${v.toLocaleString()}億`
               }
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "#6B7280" }}
+              stroke="rgba(255,255,255,0.06)"
             />
             <Tooltip
               formatter={(value: number, name: string) => [
@@ -58,11 +59,17 @@ export function BudgetTrendChart({ data, categoryKeys, colorMap }: TrendChartPro
               ]}
               contentStyle={{
                 borderRadius: "8px",
-                border: "1px solid #E5E7EB",
-                boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                backgroundColor: "rgba(15, 23, 42, 0.95)",
+                color: "#E5E7EB",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
               }}
+              itemStyle={{ color: "#D1D5DB" }}
+              labelStyle={{ color: "#9CA3AF" }}
             />
-            <Legend />
+            <Legend
+              wrapperStyle={{ color: "#9CA3AF", fontSize: "12px" }}
+            />
             {categoryKeys.map((key, i) => (
               <Area
                 key={key}
@@ -119,10 +126,10 @@ export function BudgetPieChart({ data }: { data: PieData[] }) {
               label={({ name, percent }: { name: string; percent: number }) =>
                 `${name} ${(percent * 100).toFixed(0)}%`
               }
-              labelLine={{ stroke: "#9CA3AF", strokeWidth: 1 }}
+              labelLine={{ stroke: "#4B5563", strokeWidth: 1 }}
             >
               {data.map((d) => (
-                <Cell key={d.name} fill={`url(#pie-${d.name})`} stroke="white" strokeWidth={2} />
+                <Cell key={d.name} fill={`url(#pie-${d.name})`} stroke="rgba(255,255,255,0.05)" strokeWidth={2} />
               ))}
             </Pie>
             <Tooltip
@@ -134,9 +141,13 @@ export function BudgetPieChart({ data }: { data: PieData[] }) {
               ]}
               contentStyle={{
                 borderRadius: "8px",
-                border: "1px solid #E5E7EB",
-                boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                backgroundColor: "rgba(15, 23, 42, 0.95)",
+                color: "#E5E7EB",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
               }}
+              itemStyle={{ color: "#D1D5DB" }}
+              labelStyle={{ color: "#9CA3AF" }}
             />
           </PieChart>
         </ResponsiveContainer>

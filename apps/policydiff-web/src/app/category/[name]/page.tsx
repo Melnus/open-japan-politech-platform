@@ -28,46 +28,46 @@ export default async function CategoryPage({ params }: Props) {
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <div className="mb-8">
-        <h2 className="mb-2 text-3xl font-bold">{categoryName}</h2>
-        <p className="text-gray-600">
-          全{policies.length}政党の「{categoryName}」に関する政策を一覧で比較できます。
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950">
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <div className="mb-8">
+          <h2 className="mb-2 text-3xl font-bold text-white">{categoryName}</h2>
+          <p className="text-slate-400">
+            全{policies.length}政党の「{categoryName}」に関する政策を一覧で比較できます。
+          </p>
+        </div>
 
-      <div className="mb-8 flex flex-wrap gap-2">
-        {allCategories.map((cat) => (
-          <a
-            key={cat.category}
-            href={`/category/${encodeURIComponent(cat.category)}`}
-            className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-              cat.category === categoryName
-                ? "border-green-600 bg-green-50 font-medium text-green-700"
-                : "hover:bg-gray-50"
-            }`}
-          >
-            {cat.category}
-          </a>
-        ))}
-      </div>
+        <div className="mb-8 flex flex-wrap gap-2">
+          {allCategories.map((cat) => (
+            <a
+              key={cat.category}
+              href={`/category/${encodeURIComponent(cat.category)}`}
+              className={`filter-chip ${
+                cat.category === categoryName ? "filter-chip--active" : ""
+              }`}
+            >
+              {cat.category}
+            </a>
+          ))}
+        </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {policies.map((policy) => (
-          <PolicyCard
-            key={policy.id}
-            id={policy.id}
-            title={policy.title}
-            category={policy.category}
-            partyName={policy.party?.name}
-            partyColor={policy.party?.color}
-            status={policy.status}
-            contentPreview={policy.content
-              .slice(0, 100)
-              .replace(/[#*\n]/g, " ")
-              .trim()}
-          />
-        ))}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {policies.map((policy) => (
+            <PolicyCard
+              key={policy.id}
+              id={policy.id}
+              title={policy.title}
+              category={policy.category}
+              partyName={policy.party?.name}
+              partyColor={policy.party?.color}
+              status={policy.status}
+              contentPreview={policy.content
+                .slice(0, 100)
+                .replace(/[#*\n]/g, " ")
+                .trim()}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

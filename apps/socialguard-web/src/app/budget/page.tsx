@@ -1,5 +1,5 @@
 import { prisma } from "@ojpp/db";
-import { Card, HeroSection, FadeIn } from "@ojpp/ui";
+import { FadeIn } from "@ojpp/ui";
 import { unstable_noStore as noStore } from "next/cache";
 import { BudgetTrendChart, BudgetPieChart } from "./budget-charts";
 
@@ -58,21 +58,26 @@ export default async function BudgetPage() {
 
   if (budgets.length === 0) {
     return (
-      <div>
-        <HeroSection
-          title="予算推移"
-          subtitle="社会保障関係費の年度別推移を可視化"
-          gradientFrom="from-emerald-500"
-          gradientTo="to-teal-600"
-        />
-        <div className="mx-auto max-w-7xl px-6 py-12">
-          <Card>
+      <div className="min-h-screen">
+        <section className="relative overflow-hidden bg-gradient-to-br from-teal-950 to-slate-950 py-16 pb-20">
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }} />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+          <div className="relative mx-auto max-w-7xl px-8">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">予算推移</h1>
+            <p className="mt-3 text-gray-400">社会保障関係費の年度別推移を可視化</p>
+          </div>
+        </section>
+        <div className="mx-auto max-w-7xl px-8 py-12">
+          <div className="dark-card p-8">
             <p className="text-center text-gray-500">
               社会保障予算データがまだありません。
               <br />
-              <code className="text-xs">pnpm ingest:social-security</code> を実行してデータを投入してください。
+              <code className="text-xs text-gray-400">pnpm ingest:social-security</code> を実行してデータを投入してください。
             </p>
-          </Card>
+          </div>
         </div>
       </div>
     );
@@ -82,20 +87,17 @@ export default async function BudgetPage() {
   const years = [...new Set(budgets.map((b) => b.fiscalYear))].sort();
   const categories = [...new Set(budgets.filter((b) => b.category !== "TOTAL").map((b) => b.category))];
 
-  // Stacked area chart data: each row is a year with category amounts
   const trendData = years.map((year) => {
     const row: Record<string, number | string> = { year: `${year}` };
     for (const cat of categories) {
       const entry = budgets.find((b) => b.fiscalYear === year && b.category === cat);
       row[categoryLabel(cat)] = entry ? Number(entry.amount) : 0;
     }
-    // Also add total
     const totalEntry = budgets.find((b) => b.fiscalYear === year && b.category === "TOTAL");
     row["合計"] = totalEntry ? Number(totalEntry.amount) : 0;
     return row;
   });
 
-  // Latest year pie chart data
   const latestYear = years[years.length - 1];
   const pieData = budgets
     .filter((b) => b.fiscalYear === latestYear && b.category !== "TOTAL")
@@ -111,71 +113,75 @@ export default async function BudgetPage() {
     categories.map((c) => [categoryLabel(c), CATEGORY_COLORS[c] ?? "#6B7280"])
   );
 
-  // Year-over-year table
   const totalByYear = years.map((year) => {
     const total = budgets.find((b) => b.fiscalYear === year && b.category === "TOTAL");
     return { year, amount: total ? Number(total.amount) : 0 };
   });
 
   return (
-    <div>
-      <HeroSection
-        title="予算推移"
-        subtitle="社会保障関係費の年度別推移を可視化"
-        gradientFrom="from-emerald-500"
-        gradientTo="to-teal-600"
-      >
-        <div className="flex flex-wrap gap-4 text-sm text-white/70">
-          <span>期間: {years[0]}〜{years[years.length - 1]}年度</span>
-          <span>カテゴリ: {categories.length}分野</span>
+    <div className="min-h-screen">
+      {/* ====== Hero ====== */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-teal-950 to-slate-950 py-16 pb-20">
+        <div className="absolute inset-0 opacity-5" style={{
+          backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/30 to-transparent" />
+        <div className="relative mx-auto max-w-7xl px-8">
+          <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-white md:text-4xl">予算推移</h1>
+          <p className="mb-4 text-gray-400">社会保障関係費の年度別推移を可視化</p>
+          <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+            <span>期間: {years[0]}〜{years[years.length - 1]}年度</span>
+            <span>カテゴリ: {categories.length}分野</span>
+          </div>
         </div>
-      </HeroSection>
+      </section>
 
-      <div className="mx-auto max-w-7xl px-6 py-12 space-y-12">
+      <div className="mx-auto max-w-7xl px-8 py-10 space-y-10">
         {/* ====== Stacked Area Chart ====== */}
         <FadeIn>
           <section>
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
-              <span className="inline-block h-6 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500" />
+            <h2 className="mb-6 flex items-center gap-3 text-xl font-bold text-white">
+              <span className="inline-block h-5 w-1 rounded-full bg-gradient-to-b from-emerald-400 to-teal-500" />
               分野別予算推移
             </h2>
-            <Card padding="lg">
+            <div className="dark-card p-8">
               <BudgetTrendChart
                 data={trendData}
                 categoryKeys={categoryKeys}
                 colorMap={colorMap}
               />
-            </Card>
+            </div>
           </section>
         </FadeIn>
 
         {/* ====== Pie Chart ====== */}
         <FadeIn delay={0.1}>
           <section>
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
-              <span className="inline-block h-6 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500" />
+            <h2 className="mb-6 flex items-center gap-3 text-xl font-bold text-white">
+              <span className="inline-block h-5 w-1 rounded-full bg-gradient-to-b from-emerald-400 to-teal-500" />
               {latestYear}年度 構成比
             </h2>
-            <Card padding="lg">
+            <div className="dark-card p-8">
               <BudgetPieChart data={pieData} />
-            </Card>
+            </div>
           </section>
         </FadeIn>
 
         {/* ====== Year-over-Year Table ====== */}
         <FadeIn delay={0.2}>
           <section>
-            <h2 className="mb-6 flex items-center gap-3 text-2xl font-bold">
-              <span className="inline-block h-6 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500" />
+            <h2 className="mb-6 flex items-center gap-3 text-xl font-bold text-white">
+              <span className="inline-block h-5 w-1 rounded-full bg-gradient-to-b from-emerald-400 to-teal-500" />
               年度別合計
             </h2>
-            <div className="overflow-x-auto rounded-xl border bg-white shadow-card">
-              <table className="w-full text-left text-sm">
-                <thead className="border-b bg-gray-50/80">
+            <div className="overflow-x-auto rounded-xl dark-card dark-scrollbar">
+              <table className="w-full text-left text-sm dark-table">
+                <thead>
                   <tr>
-                    <th className="px-4 py-3 font-medium text-gray-600">年度</th>
-                    <th className="px-4 py-3 text-right font-medium text-gray-600">社会保障関係費</th>
-                    <th className="px-4 py-3 text-right font-medium text-gray-600">前年比</th>
+                    <th className="px-6 py-4 font-medium">年度</th>
+                    <th className="px-6 py-4 text-right font-medium">社会保障関係費</th>
+                    <th className="px-6 py-4 text-right font-medium">前年比</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -183,24 +189,21 @@ export default async function BudgetPage() {
                     const prev = i > 0 ? totalByYear[i - 1].amount : null;
                     const change = prev ? ((row.amount - prev) / prev) * 100 : null;
                     return (
-                      <tr
-                        key={row.year}
-                        className="border-b last:border-0 transition-colors hover:bg-emerald-50/50"
-                      >
-                        <td className="px-4 py-3 font-medium">{row.year}年度</td>
-                        <td className="px-4 py-3 text-right font-bold">
+                      <tr key={row.year}>
+                        <td className="px-6 py-4 font-medium text-gray-300">{row.year}年度</td>
+                        <td className="px-6 py-4 text-right font-bold text-white">
                           {row.amount >= 10000
                             ? `${(row.amount / 10000).toFixed(2)}兆円`
                             : `${row.amount.toLocaleString()}億円`}
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-6 py-4 text-right">
                           {change != null ? (
                             <span
                               className={
                                 change > 0
-                                  ? "text-red-600"
+                                  ? "text-red-400"
                                   : change < 0
-                                    ? "text-blue-600"
+                                    ? "text-blue-400"
                                     : "text-gray-500"
                               }
                             >
@@ -208,7 +211,7 @@ export default async function BudgetPage() {
                               {change.toFixed(1)}%
                             </span>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-gray-600">-</span>
                           )}
                         </td>
                       </tr>

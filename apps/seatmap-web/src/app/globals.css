@@ -1,2 +1,42 @@
 @import "tailwindcss";
 @import "@ojpp/ui/theme.css";
+
+/* ===== SeatMap Dark Theme ===== */
+
+/* Background gradient (subtle, like SVG preview) */
+body {
+  background: linear-gradient(135deg, #020617 0%, #0f0a1a 50%, #0a0f1a 100%);
+  background-attachment: fixed;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(220, 38, 38, 0.3);
+  color: white;
+}
+
+/* Smooth transitions for theme elements */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Table row hover animation */
+table tbody tr {
+  transition: background-color 0.15s ease;
+}

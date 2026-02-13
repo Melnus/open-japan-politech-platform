@@ -3,7 +3,7 @@
  *
  * データソース:
  *   - 財務省「一般会計歳出予算」社会保障関係費
- *     https://www.mof.go.jp/budget/budger_workflow/budget/
+ *     https://www.mof.go.jp/policy/budget/budger_workflow/budget/
  *   - 厚生労働省「社会保障関係予算」
  *     https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000164769.html
  *   - こども家庭庁「こども・子育て支援加速化プラン」（2024年〜）
@@ -49,7 +49,9 @@ interface SocialSecurityProgramData {
   description: string;
   eligibility: string | null;
   benefit: string | null;
+  /** 制度全体の予算規模（億円、一般会計+特別会計含む概算値） */
   budget: bigint | null;
+  /** 受給者数（万人） */
   recipients: number | null;
   startYear: number | null;
   lastReformed: number | null;
@@ -83,103 +85,143 @@ interface SocialSecurityStanceData {
 // ============================================
 
 /**
- * 社会保障関係費の推移
+ * 社会保障関係費の推移（一般会計当初予算ベース）
  *
  * 出典:
  *   - 財務省「予算のポイント」各年度版
  *   - 厚生労働省「社会保障関係予算のポイント」
+ *   - 参議院調査室「社会保障関係予算」各年度分析レポート
  *   - 高齢化の進行により毎年約5,000-8,000億円の自然増
- *   - 2020年はコロナ対応で大幅増（補正予算含む）
  *   - 2024年以降はこども家庭庁設置・加速化プランで子育て支援が急増
+ *
+ * カテゴリと公式分類の対応:
+ *   pension     → 年金給付費
+ *   healthcare  → 医療給付費 + 保健衛生対策費
+ *   longTermCare→ 介護給付費
+ *   welfare     → 生活扶助等社会福祉費のうち生活保護・一般福祉
+ *   childSupport→ 少子化対策費
+ *   employment  → 雇用労災対策費
+ *   disability  → 生活扶助等社会福祉費のうち障害福祉サービス関連
+ *   total       → 社会保障関係費合計（公式値）
+ *
+ * 注意:
+ *   - 公式分類の「生活扶助等社会福祉費」には障害福祉サービス費が含まれるため
+ *     welfare + disability ≒ 生活扶助等社会福祉費
+ *   - 保健衛生対策費（約4,000-5,000億円）はhealthcareに含めて計上
+ *   - 2026年度は概算要求・推計値
  */
 const SOCIAL_SECURITY_BUDGET_DATA: SocialSecurityBudgetYear[] = [
   {
+    // 平成31年度（2019年度）当初予算
+    // 公式合計: 340,593億円（34兆593億円）
+    // 参照: 参議院調査室「平成31年度社会保障関係予算」
     fiscalYear: 2019,
-    pension: 121_000n,       // 12.1兆円 - 基礎年金国庫負担等
-    healthcare: 120_000n,    // 12兆円 - 医療給付費、後期高齢者支援金等
-    longTermCare: 32_000n,   // 3.2兆円 - 介護給付費国庫負担
-    welfare: 40_000n,        // 4兆円 - 生活保護費、社会福祉費
-    childSupport: 25_000n,   // 2.5兆円 - 児童手当、保育所運営費等
-    employment: 2_500n,      // 2,500億円 - 雇用保険国庫負担等
-    disability: 19_500n,     // 1.95兆円 - 障害者総合支援、特別児童扶養手当
-    total: 360_000n,         // 36兆円
+    pension: 120_488n,       // 年金給付費 12兆488億円
+    healthcare: 122_370n,    // 医療給付費11兆8,543億円 + 保健衛生対策費3,827億円
+    longTermCare: 32_101n,   // 介護給付費 3兆2,101億円
+    welfare: 25_206n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 23_440n,   // 少子化対策費 2兆3,440億円
+    employment: 388n,        // 雇用労災対策費 388億円
+    disability: 16_600n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 340_593n,         // 34兆593億円（公式値）
   },
   {
+    // 令和2年度（2020年度）当初予算
+    // 公式合計: 358,608億円（35兆8,608億円）
+    // 参照: 参議院調査室「令和2年度社会保障関係予算」
     fiscalYear: 2020,
-    pension: 122_000n,       // 12.2兆円
-    healthcare: 122_000n,    // 12.2兆円（コロナ医療体制整備）
-    longTermCare: 33_000n,   // 3.3兆円
-    welfare: 45_000n,        // 4.5兆円（コロナ困窮者支援で増）
-    childSupport: 26_000n,   // 2.6兆円
-    employment: 8_000n,      // 8,000億円（雇用調整助成金等コロナ対応で急増）
-    disability: 20_000n,     // 2兆円
-    total: 376_000n,         // 37.6兆円（コロナ対応で大幅増）
+    pension: 125_232n,       // 年金給付費 12兆5,232億円（+3.9%）
+    healthcare: 126_730n,    // 医療給付費12兆1,546億円 + 保健衛生対策費5,184億円
+    longTermCare: 33_838n,   // 介護給付費 3兆3,838億円（+5.4%）
+    welfare: 24_000n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 30_387n,   // 少子化対策費 3兆387億円（+28.9%、幼児教育無償化通年化）
+    employment: 395n,        // 雇用労災対策費 395億円（当初予算ベース）
+    disability: 18_026n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 358_608n,         // 35兆8,608億円（公式値）
   },
   {
+    // 令和3年度（2021年度）当初予算
+    // 公式合計: 358,421億円（35兆8,421億円）
+    // 参照: 財務省「令和3年度社会保障関係予算のポイント」
     fiscalYear: 2021,
-    pension: 123_000n,       // 12.3兆円
-    healthcare: 123_500n,    // 12.35兆円
-    longTermCare: 34_000n,   // 3.4兆円
-    welfare: 43_500n,        // 4.35兆円
-    childSupport: 26_500n,   // 2.65兆円
-    employment: 7_500n,      // 7,500億円（コロナ対応継続）
-    disability: 20_500n,     // 2.05兆円
-    total: 378_500n,         // 37.85兆円
+    pension: 126_116n,       // 年金給付費 12兆6,116億円
+    healthcare: 124_387n,    // 医療給付費11兆9,637億円 + 保健衛生対策費4,750億円
+    longTermCare: 34_662n,   // 介護給付費 3兆4,662億円
+    welfare: 24_400n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 29_478n,   // 少子化対策費 2兆9,478億円
+    employment: 400n,        // 雇用労災対策費 400億円
+    disability: 18_978n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 358_421n,         // 35兆8,421億円（公式値）
   },
   {
+    // 令和4年度（2022年度）当初予算
+    // 公式合計: 362,735億円（36兆2,735億円）
+    // 参照: 財務省「令和4年度社会保障関係予算のポイント」
     fiscalYear: 2022,
-    pension: 124_000n,       // 12.4兆円
-    healthcare: 124_000n,    // 12.4兆円
-    longTermCare: 35_000n,   // 3.5兆円
-    welfare: 42_000n,        // 4.2兆円（コロナ特例縮小）
-    childSupport: 27_000n,   // 2.7兆円
-    employment: 5_000n,      // 5,000億円（雇調金縮小）
-    disability: 21_000n,     // 2.1兆円
-    total: 378_000n,         // 37.8兆円
+    pension: 127_505n,       // 年金給付費 12兆7,505億円
+    healthcare: 125_324n,    // 医療給付費12兆854億円 + 保健衛生対策費4,470億円
+    longTermCare: 35_843n,   // 介護給付費 3兆5,843億円
+    welfare: 23_400n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 30_224n,   // 少子化対策費 3兆224億円
+    employment: 435n,        // 雇用労災対策費 435億円
+    disability: 20_004n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 362_735n,         // 36兆2,735億円（公式値）
   },
   {
+    // 令和5年度（2023年度）当初予算
+    // 公式合計: 368,889億円（36兆8,889億円）
+    // 参照: 参議院調査室「令和5年度社会保障関係予算」
     fiscalYear: 2023,
-    pension: 125_500n,       // 12.55兆円
-    healthcare: 125_000n,    // 12.5兆円
-    longTermCare: 36_000n,   // 3.6兆円
-    welfare: 41_000n,        // 4.1兆円
-    childSupport: 28_500n,   // 2.85兆円（出産育児一時金50万円に増額）
-    employment: 3_500n,      // 3,500億円
-    disability: 21_500n,     // 2.15兆円
-    total: 381_000n,         // 38.1兆円
+    pension: 130_857n,       // 年金給付費 13兆857億円
+    healthcare: 126_017n,    // 医療給付費12兆1,517億円 + 保健衛生対策費4,500億円
+    longTermCare: 36_809n,   // 介護給付費 3兆6,809億円
+    welfare: 22_340n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 31_412n,   // 少子化対策費 3兆1,412億円（出産育児一時金50万円に増額）
+    employment: 447n,        // 雇用労災対策費 447億円
+    disability: 21_007n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 368_889n,         // 36兆8,889億円（公式値）
   },
   {
+    // 令和6年度（2024年度）当初予算
+    // 公式合計: 377,193億円（37兆7,193億円）
+    // 参照: 財務省「令和6年度社会保障関係予算のポイント」
     fiscalYear: 2024,
-    pension: 127_000n,       // 12.7兆円
-    healthcare: 126_000n,    // 12.6兆円
-    longTermCare: 37_000n,   // 3.7兆円
-    welfare: 41_000n,        // 4.1兆円
-    childSupport: 33_000n,   // 3.3兆円（こども家庭庁・加速化プラン本格化）
-    employment: 3_000n,      // 3,000億円
-    disability: 22_000n,     // 2.2兆円
-    total: 389_000n,         // 38.9兆円
+    pension: 134_020n,       // 年金給付費 13兆4,020億円（+2.4%）
+    healthcare: 126_810n,    // 医療給付費12兆2,366億円 + 保健衛生対策費4,444億円
+    longTermCare: 37_188n,   // 介護給付費 3兆7,188億円（+1.0%）
+    welfare: 22_312n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 33_823n,   // 少子化対策費 3兆3,823億円（+7.7%、加速化プラン本格化）
+    employment: 440n,        // 雇用労災対策費 440億円
+    disability: 22_600n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 377_193n,         // 37兆7,193億円（公式値）
   },
   {
+    // 令和7年度（2025年度）政府案
+    // 公式合計: 382,778億円（38兆2,778億円）
+    // 参照: 財務省「令和7年度社会保障関係予算のポイント」
     fiscalYear: 2025,
-    pension: 129_000n,       // 12.9兆円（2025年問題: 団塊世代全員75歳以上）
-    healthcare: 128_000n,    // 12.8兆円（後期高齢者医療費増）
-    longTermCare: 38_500n,   // 3.85兆円（要介護者増加）
-    welfare: 41_000n,        // 4.1兆円
-    childSupport: 35_000n,   // 3.5兆円（児童手当拡充・高校無償化拡大）
-    employment: 2_800n,      // 2,800億円
-    disability: 22_700n,     // 2.27兆円
-    total: 397_000n,         // 39.7兆円
+    pension: 136_916n,       // 年金給付費 13兆6,916億円（+2.2%、2025年問題: 団塊世代全員75歳以上）
+    healthcare: 127_642n,    // 医療給付費12兆3,208億円 + 保健衛生対策費4,434億円
+    longTermCare: 37_274n,   // 介護給付費 3兆7,274億円（+0.2%）
+    welfare: 21_875n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉
+    childSupport: 35_213n,   // 少子化対策費 3兆5,213億円（+4.1%、児童手当拡充）
+    employment: 458n,        // 雇用労災対策費 458億円（+4.1%）
+    disability: 23_400n,     // 障害福祉サービス費（生活扶助等社会福祉費の一部）
+    total: 382_778n,         // 38兆2,778億円（公式値）
   },
   {
+    // 令和8年度（2026年度）推計
+    // 合計は自然増5,500億円程度を見込んだ推計値
+    // 注意: 概算要求段階・推計値であり確定値ではない
     fiscalYear: 2026,
-    pension: 131_000n,       // 13.1兆円
-    healthcare: 130_000n,    // 13兆円
-    longTermCare: 39_500n,   // 3.95兆円
-    welfare: 41_000n,        // 4.1兆円
-    childSupport: 36_500n,   // 3.65兆円
-    employment: 2_700n,      // 2,700億円
-    disability: 23_300n,     // 2.33兆円
-    total: 404_000n,         // 40.4兆円
+    pension: 139_500n,       // 年金給付費推計 13兆9,500億円（年金スライド見込み）
+    healthcare: 129_000n,    // 医療給付費推計 + 保健衛生対策費
+    longTermCare: 37_800n,   // 介護給付費推計 3兆7,800億円
+    welfare: 21_600n,        // 生活扶助等社会福祉費のうち生活保護・一般福祉推計
+    childSupport: 36_500n,   // 少子化対策費推計 3兆6,500億円（加速化プラン継続）
+    employment: 478n,        // 雇用労災対策費推計
+    disability: 23_900n,     // 障害福祉サービス費推計
+    total: 388_778n,         // 38兆8,778億円（推計値: 前年度+約6,000億円）
   },
 ];
 
@@ -1309,14 +1351,14 @@ export async function seedSocialSecurity(): Promise<void> {
         update: {
           amount: entry.amount,
           description: entry.description,
-          sourceUrl: "https://www.mof.go.jp/budget/budger_workflow/budget/",
+          sourceUrl: "https://www.mof.go.jp/policy/budget/budger_workflow/budget/",
         },
         create: {
           fiscalYear: yearData.fiscalYear,
           category: entry.category as "PENSION" | "HEALTHCARE" | "LONG_TERM_CARE" | "WELFARE" | "CHILD_SUPPORT" | "EMPLOYMENT" | "DISABILITY" | "TOTAL",
           amount: entry.amount,
           description: entry.description,
-          sourceUrl: "https://www.mof.go.jp/budget/budger_workflow/budget/",
+          sourceUrl: "https://www.mof.go.jp/policy/budget/budger_workflow/budget/",
         },
       });
       budgetCount++;

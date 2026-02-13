@@ -1,2 +1,16 @@
 @import "tailwindcss";
 @import "@ojpp/ui/theme.css";
+
+@theme {
+  /* Admin Dark Theme */
+  --color-admin-bg: #0f1117;
+  --color-admin-sidebar: #161822;
+  --color-admin-card: #1c1e2e;
+  --color-admin-card-hover: #232538;
+  --color-admin-border: #2a2d3e;
+  --color-admin-text: #e4e5eb;
+  --color-admin-text-muted: #8b8fa3;
+  --color-admin-text-dim: #5a5e73;
+  --color-admin-accent: #7c3aed;
+  --color-admin-accent-light: rgba(124, 58, 237, 0.12);
+}

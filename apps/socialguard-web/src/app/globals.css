@@ -1,2 +1,115 @@
 @import "tailwindcss";
 @import "@ojpp/ui/theme.css";
+
+/* ── SocialGuard Dark Theme Overrides ── */
+
+@keyframes donut-draw {
+  from {
+    stroke-dashoffset: 365;
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes card-stagger {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(5, 150, 105, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(5, 150, 105, 0.4);
+  }
+}
+
+.animate-donut-draw {
+  animation: donut-draw 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-bar-grow {
+  animation: bar-grow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform-origin: bottom;
+}
+
+.animate-card-stagger {
+  animation: card-stagger 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Dark card glass effect */
+.dark-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+}
+
+.dark-card-accent {
+  background: rgba(5, 150, 105, 0.12);
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  border-radius: 12px;
+}
+
+/* Dark table styling */
+.dark-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.dark-table thead th {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.dark-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background-color 0.2s;
+}
+
+.dark-table tbody tr:hover {
+  background: rgba(5, 150, 105, 0.08);
+}
+
+.dark-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Scrollbar for dark theme */
+.dark-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

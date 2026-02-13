@@ -1,7 +1,8 @@
-import { NavigationBar, SmoothScrollProvider, ScrollReveal } from "@ojpp/ui";
+import { SmoothScrollProvider, ScrollReveal } from "@ojpp/ui";
 import type { Metadata } from "next";
 import { Inter, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
+import { CultureScopeNav } from "./components/nav";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const notoSansJP = Noto_Sans_JP({ subsets: ["latin"], variable: "--font-noto-sans-jp" });
@@ -23,34 +24,24 @@ export const metadata: Metadata = {
   },
 };
 
-const NAV_ITEMS = [
-  { href: "/", label: "ホーム" },
-  { href: "/budget", label: "予算推移" },
-  { href: "/programs", label: "文化施策" },
-  { href: "/compare", label: "政党比較" },
-  { href: "/about", label: "About" },
-];
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja" className={`${inter.variable} ${notoSansJP.variable}`}>
-      <body className="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
-        <NavigationBar
-          brand="CultureScope"
-          brandColor="text-amber-600"
-          items={NAV_ITEMS}
-          accentColor="hover:text-amber-600"
-        />
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-800">
+      <body className="min-h-screen font-sans antialiased">
+        <CultureScopeNav />
+        <div className="border-b border-amber-900/30 bg-amber-950/40 px-6 py-2 text-center text-xs text-amber-400/70">
           v0.1 デモ版 — 文化庁公開資料に基づく文化政策データ
         </div>
         <SmoothScrollProvider>
           <main>{children}</main>
         </SmoothScrollProvider>
         <ScrollReveal>
-          <footer className="border-t bg-white py-8 text-center text-sm text-gray-500">
-            <p>文化政策を誰でも見える形に — AIエージェント時代の政治インフラ</p>
-            <p className="mt-1">Open Japan PoliTech Platform v0.1 | AGPL-3.0</p>
+          <footer className="border-t border-white/5 bg-black/40 px-6 py-12 text-center text-sm text-zinc-500">
+            <div className="mx-auto max-w-7xl">
+              <p className="tracking-wide">文化を、政治の言語で読み解く — AIエージェント時代の政治インフラ</p>
+              <p className="mt-2">政党にも企業にもよらない、完全オープンな政治テクノロジー基盤</p>
+              <p className="mt-1 text-xs text-zinc-600">Open Japan PoliTech Platform v0.1 | AGPL-3.0</p>
+            </div>
           </footer>
         </ScrollReveal>
       </body>

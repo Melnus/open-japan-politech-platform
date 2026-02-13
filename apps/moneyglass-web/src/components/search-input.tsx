@@ -30,11 +30,11 @@ export function SearchInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+        className="flex-1 rounded-lg border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.04)] px-4 py-2.5 text-sm text-[#f0f0f0] placeholder-[#6e7681] outline-none transition-colors focus:border-[rgba(255,107,53,0.4)] focus:ring-1 focus:ring-[rgba(255,107,53,0.2)]"
       />
       <button
         type="submit"
-        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+        className="rounded-lg border border-[rgba(255,107,53,0.3)] bg-[rgba(255,107,53,0.12)] px-5 py-2.5 text-sm font-medium text-[#FF6B35] transition-colors hover:bg-[rgba(255,107,53,0.2)]"
       >
         検索
       </button>

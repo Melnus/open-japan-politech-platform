@@ -1,5 +1,5 @@
 import { prisma } from "@ojpp/db";
-import { HeroSection, Card, FadeIn } from "@ojpp/ui";
+import { FadeIn } from "@ojpp/ui";
 import { unstable_noStore as noStore } from "next/cache";
 import { BudgetCharts } from "./budget-charts";
 
@@ -47,33 +47,33 @@ export default async function BudgetPage() {
 
   if (budgets.length === 0) {
     return (
-      <div>
-        <HeroSection
-          title="文化庁予算推移"
-          subtitle="年度別・分野別の文化予算データをグラフで可視化"
-          gradientFrom="from-amber-500"
-          gradientTo="to-yellow-600"
-        />
-        <div className="mx-auto max-w-7xl px-6 py-12">
-          <Card>
-            {fetchError ? (
-              <div className="text-center">
-                <p className="text-red-600 font-medium">データベース接続エラー</p>
-                <code className="mt-2 inline-block rounded bg-red-50 px-3 py-1 text-xs font-mono text-red-700">
-                  {fetchError}
-                </code>
-              </div>
-            ) : (
-              <p className="text-center text-gray-500">
-                予算データがまだ投入されていません。
-                <br />
-                <code className="mt-1 inline-block rounded bg-gray-100 px-2 py-1 text-xs font-mono">
-                  pnpm ingest:culture
-                </code>{" "}
-                を実行してデータを投入してください。
-              </p>
-            )}
-          </Card>
+      <div className="mx-auto max-w-7xl px-6 py-20">
+        <FadeIn>
+          <h1 className="mb-4 text-3xl font-extrabold tracking-tight text-white">
+            文化庁予算推移
+          </h1>
+          <p className="mb-8 text-zinc-400">
+            年度別・分野別の文化予算データをグラフで可視化
+          </p>
+        </FadeIn>
+        <div className="glass-card p-8">
+          {fetchError ? (
+            <div className="text-center">
+              <p className="text-red-400 font-medium">データベース接続エラー</p>
+              <code className="mt-3 inline-block rounded-lg bg-red-950/50 border border-red-900/30 px-4 py-2 text-xs font-mono text-red-400">
+                {fetchError}
+              </code>
+            </div>
+          ) : (
+            <p className="text-center text-zinc-500">
+              予算データがまだ投入されていません。
+              <br />
+              <code className="mt-2 inline-block rounded-lg bg-amber-950/40 border border-amber-800/20 px-3 py-1 text-xs font-mono text-amber-400">
+                pnpm ingest:culture
+              </code>{" "}
+              を実行してデータを投入してください。
+            </p>
+          )}
         </div>
       </div>
     );
@@ -81,22 +81,33 @@ export default async function BudgetPage() {
 
   return (
     <div>
-      <HeroSection
-        title="文化庁予算推移"
-        subtitle="年度別・分野別の文化予算データをグラフで可視化"
-        gradientFrom="from-amber-500"
-        gradientTo="to-yellow-600"
-      >
-        <div className="flex flex-wrap gap-4 text-sm text-white/70">
-          <span>データ件数: {budgets.length}件</span>
-          <span>
-            対象期間: {serializedBudgets[0]?.fiscalYear}〜
-            {serializedBudgets[serializedBudgets.length - 1]?.fiscalYear}年度
-          </span>
+      {/* Hero */}
+      <section className="relative overflow-hidden px-6 pb-8 pt-12">
+        <div className="absolute -top-20 left-1/4 h-40 w-80 rounded-full bg-amber-500/10 blur-3xl" />
+        <div className="relative mx-auto max-w-7xl">
+          <FadeIn>
+            <h1 className="text-3xl font-extrabold tracking-tight text-white">
+              文化庁予算推移
+            </h1>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <p className="mt-3 text-base text-zinc-400">
+              年度別・分野別の文化予算データをグラフで可視化
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <div className="mt-4 flex flex-wrap gap-4 text-sm text-zinc-500">
+              <span>データ件数: {budgets.length}件</span>
+              <span>
+                対象期間: {serializedBudgets[0]?.fiscalYear}〜
+                {serializedBudgets[serializedBudgets.length - 1]?.fiscalYear}年度
+              </span>
+            </div>
+          </FadeIn>
         </div>
-      </HeroSection>
+      </section>
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="mx-auto max-w-7xl px-6 pb-16">
         <FadeIn>
           <BudgetCharts budgets={serializedBudgets} />
         </FadeIn>

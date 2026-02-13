@@ -20,18 +20,18 @@ export function FilterBar({ filters, onChange }: FilterBarProps) {
     <div className="flex flex-wrap gap-4">
       {filters.map((filter) => (
         <div key={filter.key} className="flex items-center gap-2">
-          <label htmlFor={filter.key} className="text-sm font-medium text-gray-700">
+          <label htmlFor={filter.key} className="text-sm font-medium text-[#8b949e]">
             {filter.label}
           </label>
           <select
             id={filter.key}
             value={filter.value}
             onChange={(e) => onChange(filter.key, e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="rounded-lg border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-sm text-[#f0f0f0] outline-none transition-colors focus:border-[rgba(255,107,53,0.4)] focus:ring-1 focus:ring-[rgba(255,107,53,0.2)]"
           >
-            <option value="">すべて</option>
+            <option value="" className="bg-[#1a1a2e]">すべて</option>
             {filter.options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
+              <option key={opt.value} value={opt.value} className="bg-[#1a1a2e]">
                 {opt.label}
               </option>
             ))}

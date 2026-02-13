@@ -147,6 +147,7 @@ const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
       { partyName: "次世代の党", seatsWon: 2, districtSeats: 2, proportionalSeats: 0 },
       { partyName: "生活の党", seatsWon: 2, districtSeats: 2, proportionalSeats: 0 },
       { partyName: "社民党", seatsWon: 2, districtSeats: 1, proportionalSeats: 1 },
+      { partyName: "無所属", seatsWon: 8, districtSeats: 8, proportionalSeats: 0 },
     ],
   },
   {
@@ -165,6 +166,7 @@ const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
       { partyName: "日本共産党", seatsWon: 12, districtSeats: 1, proportionalSeats: 11 },
       { partyName: "日本維新の会", seatsWon: 11, districtSeats: 3, proportionalSeats: 8 },
       { partyName: "社民党", seatsWon: 2, districtSeats: 1, proportionalSeats: 1 },
+      { partyName: "無所属", seatsWon: 22, districtSeats: 22, proportionalSeats: 0 },
     ],
   },
   {
@@ -184,6 +186,7 @@ const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
       { partyName: "日本共産党", seatsWon: 10, districtSeats: 1, proportionalSeats: 9 },
       { partyName: "れいわ新選組", seatsWon: 3, districtSeats: 0, proportionalSeats: 3 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 1, proportionalSeats: 0 },
+      { partyName: "無所属", seatsWon: 10, districtSeats: 10, proportionalSeats: 0 },
     ],
   },
   {
@@ -205,6 +208,7 @@ const HOUSE_OF_REPRESENTATIVES_ELECTIONS: ElectionData[] = [
       { partyName: "参政党", seatsWon: 3, districtSeats: 0, proportionalSeats: 3 },
       { partyName: "日本保守党", seatsWon: 3, districtSeats: 3, proportionalSeats: 0 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 1, proportionalSeats: 0 },
+      { partyName: "無所属", seatsWon: 12, districtSeats: 12, proportionalSeats: 0 },
     ],
   },
   {
@@ -251,6 +255,7 @@ const HOUSE_OF_COUNCILLORS_ELECTIONS: ElectionData[] = [
       { partyName: "みんなの党", seatsWon: 8, districtSeats: 4, proportionalSeats: 4 },
       { partyName: "日本共産党", seatsWon: 8, districtSeats: 3, proportionalSeats: 5 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 0, proportionalSeats: 1 },
+      { partyName: "無所属", seatsWon: 2, districtSeats: 2, proportionalSeats: 0 },
     ],
   },
   {
@@ -268,6 +273,8 @@ const HOUSE_OF_COUNCILLORS_ELECTIONS: ElectionData[] = [
       { partyName: "日本維新の会", seatsWon: 7, districtSeats: 3, proportionalSeats: 4 },
       { partyName: "日本共産党", seatsWon: 6, districtSeats: 1, proportionalSeats: 5 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 0, proportionalSeats: 1 },
+      { partyName: "生活の党", seatsWon: 1, districtSeats: 0, proportionalSeats: 1 },
+      { partyName: "無所属", seatsWon: 4, districtSeats: 4, proportionalSeats: 0 },
     ],
   },
   {
@@ -287,6 +294,7 @@ const HOUSE_OF_COUNCILLORS_ELECTIONS: ElectionData[] = [
       { partyName: "国民民主党", seatsWon: 6, districtSeats: 3, proportionalSeats: 3 },
       { partyName: "れいわ新選組", seatsWon: 2, districtSeats: 0, proportionalSeats: 2 },
       { partyName: "社民党", seatsWon: 1, districtSeats: 0, proportionalSeats: 1 },
+      { partyName: "無所属", seatsWon: 9, districtSeats: 9, proportionalSeats: 0 },
     ],
   },
   {

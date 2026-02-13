@@ -1,5 +1,4 @@
 import { prisma } from "@ojpp/db";
-import { Badge, Card } from "@ojpp/ui";
 import { notFound } from "next/navigation";
 import { BillStatusBadge } from "@/components/bill-status-badge";
 
@@ -15,10 +14,10 @@ const CHAMBER_LABELS: Record<string, string> = {
 };
 
 const VOTE_LABELS: Record<string, { label: string; color: string }> = {
-  FOR: { label: "賛成", color: "text-green-600" },
-  AGAINST: { label: "反対", color: "text-red-600" },
-  ABSTAIN: { label: "棄権", color: "text-yellow-600" },
-  ABSENT: { label: "欠席", color: "text-gray-500" },
+  FOR: { label: "賛成", color: "text-emerald-400" },
+  AGAINST: { label: "反対", color: "text-red-400" },
+  ABSTAIN: { label: "棄権", color: "text-yellow-400" },
+  ABSENT: { label: "欠席", color: "text-[#6b7280]" },
 };
 
 export default async function PoliticianDetailPage({ params }: PageProps) {
@@ -52,59 +51,65 @@ export default async function PoliticianDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
-      <div className="mb-4">
-        <a href="/politicians" className="text-sm text-purple-600 hover:underline">
+      <div className="mb-6">
+        <a href="/politicians" className="inline-flex items-center gap-1 text-sm text-indigo-400 transition-colors hover:text-indigo-300">
           &larr; 議員一覧に戻る
         </a>
       </div>
 
-      <div className="mb-8 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 text-2xl font-bold text-purple-600">
+      {/* Header */}
+      <div className="mb-8 flex items-center gap-5">
+        <div className="flex h-18 w-18 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-3xl font-bold text-white shadow-lg shadow-indigo-500/20">
           {politician.name.charAt(0)}
         </div>
         <div>
-          <h2 className="text-2xl font-bold">{politician.name}</h2>
-          {politician.nameKana && <p className="text-sm text-gray-500">{politician.nameKana}</p>}
-          <div className="mt-1 flex items-center gap-2">
+          <h2 className="text-3xl font-bold text-white">{politician.name}</h2>
+          {politician.nameKana && <p className="mt-0.5 text-sm text-[#6b7280]">{politician.nameKana}</p>}
+          <div className="mt-2 flex items-center gap-2">
             {politician.party && (
-              <Badge>{politician.party.shortName ?? politician.party.name}</Badge>
+              <span className="rounded-full bg-indigo-500/15 px-3 py-0.5 text-xs font-medium text-indigo-300">
+                {politician.party.shortName ?? politician.party.name}
+              </span>
             )}
             {politician.chamber && (
-              <Badge variant="info">{CHAMBER_LABELS[politician.chamber]}</Badge>
+              <span className="rounded-full bg-blue-500/15 px-3 py-0.5 text-xs font-medium text-blue-300">
+                {CHAMBER_LABELS[politician.chamber]}
+              </span>
             )}
           </div>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
+        {/* Main content */}
         <div className="space-y-6 lg:col-span-2">
-          <Card>
-            <h3 className="mb-4 font-semibold">投票履歴</h3>
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-6">
+            <h3 className="mb-4 text-lg font-semibold text-white">投票履歴</h3>
             {politician.votes.length > 0 ? (
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {politician.votes.map((vote) => {
                   const voteConfig = VOTE_LABELS[vote.voteType] ?? {
                     label: vote.voteType,
-                    color: "text-gray-500",
+                    color: "text-[#6b7280]",
                   };
                   return (
                     <div
                       key={vote.id}
-                      className="flex items-center justify-between rounded px-3 py-2 hover:bg-gray-50"
+                      className="flex items-center justify-between rounded-lg px-3 py-2.5 transition-colors hover:bg-white/[0.04]"
                     >
                       <div className="min-w-0 flex-1">
                         <a
                           href={`/bills/${vote.bill.id}`}
-                          className="text-sm font-medium hover:text-purple-600"
+                          className="text-sm font-medium text-white transition-colors hover:text-indigo-300"
                         >
                           {vote.bill.title}
                         </a>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="mt-0.5 flex items-center gap-2 text-xs text-[#6b7280]">
                           <span>{vote.bill.number}</span>
                           <BillStatusBadge status={vote.bill.status} />
                         </div>
                       </div>
-                      <span className={`ml-4 shrink-0 text-sm font-medium ${voteConfig.color}`}>
+                      <span className={`ml-4 shrink-0 text-sm font-semibold ${voteConfig.color}`}>
                         {voteConfig.label}
                       </span>
                     </div>
@@ -112,66 +117,97 @@ export default async function PoliticianDetailPage({ params }: PageProps) {
                 })}
               </div>
             ) : (
-              <p className="text-gray-500">投票データはありません。</p>
+              <p className="text-[#6b7280]">投票データはありません。</p>
             )}
-          </Card>
+          </div>
         </div>
 
+        {/* Sidebar */}
         <div className="space-y-6">
-          <Card>
-            <h3 className="mb-3 font-semibold">基本情報</h3>
-            <dl className="space-y-2 text-sm">
+          <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-6">
+            <h3 className="mb-4 text-lg font-semibold text-white">基本情報</h3>
+            <dl className="space-y-3 text-sm">
               <div>
-                <dt className="text-gray-500">政党</dt>
-                <dd className="font-medium">{politician.party?.name ?? "無所属"}</dd>
+                <dt className="text-[#6b7280]">政党</dt>
+                <dd className="mt-0.5 font-medium text-white">{politician.party?.name ?? "無所属"}</dd>
               </div>
               {politician.chamber && (
                 <div>
-                  <dt className="text-gray-500">議院</dt>
-                  <dd className="font-medium">{CHAMBER_LABELS[politician.chamber]}</dd>
+                  <dt className="text-[#6b7280]">議院</dt>
+                  <dd className="mt-0.5 font-medium text-white">{CHAMBER_LABELS[politician.chamber]}</dd>
                 </div>
               )}
               {politician.district && (
                 <div>
-                  <dt className="text-gray-500">選挙区</dt>
-                  <dd className="font-medium">{politician.district}</dd>
+                  <dt className="text-[#6b7280]">選挙区</dt>
+                  <dd className="mt-0.5 font-medium text-white">{politician.district}</dd>
                 </div>
               )}
               {politician.prefecture && (
                 <div>
-                  <dt className="text-gray-500">都道府県</dt>
-                  <dd className="font-medium">{politician.prefecture.name}</dd>
+                  <dt className="text-[#6b7280]">都道府県</dt>
+                  <dd className="mt-0.5 font-medium text-white">{politician.prefecture.name}</dd>
                 </div>
               )}
             </dl>
-          </Card>
+          </div>
 
           {voteStats.total > 0 && (
-            <Card>
-              <h3 className="mb-3 font-semibold">投票統計</h3>
-              <dl className="space-y-2 text-sm">
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-6">
+              <h3 className="mb-4 text-lg font-semibold text-white">投票統計</h3>
+              <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">総投票数</dt>
-                  <dd className="font-medium">{voteStats.total}</dd>
+                  <dt className="text-[#8b949e]">総投票数</dt>
+                  <dd className="font-semibold text-white">{voteStats.total}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-green-600">賛成</dt>
-                  <dd className="font-medium">{voteStats.for}</dd>
+                  <dt className="text-emerald-400">賛成</dt>
+                  <dd className="font-semibold text-emerald-400">{voteStats.for}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-red-600">反対</dt>
-                  <dd className="font-medium">{voteStats.against}</dd>
+                  <dt className="text-red-400">反対</dt>
+                  <dd className="font-semibold text-red-400">{voteStats.against}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-yellow-600">棄権</dt>
-                  <dd className="font-medium">{voteStats.abstain}</dd>
+                  <dt className="text-yellow-400">棄権</dt>
+                  <dd className="font-semibold text-yellow-400">{voteStats.abstain}</dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">欠席</dt>
-                  <dd className="font-medium">{voteStats.absent}</dd>
+                  <dt className="text-[#6b7280]">欠席</dt>
+                  <dd className="font-semibold text-[#6b7280]">{voteStats.absent}</dd>
                 </div>
               </dl>
-            </Card>
+
+              {/* Visual vote bar */}
+              {voteStats.total > 0 && (
+                <div className="mt-4 flex h-2 w-full overflow-hidden rounded-full">
+                  {voteStats.for > 0 && (
+                    <div
+                      className="bg-emerald-500"
+                      style={{ width: `${(voteStats.for / voteStats.total) * 100}%` }}
+                    />
+                  )}
+                  {voteStats.against > 0 && (
+                    <div
+                      className="bg-red-500"
+                      style={{ width: `${(voteStats.against / voteStats.total) * 100}%` }}
+                    />
+                  )}
+                  {voteStats.abstain > 0 && (
+                    <div
+                      className="bg-yellow-500"
+                      style={{ width: `${(voteStats.abstain / voteStats.total) * 100}%` }}
+                    />
+                  )}
+                  {voteStats.absent > 0 && (
+                    <div
+                      className="bg-gray-600"
+                      style={{ width: `${(voteStats.absent / voteStats.total) * 100}%` }}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

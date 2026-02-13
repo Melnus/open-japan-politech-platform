@@ -1,5 +1,5 @@
-import { GradientCard } from "@ojpp/ui";
 import { formatCurrency } from "@/lib/format";
+import { PartyCards } from "./party-cards";
 
 interface PartyData {
   id: string;
@@ -26,64 +26,48 @@ export default async function PartiesPage() {
     // fallback
   }
 
+  const sortedParties = parties.sort(
+    (a, b) => Number(b.totalIncome) - Number(a.totalIncome)
+  );
+
+  // Find max income for relative bar widths
+  const maxIncome = sortedParties.length > 0
+    ? Number(sortedParties[0].totalIncome)
+    : 1;
+
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <h2 className="mb-2 text-3xl font-bold tracking-tight">政党別資金集計</h2>
-      <p className="mb-8 text-gray-600">各政党の政治団体における資金の総計を比較</p>
+    <div className="mx-auto max-w-7xl px-8 py-12">
+      <div className="mb-10">
+        <h2 className="mb-3 text-3xl font-bold tracking-tight text-white">
+          政党別資金集計
+        </h2>
+        <p className="text-[#8b949e]">各政党の政治団体における資金の総計を比較</p>
+      </div>
 
       {parties.length === 0 ? (
-        <p className="text-center text-gray-500">データがありません</p>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {parties
-            .sort((a, b) => Number(b.totalIncome) - Number(a.totalIncome))
-            .map((party) => (
-              <GradientCard
-                key={party.id}
-                href={`/parties/${party.id}`}
-                gradientFrom="from-blue-500"
-                gradientTo="to-indigo-600"
-              >
-                <div className="mb-3 flex items-center gap-3">
-                  <div
-                    className="h-4 w-4 rounded-full"
-                    style={{ backgroundColor: party.color ?? "#6B7280" }}
-                  />
-                  <h3 className="text-lg font-bold">{party.name}</h3>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">団体数</span>
-                    <span className="font-medium">{party.organizationCount}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">総収入</span>
-                    <span className="font-medium text-income">
-                      {formatCurrency(party.totalIncome)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">総支出</span>
-                    <span className="font-medium text-expenditure">
-                      {formatCurrency(party.totalExpenditure)}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-3">
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
-                    <div
-                      className="h-full rounded-full transition-all duration-1000"
-                      style={{
-                        backgroundColor: party.color ?? "#6B7280",
-                        width: `${Math.min(100, (Number(party.totalExpenditure) / Math.max(1, Number(party.totalIncome))) * 100)}%`,
-                      }}
-                    />
-                  </div>
-                  <p className="mt-1 text-xs text-gray-400">支出/収入比率</p>
-                </div>
-              </GradientCard>
-            ))}
+        <div className="glass-card rounded-xl p-8">
+          <p className="text-center text-[#8b949e]">データがありません</p>
         </div>
+      ) : (
+        <PartyCards
+          parties={sortedParties.map((party) => ({
+            id: party.id,
+            name: party.name,
+            color: party.color,
+            organizationCount: party.organizationCount,
+            totalIncome: party.totalIncome,
+            totalExpenditure: party.totalExpenditure,
+            formattedIncome: formatCurrency(party.totalIncome),
+            formattedExpenditure: formatCurrency(party.totalExpenditure),
+            incomeRatio: Number(party.totalIncome) / maxIncome,
+            expenditureRatio: Math.min(
+              100,
+              (Number(party.totalExpenditure) /
+                Math.max(1, Number(party.totalIncome))) *
+                100
+            ),
+          }))}
+        />
       )}
     </div>
   );

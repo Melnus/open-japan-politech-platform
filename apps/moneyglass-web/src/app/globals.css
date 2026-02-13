@@ -1,2 +1,96 @@
 @import "tailwindcss";
 @import "@ojpp/ui/theme.css";
+
+/* MoneyGlass Dark Theme Custom Properties */
+:root {
+  --mg-bg-primary: #0f1119;
+  --mg-bg-secondary: #1a1a2e;
+  --mg-bg-tertiary: #16213e;
+  --mg-accent: #FF6B35;
+  --mg-accent-light: #FF8C5A;
+  --mg-accent-muted: #FFAD80;
+  --mg-accent-pale: #FFD4B8;
+  --mg-accent-glow: rgba(255, 107, 53, 0.15);
+  --mg-border: rgba(255, 255, 255, 0.06);
+  --mg-border-accent: rgba(255, 107, 53, 0.3);
+  --mg-card-bg: rgba(255, 255, 255, 0.03);
+  --mg-card-bg-accent: rgba(255, 107, 53, 0.08);
+  --mg-text-primary: #f0f0f0;
+  --mg-text-secondary: #8b949e;
+  --mg-text-tertiary: #6e7681;
+}
+
+/* Glass morphism utilities */
+.glass-card {
+  background: var(--mg-card-bg);
+  border: 1px solid var(--mg-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-card-accent {
+  background: var(--mg-card-bg-accent);
+  border: 1px solid var(--mg-border-accent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Glow effects */
+.glow-orange {
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.1), 0 0 60px rgba(255, 107, 53, 0.05);
+}
+
+.glow-orange-hover:hover {
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.2), 0 0 80px rgba(255, 107, 53, 0.1);
+}
+
+/* Animated gradient background */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-bg {
+  background: linear-gradient(-45deg, #0f1119, #1a1a2e, #16213e, #1a1a2e);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--mg-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Recharts dark theme overrides */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255, 255, 255, 0.06) !important;
+}
+
+.recharts-text {
+  fill: #8b949e !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: #1a1a2e !important;
+  border: 1px solid rgba(255, 107, 53, 0.2) !important;
+  border-radius: 12px !important;
+}
+
+.recharts-legend-item-text {
+  color: #8b949e !important;
+}

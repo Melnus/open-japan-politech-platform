@@ -1,40 +1,33 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AdminSidebar } from "./admin-sidebar";
 
 export const metadata: Metadata = {
   title: "ParliScope Admin - 管理画面",
   description: "ParliScope管理画面 - 法案データ・議論の管理",
 };
 
+const navItems = [
+  { href: "/", label: "ダッシュボード", icon: "grid" },
+  { href: "/bills", label: "法案管理", icon: "file" },
+  { href: "/sessions", label: "会期管理", icon: "calendar" },
+  { href: "/discussions", label: "議論管理", icon: "message" },
+  { href: "/settings", label: "設定", icon: "settings" },
+];
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja">
-      <body className="min-h-screen bg-gray-100 text-gray-900 antialiased">
+      <body className="min-h-screen bg-admin-bg text-admin-text antialiased">
         <div className="flex">
-          <aside className="w-64 min-h-screen border-r bg-white p-6">
-            <h1 className="mb-8 text-lg font-bold">
-              <span className="text-purple-600">Parli</span>Scope
-              <span className="ml-2 text-xs text-gray-400">Admin</span>
-            </h1>
-            <nav className="space-y-2 text-sm">
-              <a href="/" className="block rounded px-3 py-2 hover:bg-gray-100">
-                ダッシュボード
-              </a>
-              <a href="/bills" className="block rounded px-3 py-2 hover:bg-gray-100">
-                法案管理
-              </a>
-              <a href="/sessions" className="block rounded px-3 py-2 hover:bg-gray-100">
-                会期管理
-              </a>
-              <a href="/discussions" className="block rounded px-3 py-2 hover:bg-gray-100">
-                議論管理
-              </a>
-              <a href="/settings" className="block rounded px-3 py-2 hover:bg-gray-100">
-                設定
-              </a>
-            </nav>
-          </aside>
-          <main className="flex-1 p-8">{children}</main>
+          <AdminSidebar
+            brandName="ParliScope"
+            brandColorClass="text-purple-400"
+            navItems={navItems}
+          />
+          <main className="flex-1 min-h-screen ml-64">
+            <div className="px-8 py-8 max-w-7xl">{children}</div>
+          </main>
         </div>
       </body>
     </html>

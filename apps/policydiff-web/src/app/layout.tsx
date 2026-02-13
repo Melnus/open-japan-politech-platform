@@ -28,9 +28,9 @@ export const metadata: Metadata = {
 
 const NAV_ITEMS = [
   { href: "/", label: "ダッシュボード" },
-  { href: "/category/教育", label: "カテゴリ別" },
-  { href: "/compare", label: "政党比較" },
-  { href: "/proposals", label: "提案" },
+  { href: "/compare", label: "政策比較" },
+  { href: "/category/教育", label: "カテゴリ" },
+  { href: "/proposals", label: "市民提案" },
   { href: "/api-docs", label: "API" },
   { href: "/about", label: "About" },
 ];
@@ -38,14 +38,15 @@ const NAV_ITEMS = [
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja" className={`${inter.variable} ${notoSansJP.variable}`}>
-      <body className="min-h-screen bg-gray-50 font-sans text-gray-900 antialiased">
+      <body className="min-h-screen bg-slate-900 font-sans text-slate-100 antialiased">
         <NavigationBar
           brand="PolicyDiff"
-          brandColor="text-green-600"
+          brandColor="text-blue-400"
           items={NAV_ITEMS}
-          accentColor="hover:text-green-600"
+          accentColor="hover:text-blue-400"
+          variant="dark"
         />
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-xs text-amber-800">
+        <div className="border-b border-slate-700/50 bg-slate-800/60 px-6 py-2 text-center text-xs text-slate-400">
           v0.1 デモ版 —
           政策データは各党の公式マニフェストを参考にしたデモ用データです。公式の政策文書ではありません。
         </div>
@@ -53,10 +54,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <main>{children}</main>
         </SmoothScrollProvider>
         <ScrollReveal>
-          <footer className="border-t bg-white py-8 text-center text-sm text-gray-500">
-            <p>AIエージェント時代の政策比較 — あなたのエージェントが全政党の政策を常時分析する</p>
-            <p className="mt-1">政党にも企業にもよらない、完全オープンな政治テクノロジー基盤</p>
-            <p className="mt-1">Open Japan PoliTech Platform v0.1 | AGPL-3.0</p>
+          <footer className="border-t border-slate-800 bg-slate-950 px-6 py-12 text-center text-sm text-slate-500">
+            <div className="mx-auto max-w-7xl">
+              <p>AIエージェント時代の政策比較 -- あなたのエージェントが全政党の政策を常時分析する</p>
+              <p className="mt-2">政党にも企業にもよらない、完全オープンな政治テクノロジー基盤</p>
+              <p className="mt-1 text-slate-600">Open Japan PoliTech Platform v0.1 | AGPL-3.0</p>
+            </div>
           </footer>
         </ScrollReveal>
       </body>

@@ -1,7 +1,7 @@
 {
   "name": "@ojpp/ui",
   "version": "0.1.0",
-  "description": "OJPP共有デザインシステム — テーマ・11コンポーネント・アニメーション",
+  "description": "OJPP共有デザインシステム — テーマ・15コンポーネント・GLシェーダー背景・アニメーション",
   "private": true,
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -14,6 +14,9 @@
     "react": "^19.0.0",
     "motion": "^11.15.0",
     "lenis": "^1.1.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit --project tsconfig.json"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

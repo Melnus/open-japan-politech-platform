@@ -16,6 +16,16 @@
  *          れいわ9、共産8、参政3、保守3、社民1、無所属12
  *
  * 令和8年2月13日現在のデータ。
+ *
+ * ファクトチェック (2026-02-13):
+ *   - 政党別議員数（自民191、立憲148、維新38、国民28、公明24、
+ *     れいわ9、共産8、参政3、保守3、社民1、無所属12）…合計465 ✓
+ *   - 自民: 小選挙区132 + 比例59 = 191 ✓
+ *   - 立憲: 小選挙区104 + 比例44 = 148 ✓
+ *   - 主要議員の所属政党・選挙区をサンプルチェック済み（各党5名以上）
+ *   - 修正: 笠浩史のカナ「リュウ ヒロフミ」→「カサ ヒロフミ」
+ *   - 修正: れいわ「辻恵」（落選）→「上村英明」（比例東海で当選）
+ *   - 参照: 日経新聞選挙結果ページ、NHK選挙データ、各党公式サイト
  */
 
 import { prisma } from "@ojpp/db";
@@ -370,7 +380,7 @@ const CDP_MEMBERS: RepresentativeData[] = [
   { name: "青柳陽一郎", nameKana: "アオヤギ ヨウイチロウ", party: "立憲民主党", district: "神奈川6区", prefecture: "神奈川県" },
   { name: "中谷一馬", nameKana: "ナカタニ カズマ", party: "立憲民主党", district: "神奈川7区", prefecture: "神奈川県" },
   { name: "江田憲司", nameKana: "エダ ケンジ", party: "立憲民主党", district: "神奈川8区", prefecture: "神奈川県" },
-  { name: "笠浩史", nameKana: "リュウ ヒロフミ", party: "立憲民主党", district: "神奈川9区", prefecture: "神奈川県" },
+  { name: "笠浩史", nameKana: "カサ ヒロフミ", party: "立憲民主党", district: "神奈川9区", prefecture: "神奈川県" },
   { name: "阿部知子", nameKana: "アベ トモコ", party: "立憲民主党", district: "神奈川12区", prefecture: "神奈川県" },
   { name: "太栄志", nameKana: "ダイ エイシ", party: "立憲民主党", district: "神奈川13区", prefecture: "神奈川県" },
   { name: "後藤祐一", nameKana: "ゴトウ ユウイチ", party: "立憲民主党", district: "神奈川16区", prefecture: "神奈川県" },
@@ -629,7 +639,7 @@ const REIWA_MEMBERS: RepresentativeData[] = [
   { name: "多ケ谷亮", nameKana: "タガヤ リョウ", party: "れいわ新選組", district: "比例南関東", prefecture: null },
   { name: "櫛渕万里", nameKana: "クシブチ マリ", party: "れいわ新選組", district: "比例東京", prefecture: null },
   { name: "阪口直人", nameKana: "サカグチ ナオト", party: "れいわ新選組", district: "比例東海", prefecture: null },
-  { name: "辻恵", nameKana: "ツジ メグム", party: "れいわ新選組", district: "比例東海", prefecture: null },
+  { name: "上村英明", nameKana: "ウエムラ ヒデアキ", party: "れいわ新選組", district: "比例東海", prefecture: null },
   { name: "大石晃子", nameKana: "オオイシ アキコ", party: "れいわ新選組", district: "比例近畿", prefecture: null },
   { name: "八幡愛", nameKana: "ヤハタ アイ", party: "れいわ新選組", district: "比例近畿", prefecture: null },
   { name: "山川仁", nameKana: "ヤマカワ ヒトシ", party: "れいわ新選組", district: "比例九州", prefecture: null },

@@ -6,6 +6,8 @@ interface CardProps {
   padding?: "sm" | "md" | "lg";
   hover?: boolean;
   animate?: boolean;
+  /** Use dark variant for dark-themed pages */
+  variant?: "light" | "dark";
 }
 
 export function Card({
@@ -14,15 +16,22 @@ export function Card({
   padding = "md",
   hover = false,
   animate = false,
+  variant = "light",
 }: CardProps) {
   const paddingClass = { sm: "p-4", md: "p-6", lg: "p-8" }[padding];
   const hoverClass = hover
-    ? "transition-all duration-300 hover:shadow-card-hover hover:scale-[1.01]"
+    ? variant === "dark"
+      ? "transition-all duration-300 hover:bg-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)] hover:shadow-lg hover:shadow-indigo-500/5"
+      : "transition-all duration-300 hover:shadow-card-hover hover:scale-[1.01]"
     : "";
   const animateClass = animate ? "animate-fade-in" : "";
+  const variantClass =
+    variant === "dark"
+      ? "rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] backdrop-blur-sm"
+      : "rounded-xl border bg-white shadow-card";
   return (
     <div
-      className={`rounded-xl border bg-white shadow-card ${paddingClass} ${hoverClass} ${animateClass} ${className}`}
+      className={`${variantClass} ${paddingClass} ${hoverClass} ${animateClass} ${className}`}
     >
       {children}
     </div>

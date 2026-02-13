@@ -1,5 +1,3 @@
-import { Card } from "@ojpp/ui";
-
 interface Endpoint {
   method: string;
   path: string;
@@ -58,20 +56,22 @@ const ENDPOINTS: Endpoint[] = [
 
 export default function ApiDocsPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12">
-      <h2 className="mb-2 text-3xl font-bold">API ドキュメント</h2>
-      <p className="mb-8 text-gray-600">
+    <div className="mx-auto max-w-4xl px-8 py-12">
+      <h2 className="mb-3 text-3xl font-bold text-white">API ドキュメント</h2>
+      <p className="mb-8 text-[#8b949e]">
         MoneyGlass APIは、政治資金データへのプログラムによるアクセスを提供します。
         全てのエンドポイントはRESTful JSON APIです。
       </p>
 
       <div className="mb-8">
-        <Card>
-          <h3 className="mb-2 font-bold">Base URL</h3>
-          <code className="rounded bg-gray-100 px-2 py-1 text-sm">https://your-domain.com/api</code>
-          <h3 className="mb-2 mt-4 font-bold">レスポンス形式</h3>
-          <p className="text-sm text-gray-600">一覧APIはページネーション付きで返却されます:</p>
-          <pre className="mt-2 overflow-x-auto rounded bg-gray-900 p-4 text-sm text-green-400">
+        <div className="glass-card rounded-xl p-8">
+          <h3 className="mb-3 font-bold text-white">Base URL</h3>
+          <code className="rounded-lg bg-[rgba(255,107,53,0.1)] px-3 py-1.5 text-sm text-[#FFAD80]">
+            https://your-domain.com/api
+          </code>
+          <h3 className="mb-2 mt-6 font-bold text-white">レスポンス形式</h3>
+          <p className="text-sm text-[#8b949e]">一覧APIはページネーション付きで返却されます:</p>
+          <pre className="mt-3 overflow-x-auto rounded-lg border border-[rgba(255,107,53,0.15)] bg-[#0d1117] p-4 text-sm text-[#FF6B35]">
             {`{
   "data": [...],
   "pagination": {
@@ -82,45 +82,45 @@ export default function ApiDocsPage() {
   }
 }`}
           </pre>
-        </Card>
+        </div>
       </div>
 
       <div className="space-y-4">
         {ENDPOINTS.map((endpoint) => (
-          <Card key={endpoint.path}>
+          <div key={endpoint.path} className="glass-card rounded-xl p-6">
             <div className="flex items-center gap-3">
-              <span className="rounded bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">
+              <span className="rounded-lg bg-[rgba(255,107,53,0.15)] px-2.5 py-1 text-xs font-bold text-[#FF6B35]">
                 {endpoint.method}
               </span>
-              <code className="text-sm font-medium">{endpoint.path}</code>
+              <code className="text-sm font-medium text-white">{endpoint.path}</code>
             </div>
-            <p className="mt-2 text-sm text-gray-600">{endpoint.description}</p>
+            <p className="mt-3 text-sm text-[#8b949e]">{endpoint.description}</p>
             {endpoint.params && (
-              <div className="mt-3">
-                <p className="text-xs font-medium text-gray-500">クエリパラメータ</p>
-                <table className="mt-1 w-full text-left text-sm">
+              <div className="mt-4">
+                <p className="text-xs font-medium text-[#6e7681]">クエリパラメータ</p>
+                <table className="mt-2 w-full text-left text-sm">
                   <thead>
-                    <tr className="border-b text-xs text-gray-500">
-                      <th className="py-1 pr-4">名前</th>
-                      <th className="py-1 pr-4">型</th>
-                      <th className="py-1">説明</th>
+                    <tr className="border-b border-[rgba(255,255,255,0.06)] text-xs text-[#6e7681]">
+                      <th className="py-2 pr-4">名前</th>
+                      <th className="py-2 pr-4">型</th>
+                      <th className="py-2">説明</th>
                     </tr>
                   </thead>
                   <tbody>
                     {endpoint.params.map((param) => (
-                      <tr key={param.name} className="border-b last:border-0">
-                        <td className="py-1 pr-4">
-                          <code className="text-xs">{param.name}</code>
+                      <tr key={param.name} className="border-b border-[rgba(255,255,255,0.03)] last:border-0">
+                        <td className="py-2 pr-4">
+                          <code className="text-xs text-[#FF6B35]">{param.name}</code>
                         </td>
-                        <td className="py-1 pr-4 text-xs text-gray-500">{param.type}</td>
-                        <td className="py-1 text-xs text-gray-600">{param.description}</td>
+                        <td className="py-2 pr-4 text-xs text-[#6e7681]">{param.type}</td>
+                        <td className="py-2 text-xs text-[#8b949e]">{param.description}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
-          </Card>
+          </div>
         ))}
       </div>
     </div>

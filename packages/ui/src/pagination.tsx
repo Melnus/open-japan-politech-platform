@@ -3,9 +3,11 @@ interface PaginationProps {
   totalPages: number;
   baseHref: string;
   className?: string;
+  /** Use dark variant for dark-themed pages */
+  theme?: "light" | "dark";
 }
 
-export function Pagination({ currentPage, totalPages, baseHref, className = "" }: PaginationProps) {
+export function Pagination({ currentPage, totalPages, baseHref, className = "", theme = "light" }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   const pages: (number | "...")[] = [];
@@ -30,19 +32,33 @@ export function Pagination({ currentPage, totalPages, baseHref, className = "" }
     return `${baseHref}${separator}page=${page}`;
   };
 
+  const isDark = theme === "dark";
+  const navBtnClass = isDark
+    ? "rounded-lg px-3 py-2 text-sm transition-colors text-[#8b949e] hover:bg-white/[0.06] hover:text-white"
+    : "rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-100";
+  const ellipsisClass = isDark
+    ? "px-2 py-2 text-sm text-[#6b7280]"
+    : "px-2 py-2 text-sm text-gray-400";
+  const activePageClass = isDark
+    ? "bg-indigo-600 text-white font-medium"
+    : "bg-blue-600 text-white font-medium";
+  const inactivePageClass = isDark
+    ? "text-[#8b949e] hover:bg-white/[0.06] hover:text-white"
+    : "hover:bg-gray-100";
+
   return (
     <nav className={`flex items-center justify-center gap-1 ${className}`}>
       {currentPage > 1 && (
         <a
           href={getHref(currentPage - 1)}
-          className="rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-100"
+          className={navBtnClass}
         >
           前へ
         </a>
       )}
       {pages.map((page, i) =>
         page === "..." ? (
-          <span key={`ellipsis-${i}`} className="px-2 py-2 text-sm text-gray-400">
+          <span key={`ellipsis-${i}`} className={ellipsisClass}>
             ...
           </span>
         ) : (
@@ -50,7 +66,7 @@ export function Pagination({ currentPage, totalPages, baseHref, className = "" }
             key={page}
             href={getHref(page)}
             className={`rounded-lg px-3 py-2 text-sm transition-colors ${
-              page === currentPage ? "bg-blue-600 text-white font-medium" : "hover:bg-gray-100"
+              page === currentPage ? activePageClass : inactivePageClass
             }`}
           >
             {page}
@@ -60,7 +76,7 @@ export function Pagination({ currentPage, totalPages, baseHref, className = "" }
       {currentPage < totalPages && (
         <a
           href={getHref(currentPage + 1)}
-          className="rounded-lg px-3 py-2 text-sm transition-colors hover:bg-gray-100"
+          className={navBtnClass}
         >
           次へ
         </a>

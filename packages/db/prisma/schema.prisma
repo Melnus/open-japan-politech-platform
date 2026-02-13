@@ -121,9 +121,9 @@ model FundReport {
   politician       Politician? @relation(fields: [politicianId], references: [id])
   fiscalYear       Int      // 会計年度
   reportingBody    String   // 届出先（総務省 or 都道府県選管）
-  totalIncome      BigInt   @default(0)
-  totalExpenditure BigInt   @default(0)
-  balance          BigInt   @default(0)
+  totalIncome      BigInt   @default(0) // 円単位
+  totalExpenditure BigInt   @default(0) // 円単位
+  balance          BigInt   @default(0) // 円単位
   sourceUrl        String?  // 原本PDFのURL
   status           ReportStatus @default(DRAFT)
   publishedAt      DateTime?
@@ -152,7 +152,7 @@ model FundIncome {
   category    IncomeCategory
   subcategory String?
   source      String?  // 寄付者名・団体名
-  amount      BigInt
+  amount      BigInt   // 円単位
   date        DateTime?
   description String?
   createdAt   DateTime @default(now())
@@ -180,7 +180,7 @@ model FundExpenditure {
   category    ExpenditureCategory
   subcategory String?
   recipient   String?  // 支出先
-  amount      BigInt
+  amount      BigInt   // 円単位
   date        DateTime?
   description String?
   createdAt   DateTime @default(now())

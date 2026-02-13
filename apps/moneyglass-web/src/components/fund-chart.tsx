@@ -17,14 +17,14 @@ import {
 } from "recharts";
 
 const COLORS = [
-  "#3B82F6",
-  "#EF4444",
-  "#10B981",
-  "#F59E0B",
-  "#8B5CF6",
-  "#EC4899",
-  "#06B6D4",
-  "#F97316",
+  "#FF6B35",
+  "#FFAD80",
+  "#F7931E",
+  "#FFD4B8",
+  "#FF8C5A",
+  "#E5550F",
+  "#FFC299",
+  "#CC4400",
 ];
 
 interface YearlyData {
@@ -50,22 +50,40 @@ export function YearlyBarChart({ data }: { data: YearlyData[] }) {
           <BarChart data={chartData}>
             <defs>
               <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#2563EB" stopOpacity={0.7} />
+                <stop offset="0%" stopColor="#FF6B35" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="#F7931E" stopOpacity={0.7} />
               </linearGradient>
               <linearGradient id="expenditureGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#EF4444" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#DC2626" stopOpacity={0.7} />
+                <stop offset="0%" stopColor="#FF8C5A" stopOpacity={0.7} />
+                <stop offset="100%" stopColor="#FFAD80" stopOpacity={0.5} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis dataKey="year" tick={{ fontSize: 12 }} />
-            <YAxis tickFormatter={(v: number) => `${v.toFixed(0)}億`} tick={{ fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+            <XAxis
+              dataKey="year"
+              tick={{ fontSize: 12, fill: "#8b949e" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.1)" }}
+            />
+            <YAxis
+              tickFormatter={(v: number) => `${v.toFixed(0)}億`}
+              tick={{ fontSize: 12, fill: "#8b949e" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.1)" }}
+            />
             <Tooltip
               formatter={(value: number) => [`${value.toFixed(1)}億円`]}
-              contentStyle={{ borderRadius: "8px", border: "1px solid #E5E7EB" }}
+              contentStyle={{
+                borderRadius: "12px",
+                border: "1px solid rgba(255,107,53,0.2)",
+                backgroundColor: "#1a1a2e",
+                color: "#f0f0f0",
+              }}
+              labelStyle={{ color: "#8b949e" }}
             />
-            <Legend />
+            <Legend
+              wrapperStyle={{ color: "#8b949e" }}
+            />
             <Bar dataKey="収入" fill="url(#incomeGradient)" radius={[4, 4, 0, 0]} animationDuration={1200} animationBegin={200} />
             <Bar dataKey="支出" fill="url(#expenditureGradient)" radius={[4, 4, 0, 0]} animationDuration={1200} animationBegin={400} />
           </BarChart>
@@ -108,7 +126,12 @@ export function CategoryPieChart({ data }: { data: PieData[] }) {
             </Pie>
             <Tooltip
               formatter={(value: number) => [`${(value / 100_000_000).toFixed(1)}億円`]}
-              contentStyle={{ borderRadius: "8px", border: "1px solid #E5E7EB" }}
+              contentStyle={{
+                borderRadius: "12px",
+                border: "1px solid rgba(255,107,53,0.2)",
+                backgroundColor: "#1a1a2e",
+                color: "#f0f0f0",
+              }}
             />
           </PieChart>
         </ResponsiveContainer>
@@ -139,20 +162,45 @@ export function PartyComparisonChart({ data }: { data: PartyBarData[] }) {
       {isInView && (
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData} layout="vertical" margin={{ left: 80 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+            <defs>
+              <linearGradient id="incomeGradientH" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#FF6B35" stopOpacity={0.9} />
+                <stop offset="100%" stopColor="#F7931E" stopOpacity={0.7} />
+              </linearGradient>
+              <linearGradient id="expenditureGradientH" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#FF8C5A" stopOpacity={0.7} />
+                <stop offset="100%" stopColor="#FFAD80" stopOpacity={0.5} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
             <XAxis
               type="number"
               tickFormatter={(v: number) => `${v.toFixed(0)}億`}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: "#8b949e" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.1)" }}
             />
-            <YAxis type="category" dataKey="name" width={80} tick={{ fontSize: 12 }} />
+            <YAxis
+              type="category"
+              dataKey="name"
+              width={80}
+              tick={{ fontSize: 12, fill: "#8b949e" }}
+              axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
+              tickLine={{ stroke: "rgba(255,255,255,0.1)" }}
+            />
             <Tooltip
               formatter={(value: number) => [`${value.toFixed(1)}億円`]}
-              contentStyle={{ borderRadius: "8px", border: "1px solid #E5E7EB" }}
+              contentStyle={{
+                borderRadius: "12px",
+                border: "1px solid rgba(255,107,53,0.2)",
+                backgroundColor: "#1a1a2e",
+                color: "#f0f0f0",
+              }}
+              labelStyle={{ color: "#8b949e" }}
             />
-            <Legend />
-            <Bar dataKey="収入" fill="url(#incomeGradient)" radius={[0, 4, 4, 0]} animationDuration={1200} animationBegin={200} />
-            <Bar dataKey="支出" fill="url(#expenditureGradient)" radius={[0, 4, 4, 0]} animationDuration={1200} animationBegin={400} />
+            <Legend wrapperStyle={{ color: "#8b949e" }} />
+            <Bar dataKey="収入" fill="url(#incomeGradientH)" radius={[0, 4, 4, 0]} animationDuration={1200} animationBegin={200} />
+            <Bar dataKey="支出" fill="url(#expenditureGradientH)" radius={[0, 4, 4, 0]} animationDuration={1200} animationBegin={400} />
           </BarChart>
         </ResponsiveContainer>
       )}

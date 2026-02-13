@@ -8,6 +8,8 @@ interface MotionCardProps {
   className?: string;
   delay?: number;
   hover?: boolean;
+  /** Use dark variant for dark-themed pages */
+  variant?: "light" | "dark";
 }
 
 export function MotionCard({
@@ -15,14 +17,20 @@ export function MotionCard({
   className = "",
   delay = 0,
   hover = true,
+  variant = "light",
 }: MotionCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
+  const bgClass =
+    variant === "dark"
+      ? "rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] backdrop-blur-sm"
+      : "rounded-xl border bg-white shadow-card";
+
   return (
     <motion.div
       ref={ref}
-      className={`rounded-xl border bg-white shadow-card ${className}`}
+      className={`${bgClass} ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
@@ -35,7 +43,9 @@ export function MotionCard({
           ? {
               y: -4,
               boxShadow:
-                "0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+                variant === "dark"
+                  ? "0 10px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.2)"
+                  : "0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
               transition: { duration: 0.2 },
             }
           : undefined

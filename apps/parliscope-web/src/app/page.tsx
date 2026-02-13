@@ -1,6 +1,9 @@
 import { prisma } from "@ojpp/db";
-import { Card, HeroSection } from "@ojpp/ui";
-import { BillStatusBadge } from "@/components/bill-status-badge";
+import { DashboardStats } from "@/components/dashboard-stats";
+import { DashboardBillsPanel } from "@/components/dashboard-bills-panel";
+import { DashboardVotePanel } from "@/components/dashboard-vote-panel";
+import { DashboardHero } from "@/components/dashboard-hero";
+import { DashboardStatusGrid } from "@/components/dashboard-status-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -12,9 +15,14 @@ export default async function Home() {
       prisma.dietSession.count(),
       prisma.bill.count({ where: { status: "ENACTED" } }),
       prisma.bill.findMany({
-        take: 10,
+        take: 6,
         orderBy: { submittedAt: "desc" },
-        include: { session: true },
+        include: {
+          session: true,
+          votes: {
+            include: { politician: { include: { party: true } } },
+          },
+        },
       }),
       prisma.bill.groupBy({
         by: ["status"],
@@ -27,86 +35,106 @@ export default async function Home() {
     statusMap[item.status] = item._count.id;
   }
 
-  return (
-    <div>
-      <HeroSection
-        title="ParliScope"
-        subtitle="国会の法案・会期・議員データを可視化するオープンプラットフォーム"
-        gradientFrom="from-purple-600"
-        gradientTo="to-indigo-700"
-      >
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-            <p className="text-sm text-white/70">法案数</p>
-            <p className="mt-1 text-2xl font-bold">{billCount}</p>
-          </div>
-          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-            <p className="text-sm text-white/70">議員数</p>
-            <p className="mt-1 text-2xl font-bold">{politicianCount}</p>
-          </div>
-          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-            <p className="text-sm text-white/70">成立法案</p>
-            <p className="mt-1 text-2xl font-bold">{enactedCount}</p>
-          </div>
-          <div className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-            <p className="text-sm text-white/70">会期数</p>
-            <p className="mt-1 text-2xl font-bold">{sessionCount}</p>
-          </div>
-        </div>
-      </HeroSection>
+  // Find the most-voted bill for the vote visualization
+  const voteBill = recentBills.reduce(
+    (best, bill) => (bill.votes.length > best.votes.length ? bill : best),
+    recentBills[0],
+  );
 
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <section className="mb-12">
-          <h3 className="mb-4 text-xl font-bold">ステータス別法案数</h3>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {Object.entries(statusMap).map(([status, count]) => (
-              <Card key={status} padding="sm" hover>
-                <div className="flex items-center justify-between">
-                  <BillStatusBadge status={status} />
-                  <span className="text-lg font-bold">{count}</span>
-                </div>
-              </Card>
-            ))}
-          </div>
+  const voteData = voteBill
+    ? {
+        billTitle: voteBill.title,
+        forCount: voteBill.votes.filter((v) => v.voteType === "FOR").length,
+        againstCount: voteBill.votes.filter((v) => v.voteType === "AGAINST").length,
+        abstainCount: voteBill.votes.filter((v) => v.voteType === "ABSTAIN").length,
+        partyBreakdown: getPartyBreakdown(voteBill.votes),
+      }
+    : null;
+
+  const billItems = recentBills.map((bill) => ({
+    id: bill.id,
+    title: bill.title,
+    sessionNumber: bill.session.number,
+    status: bill.status,
+  }));
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#0f0f23] to-[#1a1033]">
+      {/* Hero */}
+      <DashboardHero />
+
+      <div className="mx-auto max-w-7xl px-6 pb-16">
+        {/* Stats */}
+        <section className="-mt-8 mb-10">
+          <DashboardStats
+            stats={[
+              { label: "法案数", value: billCount },
+              { label: "議員数", value: politicianCount },
+              { label: "成立法案", value: enactedCount },
+              { label: "会期数", value: sessionCount },
+            ]}
+          />
         </section>
 
-        <section>
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-xl font-bold">最新の法案</h3>
-            <a href="/bills" className="text-sm text-purple-600 hover:underline">
-              すべて見る →
-            </a>
-          </div>
-          <div className="space-y-3">
-            {recentBills.map((bill) => (
-              <Card key={bill.id} padding="sm" hover>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span className="text-xs text-gray-500">{bill.number}</span>
-                      <BillStatusBadge status={bill.status} />
-                      {bill.category && (
-                        <span className="rounded bg-purple-50 px-2 py-0.5 text-xs text-purple-700">
-                          {bill.category}
-                        </span>
-                      )}
-                    </div>
-                    <a href={`/bills/${bill.id}`} className="font-semibold hover:text-purple-600">
-                      {bill.title}
-                    </a>
-                    {bill.summary && (
-                      <p className="mt-0.5 text-sm text-gray-600 line-clamp-1">{bill.summary}</p>
-                    )}
-                  </div>
-                  <span className="shrink-0 text-xs text-gray-400">
-                    第{bill.session.number}回国会
-                  </span>
-                </div>
-              </Card>
-            ))}
-          </div>
+        {/* Status Grid */}
+        <section className="mb-10">
+          <h3 className="mb-4 text-lg font-semibold text-white">ステータス別</h3>
+          <DashboardStatusGrid statusMap={statusMap} />
+        </section>
+
+        {/* Bills + Votes side by side */}
+        <section className="grid gap-6 lg:grid-cols-2">
+          <DashboardBillsPanel bills={billItems} />
+          {voteData && <DashboardVotePanel vote={voteData} />}
         </section>
       </div>
     </div>
   );
+}
+
+// Helper to extract party vote breakdown
+function getPartyBreakdown(
+  votes: {
+    voteType: string;
+    politician: { party: { name: string; shortName: string | null; color: string | null } | null };
+  }[],
+) {
+  const PARTY_COLORS: Record<string, string> = {
+    自由民主党: "#E8312B",
+    自民: "#E8312B",
+    立憲民主党: "#1E88E5",
+    立憲: "#1E88E5",
+    公明党: "#F5DEB3",
+    公明: "#F5DEB3",
+    日本維新の会: "#E65100",
+    維新: "#E65100",
+    日本共産党: "#DB0000",
+    共産: "#DB0000",
+    国民民主党: "#FFD700",
+    国民: "#FFD700",
+    れいわ新選組: "#ED6D00",
+    れいわ: "#ED6D00",
+  };
+
+  const partyVotes = new Map<string, { forCount: number; againstCount: number; color: string }>();
+
+  for (const v of votes) {
+    const partyName = v.politician.party?.shortName ?? v.politician.party?.name ?? "無所属";
+    const existing = partyVotes.get(partyName) ?? {
+      forCount: 0,
+      againstCount: 0,
+      color: v.politician.party?.color ?? PARTY_COLORS[partyName] ?? "#6b7280",
+    };
+    if (v.voteType === "FOR") existing.forCount++;
+    else if (v.voteType === "AGAINST") existing.againstCount++;
+    partyVotes.set(partyName, existing);
+  }
+
+  return Array.from(partyVotes.entries())
+    .slice(0, 6)
+    .map(([name, data]) => ({
+      name,
+      color: data.color,
+      voted: (data.forCount >= data.againstCount ? "for" : "against") as "for" | "against",
+    }));
 }

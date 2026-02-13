@@ -14,6 +14,7 @@ interface NavigationBarProps {
   brandHref?: string;
   items: NavItem[];
   accentColor?: string;
+  variant?: "light" | "dark";
 }
 
 export function NavigationBar({
@@ -22,6 +23,7 @@ export function NavigationBar({
   brandHref = "/",
   items,
   accentColor = "text-blue-600",
+  variant = "dark",
 }: NavigationBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,20 +36,37 @@ export function NavigationBar({
 
   const brandParts = brand.match(/^([A-Z][a-z]+)(.+)$/);
 
+  const isDark = variant === "dark";
+
+  const headerBg = isDark
+    ? scrolled
+      ? "bg-[#0d1117]/80 backdrop-blur-xl shadow-[0_1px_0_rgba(255,255,255,0.06)]"
+      : "bg-[#0d1117]/60 backdrop-blur-md"
+    : scrolled
+      ? "bg-white/70 backdrop-blur-xl shadow-sm"
+      : "bg-white/80 backdrop-blur-md";
+
+  const borderClass = isDark
+    ? "border-b border-[rgba(255,255,255,0.06)]"
+    : "border-b";
+
+  const textColor = isDark ? "text-[#8b949e]" : "";
+  const hoverTextColor = isDark ? "hover:text-[#f0f0f0]" : "";
+  const mobileBg = isDark
+    ? "bg-[#0d1117]/95 backdrop-blur-lg"
+    : "bg-white/95 backdrop-blur-lg";
+  const mobileItemHover = isDark ? "hover:text-[#FF6B35]" : "hover:text-blue-600";
+
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled
-          ? "bg-white/70 backdrop-blur-xl shadow-sm"
-          : "bg-white/80 backdrop-blur-md"
-      }`}
+      className={`sticky top-0 z-50 transition-all duration-300 ${borderClass} ${headerBg}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href={brandHref} className="text-xl font-bold">
           {brandParts ? (
             <>
               <span className={brandColor}>{brandParts[1]}</span>
-              {brandParts[2]}
+              <span className={isDark ? "text-white" : ""}>{brandParts[2]}</span>
             </>
           ) : (
             <span className={brandColor}>{brand}</span>
@@ -60,7 +79,7 @@ export function NavigationBar({
             <a
               key={item.href}
               href={item.href}
-              className={`relative transition-colors ${accentColor} after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full`}
+              className={`relative transition-colors ${textColor} ${hoverTextColor} ${accentColor} after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full`}
             >
               {item.label}
             </a>
@@ -70,7 +89,7 @@ export function NavigationBar({
         {/* Mobile hamburger */}
         <button
           type="button"
-          className="md:hidden p-2"
+          className={`md:hidden p-2 ${isDark ? "text-[#8b949e]" : ""}`}
           onClick={() => setIsOpen(!isOpen)}
           aria-label="メニュー"
         >
@@ -98,7 +117,7 @@ export function NavigationBar({
       <AnimatePresence>
         {isOpen && (
           <motion.nav
-            className="md:hidden border-t bg-white/95 backdrop-blur-lg px-6 py-4 overflow-hidden"
+            className={`md:hidden border-t ${isDark ? "border-[rgba(255,255,255,0.06)]" : ""} ${mobileBg} px-6 py-4 overflow-hidden`}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -108,7 +127,7 @@ export function NavigationBar({
               <motion.a
                 key={item.href}
                 href={item.href}
-                className="block py-2 text-sm transition-colors hover:text-blue-600"
+                className={`block py-2 text-sm transition-colors ${textColor} ${mobileItemHover}`}
                 onClick={() => setIsOpen(false)}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}

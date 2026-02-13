@@ -1,48 +1,53 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
+import { useSpring, motion } from "motion/react";
 
 interface AnimatedCounterProps {
-  end: number;
+  from?: number;
+  to?: number;
+  /** @deprecated Use `to` instead */
+  end?: number;
+  /** Duration in seconds (values > 100 are treated as milliseconds for backwards compat) */
   duration?: number;
   prefix?: string;
   suffix?: string;
   className?: string;
 }
 
-function easeOutQuart(t: number): number {
-  return 1 - (1 - t) ** 4;
-}
-
 export function AnimatedCounter({
+  from = 0,
+  to,
   end,
-  duration = 2000,
+  duration = 2,
   prefix = "",
   suffix = "",
   className = "",
 }: AnimatedCounterProps) {
-  const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
+  const target = to ?? end ?? 0;
+  // Backwards compat: old API used milliseconds, new API uses seconds
+  const durationSec = duration > 100 ? duration / 1000 : duration;
 
+  const ref = useRef<HTMLSpanElement>(null);
+  const [display, setDisplay] = useState(from);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  const springValue = useSpring(from, {
+    stiffness: 50,
+    damping: 20,
+    duration: durationSec,
+  });
+
+  // IntersectionObserver to trigger animation on scroll into view
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          const startTime = performance.now();
-          const animate = (currentTime: number) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easedProgress = easeOutQuart(progress);
-            setCount(Math.round(easedProgress * end));
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-          requestAnimationFrame(animate);
+        if (entry.isIntersecting && !hasStarted) {
+          setHasStarted(true);
+          springValue.set(target);
         }
       },
       { threshold: 0.1 },
@@ -50,13 +55,21 @@ export function AnimatedCounter({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [end, duration, hasAnimated]);
+  }, [target, hasStarted, springValue]);
+
+  // Subscribe to spring value changes
+  useEffect(() => {
+    const unsubscribe = springValue.on("change", (latest) => {
+      setDisplay(Math.round(latest));
+    });
+    return unsubscribe;
+  }, [springValue]);
 
   return (
-    <span ref={ref} className={className}>
+    <motion.span ref={ref} className={className}>
       {prefix}
-      {count.toLocaleString()}
+      {display.toLocaleString()}
       {suffix}
-    </span>
+    </motion.span>
   );
 }

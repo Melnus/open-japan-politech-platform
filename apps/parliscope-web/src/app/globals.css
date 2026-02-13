@@ -1,2 +1,77 @@
 @import "tailwindcss";
 @import "@ojpp/ui/theme.css";
+
+/* ParliScope Dark Theme Overrides */
+:root {
+  --ps-bg-primary: #0f0f23;
+  --ps-bg-secondary: #1a1033;
+  --ps-bg-card: rgba(255, 255, 255, 0.03);
+  --ps-bg-card-hover: rgba(255, 255, 255, 0.06);
+  --ps-border-card: rgba(255, 255, 255, 0.06);
+  --ps-border-card-hover: rgba(255, 255, 255, 0.12);
+  --ps-accent-indigo: #6366f1;
+  --ps-accent-violet: #8b5cf6;
+  --ps-accent-light: #818cf8;
+  --ps-text-primary: #ffffff;
+  --ps-text-secondary: #8b949e;
+  --ps-text-muted: #6b7280;
+  --ps-nav-bg: rgba(13, 17, 23, 0.85);
+  --ps-nav-bg-scrolled: rgba(13, 17, 23, 0.95);
+  --ps-status-green: #22c55e;
+  --ps-status-green-bg: rgba(34, 197, 94, 0.15);
+  --ps-status-yellow: #eab308;
+  --ps-status-yellow-bg: rgba(234, 179, 8, 0.15);
+  --ps-status-red: #ef4444;
+  --ps-status-red-bg: rgba(239, 68, 68, 0.15);
+  --ps-stat-bg: rgba(99, 102, 241, 0.1);
+  --ps-stat-border: rgba(99, 102, 241, 0.3);
+}
+
+/* Smooth scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Vote bar gradient animation */
+@keyframes vote-bar-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Glow pulse for accent elements */
+@keyframes glow-breathe {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(99, 102, 241, 0.3);
+  }
+}
+
+/* Shimmer effect for loading states */
+@keyframes dark-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
