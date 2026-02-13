@@ -1,133 +1,145 @@
-# Open Japan PoliTech Platform v0.1
+<div align="center">
+
+# Open Japan PoliTech Platform
+
+**AIエージェント時代の政治インフラ**
+
+政党にも企業にもよらない、完全オープンな政治テクノロジー基盤
 
 [![CI](https://github.com/ochyai/open-japan-politech-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/ochyai/open-japan-politech-platform/actions/workflows/ci.yml)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1-orange.svg)](#)
-[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?logo=node.js)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-10%2B-F69220?logo=pnpm)](https://pnpm.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Apps](https://img.shields.io/badge/apps-8-FF6B35.svg)](#6-apps)
+[![Models](https://img.shields.io/badge/Prisma_models-29-5B21B6.svg)](#data-model)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-000000?logo=next.js)](https://nextjs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-10-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 
-> **AIエージェント時代の政治インフラ — 政党にも企業にもよらない、完全オープンな政治テクノロジー基盤**
+[**1行で起動**](#1-line-setup) | [**6つのアプリ**](#6-apps) | [**API仕様**](#api) | [**論文**](#paper) | [**Contributing**](#contributing)
+
+</div>
+
+---
 
 > [!NOTE]
-> **v0.1 のデータは公的機関の公開資料に基づく実データです。** 詳細は[データの性質と注意事項](#データの性質と注意事項)および[データソース・根拠一覧](docs/DATA_SOURCES.md)を参照してください。
+> **v0.1 のデータは公的機関の公開資料に基づく実データです。** 詳細は[データソース・根拠一覧](docs/DATA_SOURCES.md)を参照してください。
 
----
+<a id="1-line-setup"></a>
 
-## 1行で起動。ターミナルに以下を貼り付けて。
-
-> **必要なもの**: [Docker](https://docs.docker.com/get-docker/) と [Git](https://git-scm.com/) だけ。Node.js / pnpm は自動インストールされます。
+## 1行で起動
 
 ```bash
-(git clone https://github.com/ochyai/open-japan-politech-platform.git 2>/dev/null || true) && cd open-japan-politech-platform && git pull -q && bash setup.sh
+git clone https://github.com/ochyai/open-japan-politech-platform.git && cd open-japan-politech-platform && bash setup.sh
 ```
 
-セットアップ完了後、自動的に空きポートを探して3つのURLを表示します（デフォルト: 3000, 3002, 3003）。
-
-> 💡 **技術的な知識は不要です！** 上のコマンドをコピーしてターミナルに貼り付けるだけで、全ての環境が自動で構築されます。Docker、Node.js、データベース — 全て自動でインストール・セットアップされます。
-
-> 停止: `Ctrl+C`（ポートは自動解放） / 再起動: `bash setup.sh` / DB削除: `docker compose down -v`
+> **必要なもの**: [Docker](https://docs.docker.com/get-docker/) と [Git](https://git-scm.com/) だけ。Node.js / pnpm は自動インストールされます。
+>
+> 停止 `Ctrl+C` / 再起動 `bash setup.sh` / DB削除 `docker compose down -v`
 
 ---
 
-## なぜ今、PoliTechなのか
+## なぜ PoliTech か
 
-政治は長く、政党と企業の専有物だった。政治資金の流れを追うには専門知識が必要だった。全政党の政策を比較するには膨大な時間がかかった。国会の法案を読み解くには法律の素養が求められた。
+政治は長く、政党と企業の専有物だった。
 
 **AIエージェントの時代が、この構造を変える。**
 
 あなたのAIエージェントが、24時間365日、全政党の政治資金を監視する。全政党の政策変更を追跡し、差分を届ける。全法案を読み、あなたに影響のある部分を要約する。政党に属さなくても、企業のロビイストを雇わなくても、専門家でなくても——**AIエージェントがあなたの代わりに政治を読み解き、あなたに届ける**。
 
-これがPoliTechだ。GovTech（行政DX）でもCivicTech（市民技術）でもない。**政治の意思決定プロセスそのものを、AIエージェントと共に、すべての人に開くテクノロジー**。
+GovTech（行政DX）でもCivicTech（市民技術）でもない。**政治の意思決定プロセスそのものを、すべての人に開くテクノロジー**。
 
-## PoliTech = 第三の概念
+<table>
+<tr><th></th><th>GovTech</th><th>CivicTech</th><th><strong>PoliTech</strong></th></tr>
+<tr><td><strong>問い</strong></td><td>決まった政策をいかに届けるか</td><td>市民がいかに参加するか</td><td><strong>AIエージェント時代に、誰もが政治プロセスを実行・享受するには</strong></td></tr>
+<tr><td><strong>主体</strong></td><td>政府</td><td>市民社会</td><td><strong>市民 + AIエージェント</strong></td></tr>
+<tr><td><strong>時代</strong></td><td>電子政府時代</td><td>Web 2.0時代</td><td><strong>AIエージェント時代</strong></td></tr>
+</table>
 
-| | GovTech（行政DX） | CivicTech（市民技術） | **PoliTech（政治技術）** |
-|---|---|---|---|
-| **問い** | 決まった政策をいかに届けるか | 市民がいかに参加するか | **AIエージェント時代に、誰もが政治プロセスを実行・享受するには** |
-| **主体** | 政府 | 市民社会 | **市民 + AIエージェント** |
-| **時代** | 電子政府時代 | Web 2.0時代 | **AIエージェント時代** |
-| **例** | マイナンバー、X-Road | Code for Japan、FixMyStreet | **本プラットフォーム、vTaiwan、Decidim** |
+### 7つの原則
 
-## 7つの原則
-
-1. **エージェントファースト** — AIエージェントの参加を前提に設計。人間が見ていなくてもエージェントが動く
-2. **非党派性** — 特定の政党・政治団体に依存しない。全政党を等しく扱う
-3. **非企業性** — 企業が運営しない。企業の代弁者にもならない。完全にコミュニティ主導
-4. **完全オープン** — コード、データ、意思決定プロセスの全てがオープン。AGPL-3.0
-5. **誰でも参加** — 技術者でなくても、どの政治的立場からでも、人間でもAIでも参加できる
-6. **議席不要** — 政治のデジタル化のために議席を取る必要はない。インフラは市民とエージェントが作る
-7. **持続性** — 政権交代・組織変更に左右されない。フォーク可能で分散的
+> **1** エージェントファースト — AIの参加を前提に設計
+> **2** 非党派性 — 全政党を等しく扱う
+> **3** 非企業性 — 企業が運営しない
+> **4** 完全オープン — AGPL-3.0
+> **5** 誰でも参加 — 人間でもAIでも
+> **6** 議席不要 — インフラは市民とエージェントが作る
+> **7** 持続性 — フォーク可能で分散的
 
 ---
 
-## プロダクト
+<a id="6-apps"></a>
 
-### MoneyGlass — 政治資金を、ガラスのように透明に
+## 6 Apps
 
-全政党・全政治団体の資金の流れを可視化。収支報告書を構造化し、収入9カテゴリ・支出8カテゴリで分類。Rechartsによるインタラクティブなグラフ（グラデーション付き棒グラフ・ドーナツチャート）、AnimatedCounterによるダッシュボード統計、GradientCardによる政党別カードで、誰もが政治資金の実態にアクセスできる。
+<table>
+<tr>
+<td width="50%">
 
-| ダッシュボード | 政党別資金集計 |
-|---|---|
-| ![MoneyGlass Dashboard](docs/screenshots/moneyglass-dashboard.gif) | ![MoneyGlass Parties](docs/screenshots/moneyglass-parties.gif) |
+### MoneyGlass `:3000`
+**政治資金を、ガラスのように透明に**
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `moneyglass-web` | 3000 | ダッシュボード、団体検索、報告書閲覧 |
-| `moneyglass-admin` | 3001 | データ管理・メンテナンス |
+全政党・全政治団体の資金の流れを可視化。収支報告書を構造化し、収入9カテゴリ・支出8カテゴリで分類。グラデーション付き棒グラフ・ドーナツチャートで政治資金の実態にアクセス。
 
-### PolicyDiff — 全政党の政策を、差分で比較する
+`13政党` `8年分` `政治資金収支報告書`
 
-全15政党のマニフェスト・政策を10カテゴリに分類し、政党間の比較を可能にする。Markdown形式の政策テキストをremark + remark-htmlでレンダリング。カテゴリ別・政党別のフィルタリング、政党カラーチップによる直感的なUI、スナップスクロール対応の比較カード、市民からの政策提案機能を実装。
+</td>
+<td width="50%">
 
-| ホーム | 政党比較 |
-|---|---|
-| ![PolicyDiff Home](docs/screenshots/policydiff-home.gif) | ![PolicyDiff Compare](docs/screenshots/policydiff-compare.gif) |
+### PolicyDiff `:3002`
+**全政党の政策を、差分で比較する**
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `policydiff-web` | 3002 | 政策比較、カテゴリ別閲覧、提案投稿 |
+全15政党のマニフェスト・政策を10カテゴリに分類し、政党間の比較を可能にする。カテゴリ別・政党別フィルタリング、政党カラーチップによる直感的UI、市民からの政策提案機能。
 
-### ParliScope — 議会を、すべての人とエージェントに開く
+`15政党` `10カテゴリ` `マニフェスト比較`
 
-国会の会期・法案・議員・投票・討論データをAPI化。14会期分のデータを構造化し、BillTimeline（法案ステータスのステップインジケーター）、VoteChart（投票結果のアニメーション棒グラフ）、議員カードのページネーション付き一覧で、法案追跡と議員分析が可能。
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-| ダッシュボード | 議員名簿 |
-|---|---|
-| ![ParliScope Home](docs/screenshots/parliscope-home.gif) | ![ParliScope Politicians](docs/screenshots/parliscope-politicians.gif) |
+### ParliScope `:3003`
+**議会を、すべての人とエージェントに開く**
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `parliscope-web` | 3003 | 法案検索、議員情報、投票記録 |
-| `parliscope-admin` | 3004 | データ管理・メンテナンス |
+国会の会期・法案・議員・投票・討論データをAPI化。21会期分のデータを構造化し、法案タイムライン、投票結果アニメーション棒グラフ、議員カード一覧で法案追跡と議員分析が可能。
 
-### SeatMap — 議会の勢力図を、ひと目で把握する
+`90法案` `713議員` `21会期`
 
-国会の議席構成・政党別勢力を視覚的に表示。スプリング物理に基づくアニメーテッドバーで議席数の変動や与野党の勢力バランスを直感的に理解できる。過半数ラインのdraw-inアニメーション付き。
+</td>
+<td width="50%">
 
-| 勢力図 |
-|---|
-| ![SeatMap](docs/screenshots/seatmap-home.gif) |
+### SeatMap `:3005`
+**議会の勢力図を、ひと目で把握する**
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `seatmap-web` | 3005 | SeatMap 議席勢力図 |
+国会の議席構成・政党別勢力を視覚的に表示。スプリング物理に基づくアニメーテッドバーで議席数の変動や与野党の勢力バランスを直感的に理解。過半数ラインdraw-in付き。
 
-### CultureScope — 文化政策を、データで可視化する
+`衆参両院` `9選挙` `スプリング物理`
 
-文化庁予算の推移、芸術振興・文化財保護・メディア芸術等の分野別予算配分、各政党の文化政策スタンスを一覧比較。文化プログラム・補助金制度のデータベースを備え、文化政策の全体像を俯瞰できる。
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `culturescope-web` | 3006 | 文化庁予算推移、文化施策一覧、政党比較 |
+### CultureScope `:3006`
+**文化政策を、データで可視化する**
 
-### SocialGuard — 社会保障を、誰もが理解できる形に
+文化庁予算の推移（2019-2026）、芸術振興・文化財保護・メディア芸術等12分野の予算配分、各政党の文化政策スタンスを一覧比較。20の文化プログラム・補助金制度データベース。
 
-年金・医療・介護・子育て支援・生活保護——37兆円規模の社会保障関係費を分野別に可視化。都道府県別の福祉指標比較、各政党の社会保障政策スタンス比較を提供し、社会保障制度の全体像を把握できる。
+`96予算データ` `20プログラム` `13政党スタンス`
 
-| アプリ | ポート | 用途 |
-|---|---|---|
-| `socialguard-web` | 3007 | 社会保障予算推移、制度一覧、都道府県比較、政党比較 |
+</td>
+<td width="50%">
+
+### SocialGuard `:3007`
+**社会保障を、誰もが理解できる形に**
+
+年金・医療・介護・子育て支援・生活保護——37兆円規模の社会保障関係費を8分野で可視化。47都道府県別福祉指標比較、各政党の社会保障政策スタンス比較。
+
+`64予算データ` `15制度` `47都道府県` `13政党スタンス`
+
+</td>
+</tr>
+</table>
+
+> **管理画面**: `moneyglass-admin` `:3001` / `parliscope-admin` `:3004`
 
 ---
 
@@ -135,522 +147,339 @@
 
 > **「ぬるぬるカッコいい」** — 政治データを、触って気持ちいいUIで届ける
 
-全アプリに [Motion](https://motion.dev/)（framer-motion v11+）と [Lenis](https://lenis.darkroom.engineering/) による滑らかなアニメーションを実装。スクロールするだけで「動く政治データ」を体感できます。
+全アプリに [Motion](https://motion.dev/) と [Lenis](https://lenis.darkroom.engineering/) による滑らかなアニメーションを実装。
 
 | 機能 | 技術 | 体験 |
-|---|---|---|
-| **スムーススクロール** | Lenis (慣性スクロール) | 全ページが60fpsでぬるぬるスクロール |
-| **ページ遷移** | Motion `PageTransition` | ルート切替時にフェード＋スライドアップ |
-| **スクロールリビール** | `useInView` + `ScrollReveal` | セクションがスクロールで現れる |
-| **カードスタッガー** | `StaggerGrid` + `StaggerItem` | カードが順番に時差表示 |
-| **データバーアニメーション** | Spring物理 (stiffness:60) | 議席バー・投票バーがバネで伸びる |
-| **過半数ライン** | `scaleY` draw-in | 議席バーの過半数ラインがドローイン |
-| **グラスモーフィズム** | Scroll-dependent backdrop-blur | ナビゲーションバーが半透明ガラス化 |
-| **ホバーリフト** | `whileHover` + boxShadow | カードがホバーで浮き上がる |
-| **タップフィードバック** | `whileTap` scale(0.97) | ボタンを押すとバネで縮む |
-| **パララックス** | `useScroll` + `useTransform` | HeroSectionの背景がパララックス移動 |
-| **シマースケルトン** | CSS gradient animation | ローディング状態がキラキラ光る |
-
-<details>
-<summary>GIFスクリーンショットの録画方法</summary>
-
-開発サーバーを起動し、以下の手順でGIFを録画してください:
-
-```bash
-# 1. 開発サーバー起動
-bash setup.sh
-
-# 2. 各アプリのURLにアクセスし、以下をキャプチャ
-#    - ページ読み込み時のアニメーション
-#    - スクロールによるカード表示
-#    - データバーの成長アニメーション
-#    - ホバー・クリックのインタラクション
-
-# 3. 推奨ツール
-#    macOS: Gifski, LICEcap, CleanShot X
-#    Chrome拡張: Screencastify
-#    CLI: ffmpeg + gifsicle
-```
-
-録画したGIFを `docs/screenshots/` に配置してください:
-- `moneyglass-dashboard.gif` — ダッシュボードのチャートアニメーション
-- `moneyglass-parties.gif` — 政党カードのスタッガー表示
-- `policydiff-home.gif` — HeroSection + スクロールリビール
-- `policydiff-compare.gif` — 政策カードの時差表示
-- `parliscope-home.gif` — 法案一覧のスクロール表示
-- `parliscope-politicians.gif` — 議員カードのグリッドアニメーション
-- `seatmap-home.gif` — 議席バーのスプリングアニメーション
-
-</details>
+|:---|:---|:---|
+| スムーススクロール | Lenis 慣性スクロール | 全ページが60fpsでぬるぬる |
+| ページ遷移 | `PageTransition` | フェード＋スライドアップ |
+| スクロールリビール | `useInView` + `ScrollReveal` | セクションがスクロールで出現 |
+| カードスタッガー | `StaggerGrid` + `StaggerItem` | カードが順番に時差表示 |
+| データバー | Spring物理 (stiffness:60) | 議席バー・投票バーがバネで伸びる |
+| グラスモーフィズム | Scroll-dependent backdrop-blur | ナビバーが半透明ガラス化 |
+| ホバーリフト | `whileHover` + boxShadow | カードが浮き上がる |
+| タップフィードバック | `whileTap` scale(0.97) | ボタンがバネで縮む |
+| パララックス | `useScroll` + `useTransform` | Hero背景がパララックス移動 |
 
 ---
 
 ## アーキテクチャ
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                     クライアント                                              │
-│                    ブラウザ / AIエージェント / MCP クライアント                                  │
-└──┬──────────┬──────────┬──────────┬──────────┬──────────────┬────────────────────────────────┘
-   │          │          │          │          │              │
-   ▼          ▼          ▼          ▼          ▼              ▼
-┌────────┐┌────────┐┌────────┐┌────────┐┌─────────────┐┌─────────────┐
-│Money   ││Policy  ││Parli   ││Seat    ││Culture      ││Social       │
-│Glass   ││Diff    ││Scope   ││Map     ││Scope        ││Guard        │
-│:3000   ││:3002   ││:3003   ││:3005   ││:3006        ││:3007        │
-│        ││        ││        ││        ││文化政策      ││社会保障      │
-└──┬─────┘└──┬─────┘└──┬─────┘└──┬─────┘└──┬──────────┘└──┬──────────┘
-   │          │          │          │          │              │
-   ▼          ▼          ▼          ▼          ▼              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      共有パッケージ                               │
-│  @ojpp/api  │  @ojpp/ui  │  @ojpp/db  │  @ojpp/ingestion       │
-└───────────────────────────┬─────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     PostgreSQL (Prisma 6)                       │
-│  21モデル │ 10 enum │ 47都道府県 │ 15政党 │ 政治資金・法案・政策  │
-└─────────────────────────────────────────────────────────────────┘
-                            ▲
-                            │
-┌─────────────────────────────────────────────────────────────────┐
-│                     データソース (ingestion)                     │
-│  政治資金DB (OCR済)  │  国会会議録API  │  マニフェスト (手動)     │
-└─────────────────────────────────────────────────────────────────┘
+                          ブラウザ / AIエージェント / MCP
+                                      │
+          ┌───────┬───────┬───────┬────┴────┬──────────┬──────────┐
+          ▼       ▼       ▼       ▼         ▼          ▼          │
+      MoneyGlass PolicyDiff ParliScope SeatMap CultureScope SocialGuard
+       :3000      :3002     :3003    :3005    :3006      :3007     │
+       ┌──────────────────────────────────────────────────────┐    │
+       │              Next.js 15  ×  React 19                 │    │
+       └────────────────────────┬─────────────────────────────┘    │
+                                │                              admin apps
+       ┌────────────────────────┼─────────────────────────────┐ :3001/:3004
+       │  @ojpp/ui  │  @ojpp/api  │  @ojpp/db  │  @ojpp/ingestion │
+       └────────────────────────┬─────────────────────────────┘
+                                │
+                    PostgreSQL (Prisma 6)
+                 29 models │ 14 enums │ 13政党
 ```
 
 ---
 
 ## クイックスタート
 
-### 自動セットアップ（推奨）
-
-[上部の「1行で起動」](#1行で起動)を参照してください。`bash setup.sh` で Docker + Node.js + DB + 全アプリが自動で起動します。
-
-### 手動セットアップ
-
-<details>
-<summary>手動で個別にセットアップしたい場合</summary>
-
-**前提条件**: Node.js 22+ / pnpm 10+ / PostgreSQL（Docker or Supabase）
+### 個別起動
 
 ```bash
-# クローン
+pnpm dev:moneyglass    # MoneyGlass   :3000 + :3001
+pnpm dev:policydiff    # PolicyDiff   :3002
+pnpm dev:parliscope    # ParliScope   :3003 + :3004
+pnpm dev:seatmap       # SeatMap      :3005
+pnpm dev:culturescope  # CultureScope :3006
+pnpm dev:socialguard   # SocialGuard  :3007
+```
+
+<details>
+<summary><strong>手動セットアップ</strong></summary>
+
+**前提条件**: Node.js 22+ / pnpm 10+ / PostgreSQL
+
+```bash
 git clone https://github.com/ochyai/open-japan-politech-platform.git
 cd open-japan-politech-platform
-
-# PostgreSQL を Docker で起動
 docker compose up -d
-
-# 環境変数（デフォルトで Docker の DB に接続します）
 cp .env.example .env
-
-# 依存関係インストール + DB準備
-pnpm install
-pnpm db:generate
-pnpm --filter @ojpp/db push
-pnpm db:seed
-
-# データ取り込み（全データソース一括）
+pnpm install && pnpm db:generate && pnpm --filter @ojpp/db push && pnpm db:seed
 pnpm ingest:all
-
-# 開発サーバー起動（全アプリ）
 pnpm dev
 ```
 
 </details>
 
-個別起動も可能:
-
-```bash
-pnpm dev:moneyglass    # MoneyGlass (port 3000 + 3001)
-pnpm dev:policydiff    # PolicyDiff (port 3002)
-pnpm dev:parliscope    # ParliScope (port 3003 + 3004)
-pnpm dev:seatmap       # SeatMap (port 3005)
-pnpm dev:culturescope  # CultureScope (port 3006)
-pnpm dev:socialguard   # SocialGuard (port 3007)
-```
-
-### 品質管理コマンド
+### コマンド一覧
 
 | コマンド | 説明 |
-|---|---|
-| `pnpm test` | Vitest テスト実行（33テスト） |
-| `pnpm lint` | Biome lint チェック |
-| `pnpm lint:fix` | Biome lint 自動修正 |
+|:---|:---|
+| `pnpm build` | プロダクションビルド（全8アプリ） |
 | `pnpm typecheck` | TypeScript 型チェック |
-| `pnpm build` | プロダクションビルド（全6アプリ） |
-| `pnpm format` | Biome フォーマット |
-
-### データベース操作
-
-| コマンド | 説明 |
-|---|---|
+| `pnpm test` | Vitest テスト実行 |
+| `pnpm lint` | Biome lint |
 | `pnpm db:studio` | Prisma Studio（DB GUI） |
-| `pnpm db:reset` | DB リセット + 再シード |
 | `pnpm db:generate` | Prisma Client 再生成 |
-| `pnpm --filter @ojpp/db push` | スキーマをDBに直接反映（開発用） |
-| `pnpm db:migrate` | マイグレーション実行 |
+| `pnpm ingest:all` | 全データ一括投入 |
+| `pnpm ingest:culture` | 文化政策データ投入 |
+| `pnpm ingest:social` | 社会保障データ投入 |
 
 ---
 
-## 🤖 AIエージェントファースト開発
+<a id="api"></a>
 
-> **このプロジェクトの最大の特徴: 人間もAIも平等に開発に参加できる**
+## API
 
-OJPPは「AIエージェントが主体的に政治データ基盤を改善し続ける」ことを前提に設計されています。コードの追加・修正・テスト・デプロイまで、AIエージェントが自律的に行えます。
-
-### 🔥 Claude Code で開発（推奨）
-
-このリポジトリを clone して Claude Code を起動するだけで、AIがコードベースを完全に理解し、あらゆる開発タスクを実行できます。
-
-```bash
-cd open-japan-politech-platform
-claude
-```
-
-**依頼の例:**
-| やりたいこと | Claude Code への指示 |
-|-------------|-------------------|
-| 新機能追加 | 「MoneyGlassにグラフを追加して」 |
-| バグ修正 | 「PolicyDiffのページが表示されないバグを直して」 |
-| テスト作成 | 「SeatMapのAPIのテストを書いて」 |
-| データ追加 | 「2026年の選挙データを取り込むスクリプトを作って」 |
-| UI改善 | 「ParliScopeのダッシュボードをもっと見やすくして」 |
-| スキーマ変更 | 「Prismaに新しいモデルを追加してマイグレーションして」 |
-| 全体改善 | 「コード品質を上げてリファクタリングして」 |
-
-### 🦞 OpenClaw で開発
-
-```bash
-openclaw .
-```
-
-OpenClaw でも同様にリポジトリ全体を操作できます。UIの改善、APIの追加、データパイプラインの構築など、あらゆるタスクに対応。
-
-### 🏗️ AIエージェントのための技術マップ
-
-```
-open-japan-politech-platform/
-├── apps/                          ← Next.js 15 アプリ（ここを編集）
-│   ├── moneyglass-web/   :3000   💰 政治資金
-│   ├── moneyglass-admin/ :3001   💰 管理画面
-│   ├── policydiff-web/   :3002   📋 政策比較
-│   ├── parliscope-web/   :3003   🏛️ 国会
-│   ├── parliscope-admin/ :3004   🏛️ 管理画面
-│   ├── seatmap-web/      :3005   💺 議席勢力図
-│   ├── culturescope-web/ :3006   🎨 文化政策
-│   └── socialguard-web/  :3007   🛡️ 社会保障
-├── packages/
-│   ├── db/                        🗄️ Prisma スキーマ (29モデル) + クライアント
-│   ├── api/                       🔌 共通API ユーティリティ
-│   ├── ui/                        🎨 UIコンポーネント (14個) + Motion/Lenis
-│   └── ingestion/                 📊 データ取り込みスクリプト
-└── paper/                         📄 学術論文
-```
-
-**よくある操作:**
-```bash
-# DBスキーマ変更
-# → packages/db/prisma/schema.prisma を編集
-pnpm db:generate && pnpm --filter @ojpp/db push
-
-# データ投入
-pnpm ingest:all          # 全データ一括
-pnpm ingest:elections    # 選挙データのみ
-pnpm ingest:finance      # 政治資金のみ
-
-# 開発サーバー
-bash setup.sh            # 全アプリ一括起動（推奨）
-pnpm dev:seatmap         # 個別起動も可能
-
-# 品質チェック
-pnpm typecheck && pnpm lint && pnpm test
-```
-
-**コーディング規約:**
-- TypeScript strict mode（型安全必須）
-- Biome でフォーマット・リント
-- Server Components 優先、必要な場合のみ `"use client"`
-- `@/` からの絶対パスインポート
-- API-first: 全データは REST API として公開
-
-### 🌍 誰でも参加できる
-
-技術者でなくても参加できます:
-- **Issue を立てる** — バグ報告、機能リクエスト、データの誤り報告
-- **議論に参加** — GitHub Discussions でアイデアを共有
-- **ドキュメント改善** — 説明文やREADMEの改善提案
-- **データ提供** — 公開されている政治データソースの共有
-
-> 💡 **AIエージェントからのPull Requestも歓迎します。** `agent/` ラベルを付けてPRを送ってください。
-
----
-
-## API仕様
-
-全APIはRESTful JSONを返し、ページネーション（`?page=1&limit=20`）に対応。
-
-### MoneyGlass API (port 3000)
-
-| メソッド | エンドポイント | 説明 | パラメータ |
-|---|---|---|---|
-| GET | `/api/organizations` | 政治団体一覧 | `party`, `type`, `page`, `limit` |
-| GET | `/api/organizations/:id` | 団体詳細 | — |
-| GET | `/api/reports` | 報告書一覧 | `year`, `org`, `page`, `limit` |
-| GET | `/api/reports/:id` | 報告書詳細（収支明細含む） | — |
-| GET | `/api/parties` | 政党一覧（資金集計付き） | — |
-| GET | `/api/stats` | ダッシュボード統計 | — |
+全APIはRESTful JSONを返し、ページネーション `?page=1&limit=20` に対応。
 
 <details>
-<summary>APIレスポンス例</summary>
+<summary><strong>MoneyGlass API</strong> <code>:3000</code></summary>
 
-```bash
-curl http://localhost:3000/api/organizations?limit=2
-```
-
-```json
-{
-  "data": [
-    {
-      "id": "...",
-      "name": "自由民主党東京都支部連合会",
-      "type": "PARTY_BRANCH",
-      "partyId": "..."
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "limit": 2,
-    "total": 150,
-    "totalPages": 75
-  }
-}
-```
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/api/organizations` | 政治団体一覧 |
+| GET | `/api/organizations/:id` | 団体詳細 |
+| GET | `/api/reports` | 報告書一覧 |
+| GET | `/api/reports/:id` | 報告書詳細（収支明細含む） |
+| GET | `/api/parties` | 政党一覧（資金集計付き） |
+| GET | `/api/stats` | ダッシュボード統計 |
 
 </details>
 
-### PolicyDiff API (port 3002)
+<details>
+<summary><strong>PolicyDiff API</strong> <code>:3002</code></summary>
 
-| メソッド | エンドポイント | 説明 | パラメータ |
-|---|---|---|---|
-| GET | `/api/policies` | 政策一覧 | `party`, `category`, `page`, `limit` |
-| GET | `/api/policies/:id` | 政策詳細 | — |
-| GET | `/api/parties` | 政党一覧（カテゴリ別件数付き） | — |
-| GET | `/api/compare` | 政策比較 | `category`, `parties` |
-| GET | `/api/proposals` | 提案一覧 | `page`, `limit` |
-| GET | `/api/categories` | カテゴリ一覧（件数付き） | — |
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/api/policies` | 政策一覧 |
+| GET | `/api/policies/:id` | 政策詳細 |
+| GET | `/api/parties` | 政党一覧 |
+| GET | `/api/compare` | 政策比較 |
+| GET | `/api/proposals` | 提案一覧 |
+| GET | `/api/categories` | カテゴリ一覧 |
 
-### ParliScope API (port 3003)
+</details>
 
-| メソッド | エンドポイント | 説明 | パラメータ |
-|---|---|---|---|
-| GET | `/api/sessions` | 会期一覧 | — |
-| GET | `/api/sessions/:id` | 会期詳細 + 法案 | — |
-| GET | `/api/bills` | 法案一覧 | `status`, `session`, `page`, `limit` |
-| GET | `/api/bills/:id` | 法案詳細（投票・議論含む） | — |
-| GET | `/api/politicians` | 議員一覧 | `party`, `chamber`, `page`, `limit` |
-| GET | `/api/politicians/:id` | 議員詳細 + 投票履歴 | — |
-| GET | `/api/stats` | ダッシュボード統計 | — |
+<details>
+<summary><strong>ParliScope API</strong> <code>:3003</code></summary>
 
----
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/api/sessions` | 会期一覧 |
+| GET | `/api/sessions/:id` | 会期詳細 + 法案 |
+| GET | `/api/bills` | 法案一覧 |
+| GET | `/api/bills/:id` | 法案詳細（投票・議論含む） |
+| GET | `/api/politicians` | 議員一覧 |
+| GET | `/api/politicians/:id` | 議員詳細 + 投票履歴 |
+| GET | `/api/stats` | ダッシュボード統計 |
 
-## データソース
+</details>
 
-| データ | ソース | ライセンス | 取り込み方法 |
-|---|---|---|---|
-| 政治資金 | [political-finance-database.com](https://political-finance-database.com) (OCR済み収支報告書) | パブリック | `pnpm ingest:finance` |
-| 国会会議録 | [国会会議録API](https://kokkai.ndl.go.jp/) (kokkai.ndl.go.jp) | CC BY 4.0 | `pnpm ingest:parliament` |
-| 法案データ | [SmartNews SMRI](https://github.com/smartnews-smri) (GitHub) | MIT | `pnpm ingest:parliament` |
-| マニフェスト | 各政党公式サイト、早稲田大学 #くらべてえらぶ | 手動キュレーション | `pnpm ingest:manifesto` |
+<details>
+<summary><strong>CultureScope API</strong> <code>:3006</code></summary>
 
----
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/api/budgets` | 文化庁予算一覧 |
+| GET | `/api/programs` | 文化プログラム一覧 |
+| GET | `/api/stances` | 政党別文化政策スタンス |
 
-## データの性質と注意事項
+</details>
 
-> [!NOTE]
-> v0.1 のデータは公的機関の公開資料に基づく実データです。詳細なソース情報は **[docs/DATA_SOURCES.md](docs/DATA_SOURCES.md)** を参照してください。
+<details>
+<summary><strong>SocialGuard API</strong> <code>:3007</code></summary>
 
-| データ種別 | 性質 | 件数 | 一次ソース |
-|---|---|---|---|
-| **政党マスタ** | 実データ | 現存15＋過去8＝23政党 | [総務省 政党名簿](https://www.soumu.go.jp/senkyo/seiji_s/data_seitou/) |
-| **都道府県** | 実データ | 47都道府県（地方区分・英語名付き） | JIS X 0401 |
-| **衆議院議員** | 実データ | 465名（全員） | [総務省 第50回衆院選結果](https://www.soumu.go.jp/senkyo/) |
-| **参議院議員** | 実データ | 248名（全員） | [参議院公式](https://www.sangiin.go.jp/japanese/joho1/kousei/giin/220/giinmei.htm) |
-| **選挙結果** | 実データ | 衆院4回＋参院5回＝9選挙 | 総務省選挙結果 |
-| **国会会期** | 実データ | 21会期（第200〜220回） | [衆議院公式](https://www.shugiin.go.jp/) |
-| **法案** | 実データ | 90件（第210〜220回国会） | 衆議院・参議院議案一覧 |
-| **政治資金** | 実データ | 10政党×3年＝30報告書 | [総務省 政治資金収支報告書](https://www.soumu.go.jp/senkyo/seiji_s/seijishikin/) |
-| **政策マニフェスト** | デモデータ | - | 各党公式マニフェストを参考に作成 |
-| **投票記録** | 未実装 | - | - |
+| Method | Endpoint | Description |
+|:---|:---|:---|
+| GET | `/api/budgets` | 社会保障予算一覧 |
+| GET | `/api/programs` | 社会保障制度一覧 |
+| GET | `/api/welfare-stats` | 都道府県別福祉指標 |
+| GET | `/api/stances` | 政党別社会保障スタンス |
 
-**データセット**: ソースデータは [`data/`](data/) ディレクトリ、シードスクリプトは [`packages/ingestion/src/`](packages/ingestion/src/) に格納。
+</details>
 
 ---
 
-## データモデル
+<a id="data-model"></a>
 
-Prismaスキーマに29モデル・14 enumを定義。
+## Data Model
+
+Prisma 6 — **29 models**, **14 enums**
 
 ```
-政治主体                    政治資金                      議会
-┌──────────┐              ┌──────────────┐             ┌──────────────┐
-│  Party   │◄────────────►│  FundReport  │             │ DietSession  │
-│ (15政党)  │              │  (収支報告書)  │             │  (国会会期)   │
-└────┬─────┘              └──┬───────┬───┘             └──────┬───────┘
-     │                       │       │                        │
-     ▼                       ▼       ▼                        ▼
-┌──────────┐         ┌────────┐ ┌─────────┐           ┌──────────┐
-│Politician│         │Income  │ │Expense  │           │   Bill   │
-│  (議員)   │         │(収入)  │ │(支出)   │           │  (法案)   │
-└──────────┘         └────────┘ └─────────┘           └──┬───┬──┘
-     │                                                    │   │
-     ▼                                                    ▼   ▼
-┌──────────┐         ┌──────────────┐              ┌─────┐ ┌──────────┐
-│Prefecture│         │   Policy     │              │Vote │ │Discussion│
-│(都道府県) │         │ (10カテゴリ)  │              │(投票)│ │ (討論)   │
-└──────────┘         └──────────────┘              └─────┘ └──────────┘
+  Party ◄─── CulturalStance          DietSession ──► Bill ──► Vote
+    │    ◄── SocialSecurityStance         │               └──► Discussion
+    │                                     │
+    ├──► Politician ──► Vote          Election ──► ElectionResult
+    │        │
+    ├──► PoliticalOrganization        CulturalBudget
+    │        └──► FundReport          CulturalProgram
+    │              ├──► FundIncome
+    │              └──► FundExpenditure   SocialSecurityBudget
+    │                                     SocialSecurityProgram
+    └──► Policy ──► PolicyProposal
+                                      Prefecture ──► WelfareStat
 ```
+
+<details>
+<summary><strong>データの性質と件数</strong></summary>
+
+| データ | 性質 | 件数 | ソース |
+|:---|:---|:---|:---|
+| 政党マスタ | 実データ | 23政党 | 総務省 政党名簿 |
+| 都道府県 | 実データ | 47 | JIS X 0401 |
+| 衆議院議員 | 実データ | 465名 | 総務省 第50回衆院選結果 |
+| 参議院議員 | 実データ | 248名 | 参議院公式 |
+| 選挙結果 | 実データ | 9選挙 | 総務省選挙結果 |
+| 国会会期 | 実データ | 21会期 | 衆議院公式 |
+| 法案 | 実データ | 90件 | 衆議院・参議院議案一覧 |
+| 政治資金 | 実データ | 13政党×8年 | 総務省 政治資金収支報告書 |
+| 文化庁予算 | 実データ | 12分野×8年 | 文化庁予算概要 |
+| 文化プログラム | 実データ | 20件 | 文化庁公開資料 |
+| 社会保障予算 | 実データ | 8分野×8年 | 厚生労働省・財務省 |
+| 社会保障制度 | 実データ | 15件 | 厚生労働省 |
+| 都道府県別福祉指標 | 実データ | 47×3指標 | 総務省統計局 |
+| 政党別スタンス | デモデータ | 13政党×12トピック | 各党マニフェスト参照 |
+
+</details>
+
+### データソース
+
+| データ | ソース | 取り込み |
+|:---|:---|:---|
+| 政治資金 | [political-finance-database.com](https://political-finance-database.com) | `pnpm ingest:finance` |
+| 国会会議録 | [国会会議録API](https://kokkai.ndl.go.jp/) (CC BY 4.0) | `pnpm ingest:parliament` |
+| 法案データ | [SmartNews SMRI](https://github.com/smartnews-smri) (MIT) | `pnpm ingest:parliament` |
+| マニフェスト | 各政党公式サイト | `pnpm ingest:manifesto` |
+| 文化政策 | 文化庁予算概要・各党マニフェスト | `pnpm ingest:culture` |
+| 社会保障 | 厚生労働省・財務省・総務省統計局 | `pnpm ingest:social` |
 
 ---
 
 ## エージェントファースト設計
 
-AIエージェント時代に、政党や企業が独占してきた政治プロセスを誰もが実行できるようにする。
-
 | 設計原則 | 詳細 |
-|---|---|
+|:---|:---|
 | **API-First** | 全データをRESTful APIで提供。エージェントが直接アクセス |
 | **機械可読データ** | JSON構造化データを標準。人間用UIとエージェント用APIの両方 |
-| **エージェント認証** *(v0.2予定)* | AIエージェント用の認証・権限管理。エージェントは一級市民 |
-| **MCP対応** *(v0.2予定)* | Model Context Protocol による外部AIとのシームレスな連携 |
-| **監査ログ** *(v0.2予定)* | 全操作のトレーサビリティを保証。エージェントの行動も完全に透明 |
+| **エージェント認証** *(v0.2)* | AIエージェント用の認証・権限管理 |
+| **MCP対応** *(v0.2)* | Model Context Protocol による外部AIとの連携 |
+| **監査ログ** *(v0.2)* | 全操作のトレーサビリティ。エージェントの行動も透明 |
+
+---
+
+## AIエージェントで開発する
+
+このリポジトリを clone して Claude Code を起動するだけ。
+
+```bash
+cd open-japan-politech-platform && claude
+```
+
+```
+open-japan-politech-platform/
+├── apps/                              ← Next.js 15 アプリ
+│   ├── moneyglass-web/       :3000       政治資金
+│   ├── moneyglass-admin/     :3001       管理画面
+│   ├── policydiff-web/       :3002       政策比較
+│   ├── parliscope-web/       :3003       国会
+│   ├── parliscope-admin/     :3004       管理画面
+│   ├── seatmap-web/          :3005       議席勢力図
+│   ├── culturescope-web/     :3006       文化政策
+│   └── socialguard-web/      :3007       社会保障
+├── packages/
+│   ├── ui/                            @ojpp/ui  — 14+ コンポーネント + Motion + Lenis
+│   ├── db/                            @ojpp/db  — Prisma (29 models / 14 enums)
+│   ├── api/                           @ojpp/api — ページネーション, エラー, BigInt変換
+│   └── ingestion/                     @ojpp/ingestion — 6データソース取り込み
+├── paper/                             学術論文
+└── docs/                              ドキュメント
+```
+
+**コーディング規約**: TypeScript strict / Biome lint / Server Components優先 / API-first
 
 ---
 
 ## 技術スタック
 
-| カテゴリ | 技術 |
-|---|---|
-| Frontend | Next.js 15 (App Router), React 19, TypeScript 5.9 |
-| Database | PostgreSQL (via Supabase / local) |
-| ORM | Prisma 6 |
-| Styling | Tailwind CSS v4 |
-| Design System | @ojpp/ui — カスタムテーマ、14コンポーネント |
-| Animation | Motion (framer-motion v11+) — スプリング物理、スクロールトリガー、ページ遷移 |
-| Smooth Scroll | Lenis — 慣性スクロール、60fps「ぬるぬる」体験 |
-| Charts | Recharts (全3アプリ) |
-| Markdown | remark + remark-html (PolicyDiff) |
-| Package Manager | pnpm 10 (monorepo with workspaces) |
-| Linter/Formatter | Biome 2.3 |
-| Testing | Vitest 3 (33 tests) |
-| CI/CD | GitHub Actions (lint → typecheck → test → build) |
-
-## ディレクトリ構造
-
-```
-open-japan-politech-platform/
-├── apps/
-│   ├── moneyglass-web/       # MoneyGlass 公開フロントエンド (:3000)
-│   │   └── src/app/
-│   │       ├── api/          #   6 APIルート
-│   │       ├── organizations/ #   団体一覧・詳細
-│   │       ├── parties/      #   政党別資金
-│   │       └── reports/      #   報告書詳細
-│   ├── moneyglass-admin/     # MoneyGlass 管理画面 (:3001)
-│   ├── policydiff-web/       # PolicyDiff フロントエンド (:3002)
-│   │   └── src/app/
-│   │       ├── api/          #   6 APIルート
-│   │       ├── category/     #   カテゴリ別政策
-│   │       ├── compare/      #   政党比較
-│   │       └── party/        #   政党別政策
-│   ├── parliscope-web/       # ParliScope 公開フロントエンド (:3003)
-│   │   └── src/app/
-│   │       ├── api/          #   7 APIルート
-│   │       ├── bills/        #   法案一覧・詳細
-│   │       ├── politicians/  #   議員一覧・詳細
-│   │       └── sessions/     #   会期一覧・詳細
-│   ├── parliscope-admin/     # ParliScope 管理画面 (:3004)
-│   └── seatmap-web/          # SeatMap 議席勢力図 (:3005)
-├── packages/
-│   ├── ui/                   # @ojpp/ui — 14コンポーネント + Motion/Lenis + デザインシステム (theme.css)
-│   ├── db/                   # @ojpp/db — Prisma スキーマ (21モデル / 10 enum)
-│   ├── api/                  # @ojpp/api — ページネーション, エラー, CORS, BigInt変換
-│   └── ingestion/            # @ojpp/ingestion — 政治資金・議会・マニフェスト取り込み
-├── data/                     # デモ用データセット（JSON）— 詳細は data/README.md
-├── paper/                    # 学術論文（PoliTech 5地域比較分析）
-├── docs/                     # ドキュメント・スクリーンショット・リサーチノート
-├── supabase/                 # Supabase ローカル開発設定
-├── .github/workflows/        # CI/CD (lint → typecheck → test → build)
-├── CONTRIBUTING.md           # コントリビューションガイド
-├── CODE_OF_CONDUCT.md        # 行動規範
-├── SECURITY.md               # セキュリティポリシー
-└── LICENSE                   # AGPL-3.0
-```
-
----
-
-## 既存プロジェクトとの関係
-
-| プロジェクト | 関係 |
-|---|---|
-| チームみらい（まる見え政治資金等） | 技術的参考。ただし政党紐づきのため、本プラットフォームは全15政党対応の非党派的・汎用版。デザイン品質でも同等以上を目指す |
-| DD2030（Polimoney等） | 方向性は近い。本プラットフォームはエージェントファースト設計を追加 |
-| g0v / vTaiwan | 台湾モデルの日本版。市民社会主導の非党派アプローチを踏襲 |
-| Decidim / Consul | 欧州の参加型民主主義基盤。モジュラー設計を参考 |
-| mySociety | 英国のNGOモデル。20年+の持続性を参考 |
+| Layer | Tech |
+|:---|:---|
+| **Frontend** | Next.js 15 (App Router) / React 19 / TypeScript 5.9 |
+| **Database** | PostgreSQL via Supabase |
+| **ORM** | Prisma 6 |
+| **Styling** | Tailwind CSS v4 |
+| **Design System** | @ojpp/ui — 14+ コンポーネント / カスタムテーマ |
+| **Animation** | Motion (v11+) — スプリング物理 / スクロールトリガー / ページ遷移 |
+| **Smooth Scroll** | Lenis — 慣性スクロール / 60fps |
+| **Charts** | Recharts |
+| **Monorepo** | pnpm 10 workspaces + Turborepo |
+| **Lint / Format** | Biome 2.3 |
+| **Test** | Vitest 3 |
+| **CI/CD** | GitHub Actions |
 
 ---
 
 ## ロードマップ
 
-- [x] Prismaスキーマ定義（21モデル・10 enum）
-- [x] シードデータ（47都道府県・15政党 — チームみらい、NHK党、教育無償化を実現する会、沖縄社会大衆党を追加）
-- [x] 3プロダクトのMVP実装（API + フロントエンド）
-- [x] データ取り込みパイプライン（政治資金・議会・マニフェスト）
+- [x] Prismaスキーマ (29モデル / 14 enum)
+- [x] 8アプリ MVP (API + フロントエンド)
+- [x] データ取り込みパイプライン (6データソース)
 - [x] CI/CD パイプライン
-- [x] ユニットテスト（33テスト）
-- [x] デザインシステム構築（@ojpp/ui — theme.css、14コンポーネント、アニメーション）
-- [x] 3アプリのグラフィカルデザイン刷新（HeroSection、GradientCard、NavigationBar）
-- [x] インタラクティブチャート拡充（Recharts全3アプリ対応、AnimatedCounter）
-- [x] 法案タイムライン・投票チャート・ページネーション
-- [x] UIアニメーション刷新（Motion + Lenis — スプリング物理、スムーススクロール、ページ遷移、データバーアニメーション）
-- [x] 学術論文（PoliTech 5地域比較分析）
-- [x] CultureScope — 文化政策態度・予算の可視化（文化庁予算推移、文化施策一覧、政党別スタンス比較）
-- [x] SocialGuard — 社会保障政策の可視化（社会保障予算推移、制度一覧、都道府県比較、政党別スタンス比較）
-- [ ] 認証・認可（Supabase Auth）
-- [ ] AIエージェント認証（APIキー・MCP）
+- [x] デザインシステム (@ojpp/ui + Motion + Lenis)
+- [x] 学術論文 (PoliTech 5地域比較分析)
+- [x] CultureScope — 文化政策可視化
+- [x] SocialGuard — 社会保障可視化
+- [x] Vercel デプロイ
+- [ ] 認証・認可 (Supabase Auth)
+- [ ] AIエージェント認証 (APIキー / MCP)
 - [ ] GraphQL API
-- [ ] リアルタイム通知（政策変更・法案ステータス）
-- [ ] 多言語対応（英語）
-- [x] デプロイ（Vercel）
+- [ ] リアルタイム通知
+- [ ] 多言語対応 (英語)
 
 ---
+
+## 関連プロジェクト
+
+| プロジェクト | 関係 |
+|:---|:---|
+| **g0v / vTaiwan** | 台湾モデルの日本版。市民社会主導の非党派アプローチを踏襲 |
+| **Decidim / Consul** | 欧州の参加型民主主義基盤。モジュラー設計を参考 |
+| **mySociety** | 英国のNGOモデル。20年+の持続性を参考 |
+| **チームみらい** | 技術的参考。本プラットフォームは全政党対応の非党派版 |
+| **DD2030** | 方向性は近い。本プラットフォームはエージェントファースト設計を追加 |
+
+---
+
+<a id="paper"></a>
 
 ## 論文
 
-本プラットフォームの理論的基盤となる論文を [`paper/`](paper/) ディレクトリに収録しています。
-
 > **PoliTech：政党にも企業にもよらない政治のデジタル化——オープンソース・エージェントレディな政治テクノロジー基盤の国際比較分析**
 >
-> *PoliTech: Non-Partisan, Non-Corporate Digitalization of Politics — A Comparative Analysis of Open-Source, Agent-Ready Political Technology Infrastructure*
+> 台湾・英国・米国・欧州・日本の5地域を6軸比較フレームワークで分析。
 
-GovTech（行政DX）とCivicTech（市民技術）の二分法では捉えきれない第三の領域——「PoliTech（政治技術）」を定義し、台湾（g0v/vTaiwan）、英国（mySociety）、米国（Code for America / FEC）、欧州（Decidim / CONSUL Democracy）、日本（チームみらい / Open Japan PoliTech Platform）の5地域を6軸比較フレームワーク（非党派性・非企業性・オープンソース度・制度的接合性・参加の包摂性・エージェントレディ度）で分析しています。
-
-- [paper.pdf](paper/paper.pdf) — PDF版
-- [paper.md](paper/paper.md) — Markdown版
+[paper.pdf](paper/paper.pdf) / [paper.md](paper/paper.md)
 
 ---
 
-## ライセンス
-
-[AGPL-3.0](LICENSE) — 改変版も含めてオープンソースであり続けることを保証する。ネットワーク経由のサービス提供時にもソースコード公開を義務づける。政治インフラは誰のものでもなく、全員のものである。
-
-## セキュリティ
-
-セキュリティに関する問題を発見した場合は、[SECURITY.md](SECURITY.md) をご確認ください。GitHub Security Advisories を通じた非公開報告を受け付けています。
+<a id="contributing"></a>
 
 ## Contributing
 
-このプロジェクトは人間もAIエージェントもオープンに参加できます。[CONTRIBUTING.md](CONTRIBUTING.md) と [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) をご確認ください。
+人間もAIエージェントもオープンに参加できます。[CONTRIBUTING.md](CONTRIBUTING.md) / [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) / [SECURITY.md](SECURITY.md)
+
+AIエージェントからのPull Requestも歓迎します。`agent/` ラベルを付けてPRを送ってください。
+
+---
+
+<div align="center">
+
+**[AGPL-3.0](LICENSE)** — 政治インフラは誰のものでもなく、全員のものである。
+
+</div>
