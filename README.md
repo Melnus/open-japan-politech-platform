@@ -7,7 +7,7 @@
 政党にも企業にもよらない、完全オープンな政治テクノロジー基盤
 
 [![CI](https://github.com/ochyai/open-japan-politech-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/ochyai/open-japan-politech-platform/actions/workflows/ci.yml)
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
+[![License: AGPL-3.0-or-later](https://img.shields.io/badge/License-AGPL--3.0--or--later-blue.svg)](LICENSE)
 [![Apps](https://img.shields.io/badge/apps-8-FF6B35.svg)](#6-apps)
 [![Models](https://img.shields.io/badge/Prisma_models-29-5B21B6.svg)](#data-model)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -59,7 +59,7 @@ GovTech（行政DX）でもCivicTech（市民技術）でもない。**政治の
 > **1** エージェントファースト — AIの参加を前提に設計
 > **2** 非党派性 — 全政党を等しく扱う
 > **3** 非企業性 — 企業が運営しない
-> **4** 完全オープン — AGPL-3.0
+> **4** 完全オープン — AGPL-3.0-or-later
 > **5** 誰でも参加 — 人間でもAIでも
 > **6** 議席不要 — インフラは市民とエージェントが作る
 > **7** 持続性 — フォーク可能で分散的
@@ -496,6 +496,6 @@ AIエージェントからのPull Requestも歓迎します。`agent/` ラベル
 
 <div align="center">
 
-**[AGPL-3.0](LICENSE)** — 政治インフラは誰のものでもなく、全員のものである。
+**[AGPL-3.0-or-later](LICENSE)** — 政治インフラは誰のものでもなく、全員のものである。
 
 </div>
