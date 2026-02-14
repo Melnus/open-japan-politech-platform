@@ -103,7 +103,7 @@ export default async function ComparePage() {
         stances: [],
       });
     }
-    partyMap.get(s.partyId)!.stances.push(s);
+    partyMap.get(s.partyId)?.stances.push(s);
   }
 
   const parties = [...partyMap.entries()].map(([id, data]) => ({ id, ...data }));

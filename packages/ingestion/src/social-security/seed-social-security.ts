@@ -2125,7 +2125,7 @@ export async function seedSocialSecurity(): Promise<void> {
 
     programCount++;
     console.log(
-      `[social]   ${program.name}（${program.startYear ?? "N/A"}〜, 受給者 ${program.recipients ? program.recipients + "万人" : "N/A"}）`,
+      `[social]   ${program.name}（${program.startYear ?? "N/A"}〜, 受給者 ${program.recipients ? `${program.recipients}万人` : "N/A"}）`,
     );
   }
 
@@ -2247,7 +2247,7 @@ export async function seedSocialSecurity(): Promise<void> {
   // ─────────────────────────────────────────
   // サマリー
   // ─────────────────────────────────────────
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   console.log(
     `[social] 完了 -- 予算${budgetCount}件, 制度${programCount}件, 都道府県統計${statCount}件, スタンス${stanceCount}件`,
   );

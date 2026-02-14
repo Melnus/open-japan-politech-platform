@@ -3,7 +3,9 @@
 
 /* サブセット(preload)→フルセット(on-demand)→Inter の順でフォールバック */
 @theme {
-  --font-sans: var(--font-noto-sans-jp), var(--font-noto-sans-jp-full), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    var(--font-noto-sans-jp), var(--font-noto-sans-jp-full), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
 }
 
 /* MoneyGlass Dark Theme Custom Properties */
@@ -93,19 +95,19 @@
 /* Recharts dark theme overrides */
 .recharts-cartesian-grid-horizontal line,
 .recharts-cartesian-grid-vertical line {
-  stroke: rgba(255, 255, 255, 0.06) !important;
+  stroke: rgba(255, 255, 255, 0.06);
 }
 
 .recharts-text {
-  fill: #8b949e !important;
+  fill: #8b949e;
 }
 
 .recharts-tooltip-wrapper .recharts-default-tooltip {
-  background: #1a1a2e !important;
-  border: 1px solid rgba(255, 107, 53, 0.2) !important;
-  border-radius: 12px !important;
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 12px;
 }
 
 .recharts-legend-item-text {
-  color: #8b949e !important;
+  color: #8b949e;
 }

@@ -1882,7 +1882,7 @@ export async function seedCulturalData(): Promise<void> {
   // ─────────────────────────────────────────
   // サマリー
   // ─────────────────────────────────────────
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   console.log(
     `[culture] 完了 -- 予算${budgetCount}件, プログラム${programCount}件, スタンス${stanceCount}件`,
   );

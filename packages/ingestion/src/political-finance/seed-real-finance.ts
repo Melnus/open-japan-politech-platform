@@ -1627,7 +1627,7 @@ export async function seedRealFinance(): Promise<void> {
     }
   }
 
-  console.log("\n" + "=".repeat(60));
+  console.log(`\n${"=".repeat(60)}`);
   console.log(
     `[real-finance] 完了 -- ${orgCount}団体, ${reportCount}報告書, ${incomeCount}収入明細`,
   );

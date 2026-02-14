@@ -108,7 +108,6 @@ export function GradientMeshBackground({
       ref={canvasRef}
       className={`absolute inset-0 h-full w-full ${className}`}
       style={{ pointerEvents: "none" }}
-      aria-hidden="true"
     />
   );
 }

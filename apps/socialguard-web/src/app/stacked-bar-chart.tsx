@@ -30,7 +30,7 @@ export function StackedBarChart({
   const isInView = useInView(ref, { once: true, margin: "-40px" });
 
   const chartHeight = 200;
-  const barGap = 8;
+  const _barGap = 8;
 
   return (
     <div ref={ref} className="relative">
@@ -48,7 +48,7 @@ export function StackedBarChart({
               >
                 {yearData.segments.map((seg, segIdx) => {
                   const segHeight = (seg.value / yearData.total) * totalHeight;
-                  const y = currentY;
+                  const _y = currentY;
                   currentY += segHeight;
 
                   return (

@@ -69,7 +69,7 @@ function getMajorityLine(_chamber: string, totalSeats: number) {
 function formatVotes(votes: bigint | string | null): string {
   if (votes == null) return "-";
   const n = typeof votes === "bigint" ? Number(votes) : Number(votes);
-  if (isNaN(n)) return String(votes);
+  if (Number.isNaN(n)) return String(votes);
   return new Intl.NumberFormat("ja-JP").format(n);
 }
 

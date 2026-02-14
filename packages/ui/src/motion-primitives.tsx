@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  AnimatePresence,
-  motion,
-  useInView,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "motion/react";
+import { AnimatePresence, motion, useInView, type Variants } from "motion/react";
 import { type ReactNode, useRef } from "react";
 
 /* ───── FadeIn ───── */

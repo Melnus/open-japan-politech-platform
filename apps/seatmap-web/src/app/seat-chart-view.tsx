@@ -221,10 +221,10 @@ function PartyDetailTable({
   const partiesWithSeats = election.results.filter((r) => r.seatsWon > 0);
   const totalWon = partiesWithSeats.reduce((s, r) => s + r.seatsWon, 0);
 
-  function formatVotes(votes: bigint | string | null): string {
+  function _formatVotes(votes: bigint | string | null): string {
     if (votes == null) return "-";
     const n = typeof votes === "bigint" ? Number(votes) : Number(votes);
-    if (isNaN(n)) return String(votes);
+    if (Number.isNaN(n)) return String(votes);
     return new Intl.NumberFormat("ja-JP").format(n);
   }
 

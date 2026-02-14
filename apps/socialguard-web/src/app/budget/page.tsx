@@ -102,7 +102,7 @@ export default async function BudgetPage() {
       row[categoryLabel(cat)] = entry ? Number(entry.amount) : 0;
     }
     const totalEntry = budgets.find((b) => b.fiscalYear === year && b.category === "TOTAL");
-    row["合計"] = totalEntry ? Number(totalEntry.amount) : 0;
+    row.合計 = totalEntry ? Number(totalEntry.amount) : 0;
     return row;
   });
 
