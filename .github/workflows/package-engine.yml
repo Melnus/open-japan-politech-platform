@@ -1,0 +1,22 @@
+name: Package SBCM Engine
+
+on:
+  push:
+    paths:
+      - 'packages/sbcm-engine/**' # エンジンの中身が変わった時だけ発動
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create ZIP
+        run: |
+          zip -r sbcm-engine-v0.1.0.zip packages/sbcm-engine/ -x "*.git*"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbcm-engine-package
+          path: sbcm-engine-v0.1.0.zip
