@@ -20,6 +20,20 @@ export const metadata: Metadata = {
     siteName: "Open Japan PoliTech Platform",
     locale: "ja_JP",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "OPEN JAPAN POLITECH — AIエージェント時代の政治インフラ",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "OJPP — Political Command Center",
+    description: "AIエージェント時代の政治インフラ — 日本の政治データを完全オープンに可視化",
+    images: ["/og-image.png"],
   },
 };
 
