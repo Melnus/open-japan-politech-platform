@@ -158,6 +158,13 @@ const HISTORICAL_PARTIES: HistoricalParty[] = [
     founded: "1993-06-21",
     dissolved: "2004-10-31",
   },
+  {
+    name: "公明",
+    shortName: "公明(参)",
+    color: "#F5A623",
+    founded: "1998-01-01",
+    dissolved: "1998-11-07",
+  },
 ];
 
 // ============================================
@@ -1044,7 +1051,7 @@ const HOUSE_OF_COUNCILLORS_ELECTIONS: ElectionData[] = [
         voteShare: 14.6,
       },
       {
-        partyName: "公明党",
+        partyName: "公明",
         seatsWon: 9,
         districtSeats: 2,
         proportionalSeats: 7,

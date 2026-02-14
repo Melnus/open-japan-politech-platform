@@ -8,13 +8,18 @@ function safeEqual(a: string, b: string): boolean {
   const encoder = new TextEncoder();
   const aBuf = encoder.encode(a);
   const bBuf = encoder.encode(b);
+
+  const subtle = crypto.subtle as SubtleCrypto & {
+    timingSafeEqual?: (a: BufferSource, b: BufferSource) => boolean;
+  };
+
   if (aBuf.byteLength !== bBuf.byteLength) {
     const dummy = new Uint8Array(aBuf.byteLength);
-    crypto.subtle.timingSafeEqual?.(aBuf, dummy);
+    subtle.timingSafeEqual?.(aBuf, dummy);
     return false;
   }
-  if (typeof crypto.subtle?.timingSafeEqual === "function") {
-    return crypto.subtle.timingSafeEqual(aBuf, bBuf);
+  if (typeof subtle.timingSafeEqual === "function") {
+    return subtle.timingSafeEqual(aBuf, bBuf);
   }
   let result = 0;
   for (let i = 0; i < aBuf.byteLength; i++) {
