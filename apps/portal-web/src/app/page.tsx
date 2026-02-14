@@ -1,7 +1,7 @@
-import { ServiceBentoGrid } from "@/components/service-bento-grid";
+import { ALPHA_AUTONOMY, B_STD } from "@ojpp/sbcm-engine";
 import { HeroBanner } from "@/components/hero-banner";
+import { ServiceBentoGrid } from "@/components/service-bento-grid";
 import { getPortalStats } from "@/lib/queries";
-import { B_STD, ALPHA_AUTONOMY } from "@ojpp/sbcm-engine"; // 理論定数をインポート
 
 export const revalidate = 300;
 
@@ -10,7 +10,6 @@ export default async function PortalPage() {
 
   return (
     <div className="flex flex-col bg-[#04040a] text-[#f0f0f5]">
-      {/* ====== 1. Stellar OS / G-Cart 統合ヘッダー ====== */}
       <div className="border-b border-[var(--border)] bg-black/40 px-6 py-3 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-4">
@@ -22,7 +21,6 @@ export default async function PortalPage() {
               <p className="kpi-value text-sm font-bold text-white">POLITICAL COMMAND CENTER</p>
             </div>
           </div>
-          
           <div className="hidden md:flex items-center gap-8">
             <div className="text-right">
               <p className="mono text-[0.5rem] text-[var(--text-ghost)]">QUANTUM UNIT</p>
@@ -39,11 +37,7 @@ export default async function PortalPage() {
           </div>
         </div>
       </div>
-
-      {/* ====== 2. メインビジュアル (論文のコンセプト) ====== */}
       <HeroBanner />
-
-      {/* ====== 3. 6つのアプリ（IOインターフェース） ====== */}
       <section className="relative py-12">
         <div className="mx-auto max-w-7xl px-4">
           <div className="mb-10 flex items-end justify-between border-l-4 border-[var(--accent)] pl-6">
@@ -58,12 +52,9 @@ export default async function PortalPage() {
               <p className="kpi-value text-2xl font-bold">LIVE</p>
             </div>
           </div>
-          
           <ServiceBentoGrid stats={stats} />
         </div>
       </section>
-
-      {/* ====== 4. 物理エンジン・デバッグログ (下部) ====== */}
       <section className="border-t border-[var(--border)] bg-black/60 py-10">
         <div className="mx-auto max-w-7xl px-4">
           <div className="rounded-lg border border-white/5 bg-white/[0.02] p-6">
