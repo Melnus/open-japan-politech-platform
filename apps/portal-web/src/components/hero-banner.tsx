@@ -27,7 +27,7 @@ export function HeroBanner() {
             className="term-line mono text-xs tracking-[2px] text-[var(--accent)]"
             style={{ "--delay": "0.1s" } as React.CSSProperties}
           >
-            {"$ curl -fsSL ojpp.dev/install | sh"}
+            {"$ curl -fsSL https://ojpp.dev/install | sh"}
           </p>
         </div>
 
@@ -139,7 +139,7 @@ export function HeroBanner() {
                     } as React.CSSProperties
                   }
                 >
-                  {"✨ 6 apps × 21 models × 50+ endpoints — ALL SYSTEMS GO"}
+                  {"✨ 6 apps × 21 models × 32 endpoints — ALL SYSTEMS GO"}
                 </p>
               </div>
             </div>

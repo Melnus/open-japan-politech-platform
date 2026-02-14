@@ -28,7 +28,7 @@
 ## 1行で起動
 
 ```bash
-(git clone https://github.com/ochyai/open-japan-politech-platform.git 2>/dev/null || true) && cd open-japan-politech-platform && git pull && bash setup.sh
+curl -fsSL https://ojpp.dev/install | sh
 ```
 
 <img src="docs/screenshots/portal-preview.png" alt="OJPP Portal — Political Command Center" width="100%"/>
