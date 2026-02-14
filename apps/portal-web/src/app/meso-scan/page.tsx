@@ -1,4 +1,4 @@
-import { REAL_GOVERNANCE_DATA } from ""@/lib/real-blocks";
+import { REAL_GOVERNANCE_DATA } from "@/lib/real-blocks";
 import { B_STD, WealthVector, analyzeFlowContinuity } from "@ojpp/sbcm-engine";
 
 export default function MesoScanner() {
