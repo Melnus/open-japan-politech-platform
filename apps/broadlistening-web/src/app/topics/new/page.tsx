@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { FadeIn } from "@ojpp/ui";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function NewTopicPage() {
   const router = useRouter();
@@ -47,7 +47,10 @@ export default function NewTopicPage() {
     <div className="min-h-screen pt-24 pb-20">
       <div className="mx-auto max-w-2xl px-6">
         <FadeIn>
-          <Link href="/topics" className="text-xs text-white/20 hover:text-white/40 transition-colors">
+          <Link
+            href="/topics"
+            className="text-xs text-white/20 hover:text-white/40 transition-colors"
+          >
             ← Topics
           </Link>
 
@@ -65,10 +68,14 @@ export default function NewTopicPage() {
         <FadeIn delay={0.1}>
           <form onSubmit={handleSubmit} className="mt-10 space-y-6">
             <div>
-              <label className="block text-xs font-bold text-white/30 uppercase tracking-widest mb-2">
+              <label
+                htmlFor="topic-title"
+                className="block text-xs font-bold text-white/30 uppercase tracking-widest mb-2"
+              >
                 Title
               </label>
               <input
+                id="topic-title"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -79,10 +86,14 @@ export default function NewTopicPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/30 uppercase tracking-widest mb-2">
+              <label
+                htmlFor="topic-desc"
+                className="block text-xs font-bold text-white/30 uppercase tracking-widest mb-2"
+              >
                 Description
               </label>
               <textarea
+                id="topic-desc"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={5}

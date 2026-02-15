@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface NavItem {
   href: string;
@@ -31,10 +31,7 @@ export function DarkNavigationBar({ items }: { items: NavItem[] }) {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
         {/* Logo */}
-        <Link
-          href="/"
-          className="group flex items-center gap-2"
-        >
+        <Link href="/" className="group flex items-center gap-2">
           {/* Animated logo mark */}
           <div className="relative h-7 w-7">
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 opacity-80 blur-[6px] transition-all duration-500 group-hover:opacity-100 group-hover:blur-[10px]" />
@@ -55,20 +52,17 @@ export function DarkNavigationBar({ items }: { items: NavItem[] }) {
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
           {items.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            const isActive =
+              pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-                  isActive
-                    ? "text-white"
-                    : "text-white/40 hover:text-white/80"
+                  isActive ? "text-white" : "text-white/40 hover:text-white/80"
                 }`}
               >
-                {isActive && (
-                  <span className="absolute inset-0 rounded-lg bg-white/[0.06]" />
-                )}
+                {isActive && <span className="absolute inset-0 rounded-lg bg-white/[0.06]" />}
                 <span className="relative">{item.label}</span>
               </Link>
             );

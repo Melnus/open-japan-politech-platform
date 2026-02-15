@@ -1,5 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { shannonDiversity, shannonEvenness, convergenceScore, determinePhase, type QuorumState } from "../quorum";
+import { describe, expect, it } from "vitest";
+import {
+  convergenceScore,
+  determinePhase,
+  type QuorumState,
+  shannonDiversity,
+  shannonEvenness,
+} from "../quorum";
 
 describe("quorum", () => {
   describe("shannonDiversity", () => {

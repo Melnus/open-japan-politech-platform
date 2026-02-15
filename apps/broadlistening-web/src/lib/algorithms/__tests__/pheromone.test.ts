@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { currentIntensity, reinforce, aggregateField, type PheromoneState } from "../pheromone";
+import { describe, expect, it } from "vitest";
+import { aggregateField, currentIntensity, type PheromoneState, reinforce } from "../pheromone";
 
 describe("pheromone", () => {
   const baseState: PheromoneState = {

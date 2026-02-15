@@ -1,6 +1,6 @@
 "use client";
 
-import { GlowCard, FadeIn, StaggerGrid, StaggerItem } from "@ojpp/ui";
+import { FadeIn, GlowCard, StaggerGrid, StaggerItem } from "@ojpp/ui";
 
 interface Endpoint {
   method: "GET" | "POST";
@@ -17,13 +17,18 @@ const ENDPOINTS: Endpoint[] = [
     path: "/api/topics",
     description: "トピック一覧を取得（ページネーション対応）",
     params: ["page", "limit"],
-    response: '{ data: BLTopic[], pagination: { page, limit, total, totalPages } }',
+    response: "{ data: BLTopic[], pagination: { page, limit, total, totalPages } }",
   },
   {
     method: "POST",
     path: "/api/topics",
     description: "新しいトピックを作成",
-    body: ["title (string)", "description (string)", "quorumThreshold? (number)", "billId? (string)"],
+    body: [
+      "title (string)",
+      "description (string)",
+      "quorumThreshold? (number)",
+      "billId? (string)",
+    ],
     response: "BLTopic",
   },
   {
@@ -37,7 +42,7 @@ const ENDPOINTS: Endpoint[] = [
     path: "/api/topics/:id/opinions",
     description: "トピックの意見一覧を取得",
     params: ["page", "limit"],
-    response: '{ data: BLOpinion[], pagination: { ... } }',
+    response: "{ data: BLOpinion[], pagination: { ... } }",
   },
   {
     method: "POST",
@@ -56,27 +61,28 @@ const ENDPOINTS: Endpoint[] = [
   {
     method: "POST",
     path: "/api/topics/:id/analyze",
-    description: "LLMパイプライン全実行（議論抽出→エンベディング→クラスタリング→適応度→フェーズ判定）",
-    response: '{ arguments, clusters, phase, ecosystem }',
+    description:
+      "LLMパイプライン全実行（議論抽出→エンベディング→クラスタリング→適応度→フェーズ判定）",
+    response: "{ arguments, clusters, phase, ecosystem }",
   },
   {
     method: "GET",
     path: "/api/topics/:id/ecosystem",
     description: "ビジュアライゼーション用エコシステムデータを取得",
-    response: '{ topic, ecosystem, argumentGraph, pheromone, history }',
+    response: "{ topic, ecosystem, argumentGraph, pheromone, history }",
   },
   {
     method: "POST",
     path: "/api/topics/:id/ai-participate",
     description: "AIエージェントに多視点から意見を生成させる",
     body: ["perspectives? (number, default: 3)"],
-    response: '{ opinions: BLOpinion[] }',
+    response: "{ opinions: BLOpinion[] }",
   },
   {
     method: "POST",
     path: "/api/seed",
     description: "サンプルデータを投入（デモ用）",
-    response: '{ topics: number, opinions: number }',
+    response: "{ topics: number, opinions: number }",
   },
 ];
 
@@ -97,7 +103,8 @@ export default function ApiDocsPage() {
               <span className="text-white"> ドキュメント</span>
             </h1>
             <p className="mt-4 text-lg text-[#8b949e]">
-              BroadListening APIはRESTful設計で、JSON形式でデータを返します。認証不要で自由に利用できます。
+              BroadListening
+              APIはRESTful設計で、JSON形式でデータを返します。認証不要で自由に利用できます。
             </p>
           </FadeIn>
         </div>
@@ -111,9 +118,11 @@ export default function ApiDocsPage() {
             <code className="rounded-lg bg-black/30 px-4 py-2 text-sm text-emerald-400 font-mono inline-block">
               http://localhost:3009
             </code>
-            <h3 className="text-sm font-bold text-white mt-6 mb-3">共通レスポンス形式（ページネーション）</h3>
+            <h3 className="text-sm font-bold text-white mt-6 mb-3">
+              共通レスポンス形式（ページネーション）
+            </h3>
             <pre className="overflow-x-auto rounded-lg bg-black/30 p-4 text-xs text-emerald-400/80 font-mono">
-{`{
+              {`{
   "data": [...],
   "pagination": {
     "page": 1,
@@ -132,9 +141,7 @@ export default function ApiDocsPage() {
             <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400/60 mb-2">
               Endpoints
             </h2>
-            <h3 className="text-2xl font-bold text-white mb-6">
-              エンドポイント一覧
-            </h3>
+            <h3 className="text-2xl font-bold text-white mb-6">エンドポイント一覧</h3>
           </FadeIn>
 
           <StaggerGrid className="space-y-4">
@@ -142,7 +149,9 @@ export default function ApiDocsPage() {
               <StaggerItem key={`${ep.method}-${ep.path}`}>
                 <div className="ecosystem-card p-5 transition-all duration-300 hover:bg-emerald-500/[0.04]">
                   <div className="flex items-center gap-3">
-                    <span className={`rounded-md border px-2.5 py-1 text-xs font-bold ${METHOD_STYLES[ep.method]}`}>
+                    <span
+                      className={`rounded-md border px-2.5 py-1 text-xs font-bold ${METHOD_STYLES[ep.method]}`}
+                    >
                       {ep.method}
                     </span>
                     <code className="text-sm font-medium font-mono text-white">{ep.path}</code>
@@ -204,15 +213,27 @@ export default function ApiDocsPage() {
             {[
               {
                 name: "BLTopic",
-                fields: ["id, title, description", "phase (OPEN|DELIBERATION|CONVERGENCE|CLOSED)", "quorumThreshold, billId?"],
+                fields: [
+                  "id, title, description",
+                  "phase (OPEN|DELIBERATION|CONVERGENCE|CLOSED)",
+                  "quorumThreshold, billId?",
+                ],
               },
               {
                 name: "BLOpinion",
-                fields: ["id, content, stance", "authorId, x, y, fitness", "supportCount, topicId, clusterId?"],
+                fields: [
+                  "id, content, stance",
+                  "authorId, x, y, fitness",
+                  "supportCount, topicId, clusterId?",
+                ],
               },
               {
                 name: "BLArgument",
-                fields: ["id, type (CLAIM|PREMISE|EVIDENCE|REBUTTAL)", "content, confidence", "opinionId, topicId"],
+                fields: [
+                  "id, type (CLAIM|PREMISE|EVIDENCE|REBUTTAL)",
+                  "content, confidence",
+                  "opinionId, topicId",
+                ],
               },
               {
                 name: "BLPheromone",
@@ -223,7 +244,9 @@ export default function ApiDocsPage() {
                 <h4 className="text-sm font-bold text-emerald-400 font-mono">{model.name}</h4>
                 <ul className="mt-3 space-y-1">
                   {model.fields.map((f) => (
-                    <li key={f} className="text-xs text-[#6b7280] font-mono">{f}</li>
+                    <li key={f} className="text-xs text-[#6b7280] font-mono">
+                      {f}
+                    </li>
                   ))}
                 </ul>
               </div>

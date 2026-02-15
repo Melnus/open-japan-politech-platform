@@ -63,7 +63,9 @@ export async function detectGaps(input: GapDetectionInput): Promise<GapDetection
               g !== null &&
               typeof (g as ArgumentGap).description === "string" &&
               validTypes.includes((g as ArgumentGap).type as (typeof validTypes)[number]) &&
-              validPriorities.includes((g as ArgumentGap).priority as (typeof validPriorities)[number]),
+              validPriorities.includes(
+                (g as ArgumentGap).priority as (typeof validPriorities)[number],
+              ),
           )
         : [],
     };

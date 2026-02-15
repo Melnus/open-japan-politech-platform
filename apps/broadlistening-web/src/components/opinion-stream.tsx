@@ -39,13 +39,31 @@ const STANCE_COLORS: Record<string, string> = {
 
 // Extreme weighted: tons of tiny, some medium, rare huge
 const SIZE_POOL = [
-  "text-[5px]", "text-[5px]", "text-[6px]", "text-[6px]",
-  "text-[7px]", "text-[7px]", "text-[8px]", "text-[8px]", "text-[8px]",
-  "text-[9px]", "text-[9px]", "text-[10px]", "text-[10px]", "text-[10px]",
-  "text-xs", "text-xs", "text-xs", "text-xs",
-  "text-sm", "text-sm", "text-sm",
-  "text-base", "text-base",
-  "text-lg", "text-lg",
+  "text-[5px]",
+  "text-[5px]",
+  "text-[6px]",
+  "text-[6px]",
+  "text-[7px]",
+  "text-[7px]",
+  "text-[8px]",
+  "text-[8px]",
+  "text-[8px]",
+  "text-[9px]",
+  "text-[9px]",
+  "text-[10px]",
+  "text-[10px]",
+  "text-[10px]",
+  "text-xs",
+  "text-xs",
+  "text-xs",
+  "text-xs",
+  "text-sm",
+  "text-sm",
+  "text-sm",
+  "text-base",
+  "text-base",
+  "text-lg",
+  "text-lg",
   "text-xl",
   "text-2xl",
   "text-3xl",
@@ -55,15 +73,25 @@ const SIZE_POOL = [
 ];
 
 const WEIGHT_POOL = [
-  "font-thin", "font-extralight", "font-light", "font-light",
-  "font-normal", "font-normal", "font-normal",
-  "font-medium", "font-medium",
-  "font-semibold", "font-bold",
-  "font-extrabold", "font-black",
+  "font-thin",
+  "font-extralight",
+  "font-light",
+  "font-light",
+  "font-normal",
+  "font-normal",
+  "font-normal",
+  "font-medium",
+  "font-medium",
+  "font-semibold",
+  "font-bold",
+  "font-extrabold",
+  "font-black",
 ];
 
 const FONT_POOL = [
-  "inherit", "inherit", "inherit",
+  "inherit",
+  "inherit",
+  "inherit",
   "Georgia, 'Noto Serif JP', serif",
   "Georgia, 'Yu Mincho', serif",
   "'Courier New', 'Fira Code', monospace",
@@ -122,11 +150,16 @@ export function OpinionStream({ opinions, lanes = 12, className, density = "norm
         const isUppercase = h % 13 === 0;
         const itemOpacity = 0.18 + (h % 60) / 85;
         // Multiple glitch types: standard, chromatic, scan, heavy
-        const glitchType = h % 19 === 0 ? "glitch-text"
-          : h % 23 === 0 ? "glitch-chromatic"
-          : h % 29 === 0 ? "glitch-scan"
-          : h % 37 === 0 ? "glitch-heavy"
-          : "";
+        const glitchType =
+          h % 19 === 0
+            ? "glitch-text"
+            : h % 23 === 0
+              ? "glitch-chromatic"
+              : h % 29 === 0
+                ? "glitch-scan"
+                : h % 37 === 0
+                  ? "glitch-heavy"
+                  : "";
         const isGlitch = glitchType !== "";
         const isOutline = h % 31 === 0;
 
@@ -205,16 +238,20 @@ export function OpinionStream({ opinions, lanes = 12, className, density = "norm
               <div
                 key={copy}
                 className={`opinion-lane flex items-baseline gap-4 shrink-0 stream-anim-${lane.direction}`}
-                style={{
-                  "--stream-duration": `${lane.speed}s`,
-                  "--stream-delay": copy === 0 ? "0s" : `-${lane.speed / 2}s`,
-                } as React.CSSProperties}
+                style={
+                  {
+                    "--stream-duration": `${lane.speed}s`,
+                    "--stream-delay": copy === 0 ? "0s" : `-${lane.speed / 2}s`,
+                  } as React.CSSProperties
+                }
               >
                 {lane.opinions.map((op, opIdx) => {
-                  const stanceColor = STANCE_COLORS[op.stance ?? "NEUTRAL"] ?? STANCE_COLORS.NEUTRAL;
-                  const text = op.content.length > op.truncLen
-                    ? `${op.content.slice(0, op.truncLen)}…`
-                    : op.content;
+                  const stanceColor =
+                    STANCE_COLORS[op.stance ?? "NEUTRAL"] ?? STANCE_COLORS.NEUTRAL;
+                  const text =
+                    op.content.length > op.truncLen
+                      ? `${op.content.slice(0, op.truncLen)}…`
+                      : op.content;
 
                   return (
                     <span
@@ -242,7 +279,6 @@ export function OpinionStream({ opinions, lanes = 12, className, density = "norm
           </div>
         ))}
       </div>
-
     </div>
   );
 }

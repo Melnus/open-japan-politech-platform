@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { calculateFitness, rankByFitness, landscapeStats } from "../fitness";
+import { describe, expect, it } from "vitest";
+import { calculateFitness, landscapeStats, rankByFitness } from "../fitness";
 
 describe("fitness", () => {
   describe("calculateFitness", () => {

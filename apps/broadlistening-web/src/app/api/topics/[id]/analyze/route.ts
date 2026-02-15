@@ -1,18 +1,15 @@
 import { handleApiError, jsonResponse } from "@ojpp/api";
 import { prisma } from "@ojpp/db";
 import type { NextRequest } from "next/server";
+import { calculateFitness } from "@/lib/algorithms/fitness";
+import { autoKMeans } from "@/lib/algorithms/kmeans";
+import { convergenceScore, determinePhase, shannonDiversity } from "@/lib/algorithms/quorum";
 import { extractArguments } from "@/lib/llm/argument-extractor";
+import { extractApiKey } from "@/lib/llm/client";
 import { generateEmbeddings } from "@/lib/llm/embeddings";
 import { generateClusterLabel } from "@/lib/llm/label-generator";
-import { extractApiKey } from "@/lib/llm/client";
-import { autoKMeans } from "@/lib/algorithms/kmeans";
-import { calculateFitness } from "@/lib/algorithms/fitness";
-import { shannonDiversity, convergenceScore, determinePhase } from "@/lib/algorithms/quorum";
 
-export async function POST(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: topicId } = await params;
     const apiKey = extractApiKey(_request);
@@ -41,15 +38,16 @@ export async function POST(
     const unanalyzed = topic.opinions.filter((o) => o.arguments.length === 0).slice(0, BATCH_SIZE);
 
     // Process in parallel with concurrency limit
-    async function processOpinion(opinion: typeof unanalyzed[0]) {
+    async function processOpinion(opinion: (typeof unanalyzed)[0]) {
       try {
         const result = await extractArguments(opinion.content, apiKey);
-        const allArgs: { type: "CLAIM" | "PREMISE" | "EVIDENCE" | "REBUTTAL"; content: string }[] = [
-          ...result.claims.map((c) => ({ type: "CLAIM" as const, content: c })),
-          ...result.premises.map((p) => ({ type: "PREMISE" as const, content: p })),
-          ...result.evidence.map((e) => ({ type: "EVIDENCE" as const, content: e })),
-          ...result.rebuttals.map((r) => ({ type: "REBUTTAL" as const, content: r })),
-        ];
+        const allArgs: { type: "CLAIM" | "PREMISE" | "EVIDENCE" | "REBUTTAL"; content: string }[] =
+          [
+            ...result.claims.map((c) => ({ type: "CLAIM" as const, content: c })),
+            ...result.premises.map((p) => ({ type: "PREMISE" as const, content: p })),
+            ...result.evidence.map((e) => ({ type: "EVIDENCE" as const, content: e })),
+            ...result.rebuttals.map((r) => ({ type: "REBUTTAL" as const, content: r })),
+          ];
         for (const arg of allArgs) {
           await prisma.bLArgument.create({
             data: {
@@ -65,13 +63,15 @@ export async function POST(
         });
         for (const rel of result.relations) {
           if (createdArgs[rel.source] && createdArgs[rel.target]) {
-            await prisma.bLArgumentEdge.create({
-              data: {
-                sourceId: createdArgs[rel.source].id,
-                targetId: createdArgs[rel.target].id,
-                relation: rel.type,
-              },
-            }).catch(() => {});
+            await prisma.bLArgumentEdge
+              .create({
+                data: {
+                  sourceId: createdArgs[rel.source].id,
+                  targetId: createdArgs[rel.target].id,
+                  relation: rel.type,
+                },
+              })
+              .catch(() => {});
           }
         }
       } catch {
@@ -112,7 +112,16 @@ export async function POST(
       // Delete old clusters for this topic
       await prisma.bLCluster.deleteMany({ where: { topicId } });
 
-      const CLUSTER_COLORS = ["#10b981", "#6366f1", "#f59e0b", "#ef4444", "#8b5cf6", "#06b6d4", "#ec4899", "#84cc16"];
+      const CLUSTER_COLORS = [
+        "#10b981",
+        "#6366f1",
+        "#f59e0b",
+        "#ef4444",
+        "#8b5cf6",
+        "#06b6d4",
+        "#ec4899",
+        "#84cc16",
+      ];
 
       // Create new clusters with LLM labels
       const clusterIds: string[] = [];
@@ -156,9 +165,11 @@ export async function POST(
       const pheromone = opinion.pheromones[0];
       const args = await prisma.bLArgument.findMany({ where: { opinionId: opinion.id } });
       const rebuttals = args.filter((a) => a.type === "REBUTTAL");
-      const avgConfidence = args.length > 0 ? args.reduce((s, a) => s + a.confidence, 0) / args.length : 0.5;
+      const avgConfidence =
+        args.length > 0 ? args.reduce((s, a) => s + a.confidence, 0) / args.length : 0.5;
       const pheromoneIntensity = pheromone
-        ? pheromone.intensity * Math.exp(-pheromone.decayRate * ((now - pheromone.lastUpdated.getTime()) / 3600000))
+        ? pheromone.intensity *
+          Math.exp(-pheromone.decayRate * ((now - pheromone.lastUpdated.getTime()) / 3600000))
         : 0;
 
       const fitness = calculateFitness({
@@ -179,12 +190,13 @@ export async function POST(
     const clusters = await prisma.bLCluster.findMany({ where: { topicId } });
     const clusterSizes = clusters.map((c) => c.size);
     const totalSupports = allOpinions.reduce((s, o) => s + o.supports.length, 0);
-    const avgPheromone = allOpinions.length > 0
-      ? allOpinions.reduce((s, o) => {
-          const p = o.pheromones[0];
-          return s + (p ? p.intensity : 0);
-        }, 0) / allOpinions.length
-      : 0;
+    const avgPheromone =
+      allOpinions.length > 0
+        ? allOpinions.reduce((s, o) => {
+            const p = o.pheromones[0];
+            return s + (p ? p.intensity : 0);
+          }, 0) / allOpinions.length
+        : 0;
 
     const convScore = convergenceScore(clusterSizes);
     const newPhase = determinePhase(
@@ -208,9 +220,10 @@ export async function POST(
 
     // Step 6: Save ecosystem snapshot
     const shannonIdx = shannonDiversity(clusterSizes);
-    const avgFitness = allOpinions.length > 0
-      ? allOpinions.reduce((s, o) => s + (o.fitness || 0), 0) / allOpinions.length
-      : 0;
+    const avgFitness =
+      allOpinions.length > 0
+        ? allOpinions.reduce((s, o) => s + (o.fitness || 0), 0) / allOpinions.length
+        : 0;
 
     await prisma.bLEcosystemSnapshot.create({
       data: {
@@ -219,7 +232,8 @@ export async function POST(
         totalOpinions: allOpinions.length,
         totalSupports,
         shannonIndex: shannonIdx,
-        dominantCluster: clusters.length > 0 ? clusters.sort((a, b) => b.size - a.size)[0].label : null,
+        dominantCluster:
+          clusters.length > 0 ? clusters.sort((a, b) => b.size - a.size)[0].label : null,
         avgFitness,
         avgPheromone,
       },

@@ -89,8 +89,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     const clusterRegions = clusters.map((c) => {
       // Calculate cluster center from member positions
       const members = opinionNodes.filter((o) => o.clusterId === c.id);
-      const centerX = members.length > 0 ? members.reduce((s, m) => s + m.x, 0) / members.length : 0.5;
-      const centerY = members.length > 0 ? members.reduce((s, m) => s + m.y, 0) / members.length : 0.5;
+      const centerX =
+        members.length > 0 ? members.reduce((s, m) => s + m.x, 0) / members.length : 0.5;
+      const centerY =
+        members.length > 0 ? members.reduce((s, m) => s + m.y, 0) / members.length : 0.5;
       return {
         id: c.id,
         label: c.label,

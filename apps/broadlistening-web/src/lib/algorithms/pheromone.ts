@@ -26,9 +26,12 @@ export function reinforce(state: PheromoneState, weight: number, now: number): P
 }
 
 /** Aggregate pheromone field for a set of opinions */
-export function aggregateField(states: PheromoneState[], now: number): { total: number; avg: number; max: number } {
+export function aggregateField(
+  states: PheromoneState[],
+  now: number,
+): { total: number; avg: number; max: number } {
   if (states.length === 0) return { total: 0, avg: 0, max: 0 };
-  const intensities = states.map(s => currentIntensity(s, now));
+  const intensities = states.map((s) => currentIntensity(s, now));
   const total = intensities.reduce((a, b) => a + b, 0);
   return {
     total,

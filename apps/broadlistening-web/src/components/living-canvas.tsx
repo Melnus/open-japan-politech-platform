@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Flow Field Canvas — 計算機自然
@@ -78,7 +78,7 @@ export function LivingCanvas({
         maxLife: 100 + Math.random() * 400,
       };
     },
-    [hues, palette]
+    [hues, palette],
   );
 
   useEffect(() => {
@@ -99,9 +99,9 @@ export function LivingCanvas({
       sizeRef.current = { w, h };
 
       // Clear and reinitialize
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx!.fillStyle = "#050505";
-      ctx!.fillRect(0, 0, w, h);
+      ctx?.fillRect(0, 0, w, h);
 
       // Reinit particles
       particlesRef.current = [];
@@ -186,11 +186,7 @@ export function LivingCanvas({
         p.life++;
 
         // Respawn if out of bounds or life expired
-        if (
-          p.x < -10 || p.x > w + 10 ||
-          p.y < -10 || p.y > h + 10 ||
-          p.life > p.maxLife
-        ) {
+        if (p.x < -10 || p.x > w + 10 || p.y < -10 || p.y > h + 10 || p.life > p.maxLife) {
           const spawned = spawnParticle(w, h);
           Object.assign(p, spawned);
           continue;
@@ -250,10 +246,5 @@ export function LivingCanvas({
     };
   }, [particleCount, spawnParticle, interactive, palette, hues]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className={`absolute inset-0 h-full w-full ${className ?? ""}`}
-    />
-  );
+  return <canvas ref={canvasRef} className={`absolute inset-0 h-full w-full ${className ?? ""}`} />;
 }

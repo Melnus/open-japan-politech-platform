@@ -1,5 +1,5 @@
-import { prisma } from "@ojpp/db";
 import { jsonResponse } from "@ojpp/api";
+import { prisma } from "@ojpp/db";
 import { complete, extractApiKey } from "@/lib/llm/client";
 
 const SYSTEM_PROMPT = `あなたは政策議論に参加するAIエージェントです。
@@ -13,10 +13,7 @@ interface GeneratedOpinion {
   perspective: string;
 }
 
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: topicId } = await params;
   const apiKey = extractApiKey(request);
 
@@ -36,18 +33,16 @@ export async function POST(
     }
 
     if (topic.phase === "CLOSED") {
-      return new Response(
-        JSON.stringify({ error: "Topic is closed" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Topic is closed" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const body = await request.json().catch(() => ({}));
     const perspectives = Math.min(body.perspectives ?? 3, 5);
 
-    const existingOpinions = topic.opinions
-      .map((o) => `[${o.stance}] ${o.content}`)
-      .join("\n");
+    const existingOpinions = topic.opinions.map((o) => `[${o.stance}] ${o.content}`).join("\n");
 
     const prompt = `## トピック
 タイトル: ${topic.title}
@@ -75,10 +70,10 @@ JSONのみを出力してください。`;
       const jsonMatch = response.match(/\[[\s\S]*\]/);
       generated = JSON.parse(jsonMatch?.[0] ?? "[]");
     } catch {
-      return new Response(
-        JSON.stringify({ error: "Failed to parse AI response" }),
-        { status: 500, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "Failed to parse AI response" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const createdOpinions = await Promise.all(
@@ -103,7 +98,7 @@ JSONのみを出力してください。`;
         });
 
         return opinion;
-      })
+      }),
     );
 
     return jsonResponse({ opinions: createdOpinions });

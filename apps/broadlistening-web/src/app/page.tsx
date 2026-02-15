@@ -275,7 +275,14 @@ export default function HomePage() {
             <div className="mt-12 flex items-center gap-4 animate-in animate-in-delay-3">
               <Link href="/topics" className="btn-glow text-base py-4 px-8">
                 声を投げ込む
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="ml-2">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className="ml-2"
+                  aria-hidden="true"
+                >
                   <path
                     d="M3 8h10m0 0L9 4m4 4L9 12"
                     stroke="currentColor"
@@ -427,8 +434,8 @@ export default function HomePage() {
 
           {!loaded ? (
             <div className="grid gap-6 md:grid-cols-2">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="glass-card animate-pulse p-8" style={{ minHeight: 180 }}>
+              {["skel-1", "skel-2", "skel-3", "skel-4"].map((id) => (
+                <div key={id} className="glass-card animate-pulse p-8" style={{ minHeight: 180 }}>
                   <div className="h-4 w-32 rounded bg-white/5" />
                   <div className="mt-4 h-3 w-full rounded bg-white/[0.02]" />
                   <div className="mt-2 h-3 w-2/3 rounded bg-white/[0.02]" />

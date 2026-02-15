@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface OpinionNode {
   id: string;
@@ -97,7 +97,7 @@ export function EcosystemView({ opinions, clusters, className }: EcosystemViewPr
       }
       setTooltip(null);
     },
-    [opinions, size]
+    [opinions, size],
   );
 
   // Main render
@@ -131,7 +131,8 @@ export function EcosystemView({ opinions, clusters, className }: EcosystemViewPr
       ctx.beginPath();
       for (let px = 0; px <= drawW; px += 2) {
         const x = padding + px;
-        const wave = Math.sin(px * 0.015 + level * 0.8) * 15 + Math.cos(px * 0.008 + level * 1.2) * 10;
+        const wave =
+          Math.sin(px * 0.015 + level * 0.8) * 15 + Math.cos(px * 0.008 + level * 1.2) * 10;
         const y = yOffset + wave;
         if (px === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
@@ -253,7 +254,11 @@ export function EcosystemView({ opinions, clusters, className }: EcosystemViewPr
   }, [opinions, clusters, size]);
 
   return (
-    <div ref={containerRef} className={`relative h-full w-full ${className ?? ""}`} style={{ minHeight: 400 }}>
+    <div
+      ref={containerRef}
+      className={`relative h-full w-full ${className ?? ""}`}
+      style={{ minHeight: 400 }}
+    >
       <canvas
         ref={canvasRef}
         style={{ width: size.width, height: size.height }}
@@ -277,7 +282,14 @@ export function EcosystemView({ opinions, clusters, className }: EcosystemViewPr
   );
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);

@@ -12,7 +12,11 @@ export function getClient(apiKey?: string): Anthropic {
   return defaultClient;
 }
 
-export async function complete(systemPrompt: string, userPrompt: string, apiKey?: string): Promise<string> {
+export async function complete(
+  systemPrompt: string,
+  userPrompt: string,
+  apiKey?: string,
+): Promise<string> {
   const anthropic = getClient(apiKey);
   const response = await anthropic.messages.create({
     model: "claude-sonnet-4-5-20250929",

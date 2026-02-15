@@ -20,8 +20,7 @@ export default function AboutPage() {
               About
             </h1>
             <p className="mt-3 text-white/30 max-w-xl leading-relaxed">
-              計算機自然的アプローチで市民の声を「生態系」として扱う、
-              次世代の熟議基盤。
+              計算機自然的アプローチで市民の声を「生態系」として扱う、 次世代の熟議基盤。
             </p>
           </FadeIn>
         </div>
@@ -31,7 +30,9 @@ export default function AboutPage() {
         {/* Mission */}
         <FadeIn>
           <section>
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">Mission</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              Mission
+            </div>
             <div className="glass-card p-8">
               <p className="text-white/60 leading-relaxed text-lg">
                 BroadListeningは、Polisの統計的クラスタリング、Talk to the Cityのナラティブ抽出、
@@ -39,7 +40,9 @@ export default function AboutPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 {["意見生態系", "デジタルフェロモン", "議論構造マイニング"].map((c) => (
-                  <span key={c} className="badge-lumi badge-lumi--cyan">{c}</span>
+                  <span key={c} className="badge-lumi badge-lumi--cyan">
+                    {c}
+                  </span>
                 ))}
               </div>
               <p className="mt-6 text-white/35 leading-relaxed">
@@ -54,7 +57,9 @@ export default function AboutPage() {
         {/* AI Participation */}
         <FadeIn>
           <section>
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">AI Participation</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              AI Participation
+            </div>
             <h2
               className="text-2xl font-black text-white mb-8"
               style={{ fontFamily: "var(--font-outfit)" }}
@@ -81,7 +86,11 @@ export default function AboutPage() {
                   desc: "TF-IDFベースのエンベディングとk-means++で意見を自動分類。各クラスタにLLMが直感的なラベルを付与。",
                 },
               ].map((item, i) => (
-                <div key={item.title} className="glass-card p-6 animate-in" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div
+                  key={item.title}
+                  className="glass-card p-6 animate-in"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
                   <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
                   <p className="text-sm text-white/30 leading-relaxed">{item.desc}</p>
                 </div>
@@ -93,7 +102,9 @@ export default function AboutPage() {
         {/* Mathematical Foundations */}
         <FadeIn>
           <section>
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">Mathematics</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              Mathematics
+            </div>
             <h2
               className="text-2xl font-black text-white mb-8"
               style={{ fontFamily: "var(--font-outfit)" }}
@@ -125,9 +136,14 @@ export default function AboutPage() {
                 },
               ].map((f) => (
                 <div key={f.name} className="glass-card p-6">
-                  <div className="text-[10px] text-white/20 uppercase tracking-widest mb-2">{f.name}</div>
+                  <div className="text-[10px] text-white/20 uppercase tracking-widest mb-2">
+                    {f.name}
+                  </div>
                   <div className="rounded-lg bg-white/[0.02] border border-white/[0.04] px-4 py-3 mb-3">
-                    <code className="text-sm text-aurora" style={{ fontFamily: "var(--font-outfit)" }}>
+                    <code
+                      className="text-sm text-aurora"
+                      style={{ fontFamily: "var(--font-outfit)" }}
+                    >
                       {f.formula}
                     </code>
                   </div>
@@ -141,7 +157,9 @@ export default function AboutPage() {
         {/* Architecture */}
         <FadeIn>
           <section>
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">Architecture</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              Architecture
+            </div>
             <h2
               className="text-2xl font-black text-white mb-8"
               style={{ fontFamily: "var(--font-outfit)" }}
@@ -170,11 +188,16 @@ export default function AboutPage() {
                 <div key={layer.layer} className="glass-card p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <span className={`h-2 w-2 rounded-full bg-${layer.color}-400`} />
-                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">{layer.layer}</span>
+                    <span className="text-xs font-bold text-white/40 uppercase tracking-widest">
+                      {layer.layer}
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {layer.items.map((item) => (
-                      <span key={item} className="rounded-full bg-white/[0.03] border border-white/[0.05] px-3 py-1 text-xs text-white/40">
+                      <span
+                        key={item}
+                        className="rounded-full bg-white/[0.03] border border-white/[0.05] px-3 py-1 text-xs text-white/40"
+                      >
                         {item}
                       </span>
                     ))}
@@ -188,7 +211,9 @@ export default function AboutPage() {
         {/* Tech Stack */}
         <FadeIn>
           <section>
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">Stack</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              Stack
+            </div>
             <div className="glass-card p-6">
               <div className="grid gap-4 sm:grid-cols-3">
                 {[
@@ -197,7 +222,9 @@ export default function AboutPage() {
                   { cat: "AI/ML", items: "Claude API, TF-IDF, k-means++" },
                 ].map((s) => (
                   <div key={s.cat}>
-                    <div className="text-[10px] text-white/15 uppercase tracking-widest mb-1">{s.cat}</div>
+                    <div className="text-[10px] text-white/15 uppercase tracking-widest mb-1">
+                      {s.cat}
+                    </div>
                     <p className="text-sm text-white/40">{s.items}</p>
                   </div>
                 ))}
@@ -209,7 +236,9 @@ export default function AboutPage() {
         {/* References */}
         <FadeIn>
           <section className="pb-10">
-            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">References</div>
+            <div className="text-xs text-white/15 font-bold uppercase tracking-widest mb-4">
+              References
+            </div>
             <div className="glass-card p-6">
               <ul className="space-y-2 text-sm text-white/30">
                 <li>Polis — Statistical opinion clustering with real-time visualization</li>

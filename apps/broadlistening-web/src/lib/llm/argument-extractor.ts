@@ -36,7 +36,10 @@ For relations:
 
 Return valid JSON only, no markdown fences.`;
 
-export async function extractArguments(opinionText: string, apiKey?: string): Promise<ExtractedArguments> {
+export async function extractArguments(
+  opinionText: string,
+  apiKey?: string,
+): Promise<ExtractedArguments> {
   const raw = await complete(SYSTEM_PROMPT, opinionText, apiKey);
 
   try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface OpinionPoint {
   id: string;
@@ -38,7 +38,8 @@ function pca3(data: number[][]): number[][] {
     for (let iter = 0; iter < 50; iter++) {
       const scores = deflected.map((row) => row.reduce((s, v, j) => s + v * vec[j], 0));
       const newVec = new Array(dim).fill(0);
-      for (let i = 0; i < n; i++) for (let j = 0; j < dim; j++) newVec[j] += scores[i] * deflected[i][j];
+      for (let i = 0; i < n; i++)
+        for (let j = 0; j < dim; j++) newVec[j] += scores[i] * deflected[i][j];
       const norm = Math.sqrt(newVec.reduce((s, v) => s + v * v, 0)) || 1;
       vec = newVec.map((v) => v / norm);
     }
@@ -46,7 +47,7 @@ function pca3(data: number[][]): number[][] {
   }
 
   const results: number[][] = [];
-  let current = centered.map((r) => [...r]);
+  const current = centered.map((r) => [...r]);
 
   for (let axis = 0; axis < 3; axis++) {
     const pc = powerIteration(current);
@@ -111,7 +112,7 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
     const embeddings = opinions.map((o) =>
       o.embedding && o.embedding.length > 0
         ? o.embedding
-        : new Array(withEmbedding[0].embedding!.length).fill(0).map(() => Math.random() * 0.01),
+        : new Array(withEmbedding[0].embedding?.length).fill(0).map(() => Math.random() * 0.01),
     );
 
     const reduced = pca3(embeddings);
@@ -125,7 +126,8 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width, height } = entry.contentRect;
-        if (width > 0 && height > 0) setSize({ width: Math.floor(width), height: Math.floor(height) });
+        if (width > 0 && height > 0)
+          setSize({ width: Math.floor(width), height: Math.floor(height) });
       }
     });
     observer.observe(container);
@@ -154,7 +156,7 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
         dragRef.current.lastY = e.clientY;
       } else {
         // Hover detection
-        const rect = canvas!.getBoundingClientRect();
+        const rect = canvas?.getBoundingClientRect();
         const mx = e.clientX - rect.left;
         const my = e.clientY - rect.top;
         let closestIdx: number | null = null;
@@ -168,8 +170,10 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
 
         for (let i = 0; i < positions.current.length; i++) {
           const [px, py, pz] = positions.current[i];
-          const cosY = Math.cos(ry), sinY = Math.sin(ry);
-          const cosX = Math.cos(rx), sinX = Math.sin(rx);
+          const cosY = Math.cos(ry),
+            sinY = Math.sin(ry);
+          const cosX = Math.cos(rx),
+            sinX = Math.sin(rx);
           const x1 = px * cosY - pz * sinY;
           const z1 = px * sinY + pz * cosY;
           const y1 = py * cosX - z1 * sinX;
@@ -185,9 +189,16 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
       }
     }
 
-    function onMouseUp() { dragRef.current.dragging = false; }
-    function onMouseLeave() { dragRef.current.dragging = false; setHoverIdx(null); }
-    function onDblClick() { setAutoRotate(true); }
+    function onMouseUp() {
+      dragRef.current.dragging = false;
+    }
+    function onMouseLeave() {
+      dragRef.current.dragging = false;
+      setHoverIdx(null);
+    }
+    function onDblClick() {
+      setAutoRotate(true);
+    }
 
     canvas.addEventListener("mousedown", onMouseDown);
     canvas.addEventListener("mousemove", onMouseMove);
@@ -201,7 +212,7 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
       canvas.removeEventListener("mouseleave", onMouseLeave);
       canvas.removeEventListener("dblclick", onDblClick);
     };
-  }, [opinions, size, autoRotate]);
+  }, [size, autoRotate]);
 
   // Render loop
   useEffect(() => {
@@ -239,8 +250,10 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
 
       const ry = autoRotate ? elapsed * 0.3 : dragRef.current.rotY;
       const rx = autoRotate ? 0.3 + Math.sin(elapsed * 0.1) * 0.1 : dragRef.current.rotX;
-      const cosY = Math.cos(ry), sinY = Math.sin(ry);
-      const cosX = Math.cos(rx), sinX = Math.sin(rx);
+      const cosY = Math.cos(ry),
+        sinY = Math.sin(ry);
+      const cosX = Math.cos(rx),
+        sinX = Math.sin(rx);
 
       // Project all points
       const projected = positions.current.map(([px, py, pz], i) => {
@@ -261,7 +274,9 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
           const oi = opinions[projected[i].idx];
           const oj = opinions[projected[j].idx];
           if (oi.clusterId && oi.clusterId === oj.clusterId) {
-            const dist = Math.sqrt((projected[i].sx - projected[j].sx) ** 2 + (projected[i].sy - projected[j].sy) ** 2);
+            const dist = Math.sqrt(
+              (projected[i].sx - projected[j].sx) ** 2 + (projected[i].sy - projected[j].sy) ** 2,
+            );
             if (dist < 200) {
               ctx.strokeStyle = oi.clusterColor || "#22d3ee";
               ctx.lineWidth = 0.5;
@@ -301,7 +316,7 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
 
         // Label for hovered
         if (isHovered) {
-          const label = op.content.length > 50 ? op.content.slice(0, 50) + "…" : op.content;
+          const label = op.content.length > 50 ? `${op.content.slice(0, 50)}…` : op.content;
           ctx.font = "bold 11px system-ui, sans-serif";
           ctx.textAlign = "center";
           const metrics = ctx.measureText(label);
@@ -330,11 +345,20 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
       }
 
       // Cluster labels floating
-      const clusterMap = new Map<string, { x: number; y: number; count: number; color: string; label: string }>();
+      const clusterMap = new Map<
+        string,
+        { x: number; y: number; count: number; color: string; label: string }
+      >();
       for (const p of projected) {
         const op = opinions[p.idx];
         if (!op.clusterId) continue;
-        const entry = clusterMap.get(op.clusterId) ?? { x: 0, y: 0, count: 0, color: op.clusterColor || "#22d3ee", label: op.clusterLabel };
+        const entry = clusterMap.get(op.clusterId) ?? {
+          x: 0,
+          y: 0,
+          count: 0,
+          color: op.clusterColor || "#22d3ee",
+          label: op.clusterLabel,
+        };
         entry.x += p.sx;
         entry.y += p.sy;
         entry.count++;
@@ -377,13 +401,28 @@ export function Cluster3DView({ opinions, className }: Cluster3DViewProps) {
   }, [opinions, size, hoverIdx, autoRotate]);
 
   return (
-    <div ref={containerRef} className={`relative h-full w-full ${className ?? ""}`} style={{ minHeight: 400, cursor: "grab" }}>
-      <canvas ref={canvasRef} style={{ width: size.width, height: size.height }} className="block" />
+    <div
+      ref={containerRef}
+      className={`relative h-full w-full ${className ?? ""}`}
+      style={{ minHeight: 400, cursor: "grab" }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{ width: size.width, height: size.height }}
+        className="block"
+      />
     </div>
   );
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);

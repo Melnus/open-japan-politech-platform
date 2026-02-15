@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { FadeIn } from "@ojpp/ui";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { LivingCanvas } from "@/components/living-canvas";
 
 interface TopicSummary {
@@ -16,7 +16,11 @@ interface TopicSummary {
 
 const PHASE_MAP: Record<string, { label: string; badge: string; dot: string }> = {
   OPEN: { label: "Collecting", badge: "badge-lumi badge-lumi--emerald", dot: "bg-emerald-400" },
-  DELIBERATION: { label: "Deliberating", badge: "badge-lumi badge-lumi--amber", dot: "bg-amber-400" },
+  DELIBERATION: {
+    label: "Deliberating",
+    badge: "badge-lumi badge-lumi--amber",
+    dot: "bg-amber-400",
+  },
   CONVERGENCE: { label: "Converging", badge: "badge-lumi badge-lumi--cyan", dot: "bg-cyan-400" },
   CLOSED: { label: "Closed", badge: "badge-lumi badge-lumi--rose", dot: "bg-white/30" },
 };
@@ -43,15 +47,23 @@ export default function TopicsPage() {
         const d = await res.json();
         setTopics(d.data ?? []);
       }
-    } catch { /* ignore */ }
-    finally { setSeeding(false); }
+    } catch {
+      /* ignore */
+    } finally {
+      setSeeding(false);
+    }
   }
 
   return (
     <div className="min-h-screen">
       {/* Header with mini flow field */}
       <section className="relative h-56 overflow-hidden flex items-end">
-        <LivingCanvas particleCount={200} palette="cyan" interactive={false} className="opacity-40" />
+        <LivingCanvas
+          particleCount={200}
+          palette="cyan"
+          interactive={false}
+          className="opacity-40"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#050505]" />
 
         <div className="relative z-10 mx-auto max-w-5xl w-full px-6 pb-8">
@@ -65,12 +77,19 @@ export default function TopicsPage() {
                   Topics
                 </h1>
                 <p className="mt-2 text-white/30 text-sm">
-                  {topics.length > 0 ? `${topics.length} active discussions` : "議論のフローフィールドへ"}
+                  {topics.length > 0
+                    ? `${topics.length} active discussions`
+                    : "議論のフローフィールドへ"}
                 </p>
               </div>
               <div className="flex gap-3">
                 {topics.length === 0 && !loading && (
-                  <button onClick={handleSeed} disabled={seeding} className="btn-glass text-sm">
+                  <button
+                    type="button"
+                    onClick={handleSeed}
+                    disabled={seeding}
+                    className="btn-glass text-sm"
+                  >
                     {seeding ? "生成中..." : "Sample Data"}
                   </button>
                 )}
@@ -87,8 +106,8 @@ export default function TopicsPage() {
       <section className="mx-auto max-w-5xl px-6 py-8">
         {loading ? (
           <div className="grid gap-4 md:grid-cols-2">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="glass-card animate-pulse p-7">
+            {["skel-1", "skel-2", "skel-3", "skel-4"].map((id) => (
+              <div key={id} className="glass-card animate-pulse p-7">
                 <div className="h-4 w-40 rounded bg-white/[0.04]" />
                 <div className="mt-4 h-3 w-full rounded bg-white/[0.02]" />
                 <div className="mt-2 h-3 w-2/3 rounded bg-white/[0.02]" />
@@ -99,7 +118,16 @@ export default function TopicsPage() {
           <FadeIn>
             <div className="glass-card p-16 text-center">
               <div className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-white/[0.02] mb-6">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-white/15">
+                <svg
+                  width="36"
+                  height="36"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  className="text-white/15"
+                  aria-hidden="true"
+                >
                   <circle cx="12" cy="12" r="10" />
                   <path d="M8 12h8m-4-4v8" strokeLinecap="round" />
                 </svg>
@@ -109,7 +137,7 @@ export default function TopicsPage() {
                 サンプルデータで試すか、新しいトピックを作成して生態系を起動しましょう。
               </p>
               <div className="flex gap-4 justify-center">
-                <button onClick={handleSeed} disabled={seeding} className="btn-glass">
+                <button type="button" onClick={handleSeed} disabled={seeding} className="btn-glass">
                   {seeding ? "生成中..." : "Sample Data"}
                 </button>
                 <Link href="/topics/new" className="btn-glow">

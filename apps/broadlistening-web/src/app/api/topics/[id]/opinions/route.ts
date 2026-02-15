@@ -2,10 +2,7 @@ import { buildPaginatedResponse, handleApiError, jsonResponse, parsePagination }
 import { prisma } from "@ojpp/db";
 import type { NextRequest } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: topicId } = await params;
     const { page, limit, skip } = parsePagination(request);
@@ -31,10 +28,7 @@ export async function GET(
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: topicId } = await params;
     const body = await request.json();

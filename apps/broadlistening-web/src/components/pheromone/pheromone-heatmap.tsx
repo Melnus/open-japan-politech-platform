@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface PheromoneSource {
   id: string;
@@ -41,7 +41,7 @@ function qualityToColor(quality: number, alpha: number): string {
 
 function truncate(s: string, maxLen: number): string {
   if (s.length <= maxLen) return s;
-  return s.slice(0, maxLen) + "…";
+  return `${s.slice(0, maxLen)}…`;
 }
 
 export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) {
@@ -74,7 +74,7 @@ export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) 
     if (!canvas) return;
 
     function onMove(e: MouseEvent) {
-      const rect = canvas!.getBoundingClientRect();
+      const rect = canvas?.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
       const padding = 40;
@@ -96,7 +96,9 @@ export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) 
       setHoverIdx(closestIdx);
     }
 
-    function onLeave() { setHoverIdx(null); }
+    function onLeave() {
+      setHoverIdx(null);
+    }
 
     canvas.addEventListener("mousemove", onMove);
     canvas.addEventListener("mouseleave", onLeave);
@@ -135,10 +137,16 @@ export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) 
       ctx.strokeStyle = "rgba(255,255,255,0.02)";
       ctx.lineWidth = 0.5;
       for (let gx = padding; gx <= w - padding; gx += 40) {
-        ctx.beginPath(); ctx.moveTo(gx, padding); ctx.lineTo(gx, h - padding); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(gx, padding);
+        ctx.lineTo(gx, h - padding);
+        ctx.stroke();
       }
       for (let gy = padding; gy <= h - padding; gy += 40) {
-        ctx.beginPath(); ctx.moveTo(padding, gy); ctx.lineTo(w - padding, gy); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(padding, gy);
+        ctx.lineTo(w - padding, gy);
+        ctx.stroke();
       }
 
       // Additive blending for heatmap
@@ -212,19 +220,22 @@ export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) 
           roundRect(ctx, cx - pillW / 2, cy - 20 - pillH / 2, pillW, pillH, 6);
           ctx.fill();
           ctx.stroke();
-          ctx.fillStyle = STANCE_LABEL_COLORS[src.stance ?? "NEUTRAL"] ?? STANCE_LABEL_COLORS.NEUTRAL;
+          ctx.fillStyle =
+            STANCE_LABEL_COLORS[src.stance ?? "NEUTRAL"] ?? STANCE_LABEL_COLORS.NEUTRAL;
           ctx.fillText(label, cx, cy - 20);
 
           // Stance badge below
           if (src.stance) {
-            const stanceLabel = src.stance === "FOR" ? "賛成" : src.stance === "AGAINST" ? "反対" : "中立";
+            const stanceLabel =
+              src.stance === "FOR" ? "賛成" : src.stance === "AGAINST" ? "反対" : "中立";
             ctx.font = "bold 8px system-ui, sans-serif";
-            ctx.fillStyle = STANCE_LABEL_COLORS[src.stance] + "80";
+            ctx.fillStyle = `${STANCE_LABEL_COLORS[src.stance]}80`;
             ctx.fillText(stanceLabel, cx, cy - 20 + pillH / 2 + 8);
           }
         } else {
           // Regular label with text shadow
-          const stanceColor = STANCE_LABEL_COLORS[src.stance ?? "NEUTRAL"] ?? STANCE_LABEL_COLORS.NEUTRAL;
+          const stanceColor =
+            STANCE_LABEL_COLORS[src.stance ?? "NEUTRAL"] ?? STANCE_LABEL_COLORS.NEUTRAL;
           // Parse the rgba to adjust alpha
           const baseColor = stanceColor.replace(/[\d.]+\)$/, `${labelAlpha})`);
 
@@ -259,13 +270,21 @@ export function PheromoneHeatmap({ sources, className }: PheromoneHeatmapProps) 
   }, [sources, size, hoverIdx]);
 
   return (
-    <div ref={containerRef} className={`relative h-full w-full ${className ?? ""}`} style={{ minHeight: 400, cursor: "crosshair" }}>
-      <canvas ref={canvasRef} style={{ width: size.width, height: size.height }} className="block" />
+    <div
+      ref={containerRef}
+      className={`relative h-full w-full ${className ?? ""}`}
+      style={{ minHeight: 400, cursor: "crosshair" }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{ width: size.width, height: size.height }}
+        className="block"
+      />
     </div>
   );
 }
 
-function drawColorBar(ctx: CanvasRenderingContext2D, w: number, h: number) {
+function drawColorBar(ctx: CanvasRenderingContext2D, w: number, _h: number) {
   const barX = w - 50;
   const barY = 60;
   const barW = 16;
@@ -329,7 +348,14 @@ function drawInfoLegend(ctx: CanvasRenderingContext2D, count: number) {
   ctx.fillText("Text = opinion content", lx + 10, ly + 76);
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);

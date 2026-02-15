@@ -1,21 +1,25 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import { AnimatedCounter, FadeIn } from "@ojpp/ui";
-import { OpinionStream } from "@/components/opinion-stream";
-import { EcosystemView } from "@/components/ecosystem/ecosystem-view";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ApiKeySettings, apiHeaders, useApiKey } from "@/components/api-key-settings";
 import { ArgumentGraphView } from "@/components/argument-graph/argument-graph-view";
-import { PheromoneHeatmap } from "@/components/pheromone/pheromone-heatmap";
 import { Cluster3DView } from "@/components/cluster-3d-view";
-import { ApiKeySettings, useApiKey, apiHeaders } from "@/components/api-key-settings";
+import { EcosystemView } from "@/components/ecosystem/ecosystem-view";
+import { OpinionStream } from "@/components/opinion-stream";
+import { PheromoneHeatmap } from "@/components/pheromone/pheromone-heatmap";
 
 type ViewMode = "stream" | "grid" | "ecosystem" | "argument" | "pheromone" | "cluster3d";
 
 const PHASE_MAP: Record<string, { label: string; badge: string; dot: string }> = {
   OPEN: { label: "Collecting", badge: "badge-lumi badge-lumi--emerald", dot: "bg-emerald-400" },
-  DELIBERATION: { label: "Deliberating", badge: "badge-lumi badge-lumi--amber", dot: "bg-amber-400" },
+  DELIBERATION: {
+    label: "Deliberating",
+    badge: "badge-lumi badge-lumi--amber",
+    dot: "bg-amber-400",
+  },
   CONVERGENCE: { label: "Converging", badge: "badge-lumi badge-lumi--cyan", dot: "bg-cyan-400" },
   CLOSED: { label: "Closed", badge: "badge-lumi badge-lumi--rose", dot: "bg-white/30" },
 };
@@ -56,18 +60,46 @@ interface EcosystemData {
   ecosystem: {
     opinions: OpinionNode[];
     clusters: {
-      id: string; label: string; centerX: number; centerY: number;
-      radius: number; color: string;
+      id: string;
+      label: string;
+      centerX: number;
+      centerY: number;
+      radius: number;
+      color: string;
     }[];
   };
   argumentGraph: {
-    nodes: { id: string; type: "CLAIM" | "PREMISE" | "EVIDENCE" | "REBUTTAL"; content: string; confidence: number }[];
-    edges: { sourceId: string; targetId: string; relation: "ATTACK" | "SUPPORT" | "UNDERCUT"; weight: number }[];
+    nodes: {
+      id: string;
+      type: "CLAIM" | "PREMISE" | "EVIDENCE" | "REBUTTAL";
+      content: string;
+      confidence: number;
+    }[];
+    edges: {
+      sourceId: string;
+      targetId: string;
+      relation: "ATTACK" | "SUPPORT" | "UNDERCUT";
+      weight: number;
+    }[];
   };
   pheromone: {
-    sources: { id: string; x: number; y: number; intensity: number; quality: number; content?: string; stance?: string }[];
+    sources: {
+      id: string;
+      x: number;
+      y: number;
+      intensity: number;
+      quality: number;
+      content?: string;
+      stance?: string;
+    }[];
   };
-  history: { shannonIndex: number; avgFitness: number; avgPheromone: number; totalOpinions: number; createdAt: string }[];
+  history: {
+    shannonIndex: number;
+    avgFitness: number;
+    avgPheromone: number;
+    totalOpinions: number;
+    createdAt: string;
+  }[];
 }
 
 interface TopicDetail {
@@ -108,11 +140,16 @@ export default function TopicDetailPage() {
       ]);
       if (topicRes.ok) setTopic(await topicRes.json());
       if (ecoRes.ok) setEco(await ecoRes.json());
-    } catch { /* ignore */ }
-    finally { setLoading(false); }
+    } catch {
+      /* ignore */
+    } finally {
+      setLoading(false);
+    }
   }, [topicId]);
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // Track mouse for parallax effects
   useEffect(() => {
@@ -129,7 +166,9 @@ export default function TopicDetailPage() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  function dismissError() { setError(null); }
+  function dismissError() {
+    setError(null);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -199,7 +238,9 @@ export default function TopicDetailPage() {
           }
         } else {
           const data = await res.json().catch(() => ({}));
-          setError(`LLM分析に失敗: ${data.error ?? `ステータス ${res.status}`}。右上の「Set API Key」からAnthropicのAPIキーを設定してください。`);
+          setError(
+            `LLM分析に失敗: ${data.error ?? `ステータス ${res.status}`}。右上の「Set API Key」からAnthropicのAPIキーを設定してください。`,
+          );
           keepGoing = false;
         }
       } catch (err) {
@@ -228,7 +269,9 @@ export default function TopicDetailPage() {
         await fetchData();
       } else {
         const data = await res.json().catch(() => ({}));
-        setError(`AI参加に失敗: ${data.error ?? `ステータス ${res.status}`}。右上の「Set API Key」からAnthropicのAPIキーを設定してください。`);
+        setError(
+          `AI参加に失敗: ${data.error ?? `ステータス ${res.status}`}。右上の「Set API Key」からAnthropicのAPIキーを設定してください。`,
+        );
       }
     } catch (err) {
       setError(`AI参加エラー: ${err instanceof Error ? err.message : "APIに接続できません"}`);
@@ -243,9 +286,14 @@ export default function TopicDetailPage() {
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="h-12 w-12 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
-            <div className="absolute inset-0 h-12 w-12 rounded-full border-2 border-emerald-400/10 border-b-emerald-400/50 animate-spin" style={{ animationDirection: "reverse", animationDuration: "1.5s" }} />
+            <div
+              className="absolute inset-0 h-12 w-12 rounded-full border-2 border-emerald-400/10 border-b-emerald-400/50 animate-spin"
+              style={{ animationDirection: "reverse", animationDuration: "1.5s" }}
+            />
           </div>
-          <span className="text-sm text-white/20 tracking-widest uppercase">Loading ecosystem...</span>
+          <span className="text-sm text-white/20 tracking-widest uppercase">
+            Loading ecosystem...
+          </span>
         </div>
       </div>
     );
@@ -257,7 +305,9 @@ export default function TopicDetailPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-2">Not Found</h1>
           <p className="text-white/30 mb-6">トピックが見つかりません。</p>
-          <Link href="/topics" className="btn-glass">トピック一覧へ</Link>
+          <Link href="/topics" className="btn-glass">
+            トピック一覧へ
+          </Link>
         </div>
       </div>
     );
@@ -286,7 +336,10 @@ export default function TopicDetailPage() {
             left: `calc(20% + ${mousePos.x * 30}px)`,
             top: `calc(30% + ${mousePos.y * 30}px)`,
             transition: "left 0.8s ease, top 0.8s ease",
-            animationName: "bubble-float", animationDuration: "12s", animationTimingFunction: "ease-in-out", animationIterationCount: "infinite",
+            animationName: "bubble-float",
+            animationDuration: "12s",
+            animationTimingFunction: "ease-in-out",
+            animationIterationCount: "infinite",
           }}
         />
         <div
@@ -309,7 +362,16 @@ export default function TopicDetailPage() {
       {error && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-6">
           <div className="error-banner flex items-start gap-3">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 mt-0.5 text-rose-400/80">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="shrink-0 mt-0.5 text-rose-400/80"
+              aria-hidden="true"
+            >
               <circle cx="12" cy="12" r="10" />
               <path d="M12 8v4m0 4h.01" />
             </svg>
@@ -317,10 +379,19 @@ export default function TopicDetailPage() {
               <p className="text-sm leading-relaxed">{error}</p>
             </div>
             <button
+              type="button"
               onClick={dismissError}
               className="shrink-0 p-1 rounded-lg hover:bg-white/5 transition-colors text-rose-400/50 hover:text-rose-400"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             </button>
@@ -332,7 +403,10 @@ export default function TopicDetailPage() {
       <div className="relative z-10 mx-auto max-w-6xl px-6 mb-6">
         <FadeIn>
           <div className="flex items-center gap-3 mb-4">
-            <Link href="/topics" className="text-xs text-white/20 hover:text-white/40 transition-colors">
+            <Link
+              href="/topics"
+              className="text-xs text-white/20 hover:text-white/40 transition-colors"
+            >
               Topics
             </Link>
             <span className="text-white/10">/</span>
@@ -377,17 +451,23 @@ export default function TopicDetailPage() {
               >
                 <div
                   className={`text-2xl font-black ${
-                    s.color === "cyan" ? "text-cyan-400/60" :
-                    s.color === "emerald" ? "text-emerald-400/60" :
-                    s.color === "rose" ? "text-rose-400/60" :
-                    s.color === "violet" ? "text-violet-400/60" :
-                    "text-white/30"
+                    s.color === "cyan"
+                      ? "text-cyan-400/60"
+                      : s.color === "emerald"
+                        ? "text-emerald-400/60"
+                        : s.color === "rose"
+                          ? "text-rose-400/60"
+                          : s.color === "violet"
+                            ? "text-violet-400/60"
+                            : "text-white/30"
                   }`}
                   style={{ fontFamily: "var(--font-outfit)" }}
                 >
                   <AnimatedCounter to={s.value} duration={1} />
                 </div>
-                <div className="text-[10px] text-white/20 uppercase tracking-widest mt-0.5">{s.label}</div>
+                <div className="text-[10px] text-white/20 uppercase tracking-widest mt-0.5">
+                  {s.label}
+                </div>
               </div>
             ))}
           </div>
@@ -402,6 +482,7 @@ export default function TopicDetailPage() {
             <div className="flex gap-1 rounded-xl bg-white/[0.03] border border-white/[0.04] p-1">
               {VIEW_TABS.map((tab) => (
                 <button
+                  type="button"
                   key={tab.key}
                   onClick={() => setViewMode(tab.key)}
                   className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-300 flex items-center gap-1.5 ${
@@ -422,6 +503,7 @@ export default function TopicDetailPage() {
             {/* Action buttons with descriptions */}
             <div className="relative">
               <button
+                type="button"
                 onClick={handleAnalyze}
                 disabled={analyzing || opinions.length === 0}
                 className="action-tooltip btn-glass text-xs py-2 px-4"
@@ -434,7 +516,15 @@ export default function TopicDetailPage() {
                   </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-400/60">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="text-cyan-400/60"
+                    >
                       <circle cx="12" cy="12" r="10" />
                       <path d="M12 6v6l4 2" />
                     </svg>
@@ -454,6 +544,7 @@ export default function TopicDetailPage() {
             </div>
 
             <button
+              type="button"
               onClick={handleAi}
               disabled={aiRunning}
               className="action-tooltip btn-glass text-xs py-2 px-4"
@@ -466,7 +557,15 @@ export default function TopicDetailPage() {
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-400/60">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="text-emerald-400/60"
+                  >
                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
                     <path d="M2 17l10 5 10-5" />
                     <path d="M2 12l10 5 10-5" />
@@ -491,11 +590,16 @@ export default function TopicDetailPage() {
             <div className="h-2 w-full rounded-full bg-white/[0.04] overflow-hidden">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-400 transition-all duration-700 ease-out"
-                style={{ width: `${analyzePercent}%`, backgroundSize: "200% 100%", animation: "shimmer 2s linear infinite" }}
+                style={{
+                  width: `${analyzePercent}%`,
+                  backgroundSize: "200% 100%",
+                  animation: "shimmer 2s linear infinite",
+                }}
               />
             </div>
             <p className="mt-2 text-[10px] text-white/25">
-              {analyzeProgress} — 議論構造抽出 → 埋め込み生成 → クラスタリング → ラベル生成 → 適応度計算
+              {analyzeProgress} — 議論構造抽出 → 埋め込み生成 → クラスタリング → ラベル生成 →
+              適応度計算
             </p>
           </div>
         </div>
@@ -506,7 +610,10 @@ export default function TopicDetailPage() {
         {/* Stream View — kinetic typography */}
         {viewMode === "stream" && (
           <FadeIn>
-            <div className="glass-card overflow-hidden scan-lines liquid-lens-container noise-flicker" style={{ height: 520 }}>
+            <div
+              className="glass-card overflow-hidden scan-lines liquid-lens-container noise-flicker"
+              style={{ height: 520 }}
+            >
               {opinions.length > 0 ? (
                 <OpinionStream
                   opinions={opinions.map((o) => ({
@@ -533,61 +640,109 @@ export default function TopicDetailPage() {
                 {/* Stance distribution bar */}
                 <div className="flex gap-1 mb-4 h-2 rounded-full overflow-hidden">
                   {forOps.length > 0 && (
-                    <div className="bg-emerald-400/60 rounded-full" style={{ flex: forOps.length }} />
+                    <div
+                      className="bg-emerald-400/60 rounded-full"
+                      style={{ flex: forOps.length }}
+                    />
                   )}
                   {neutralOps.length > 0 && (
                     <div className="bg-white/20 rounded-full" style={{ flex: neutralOps.length }} />
                   )}
                   {againstOps.length > 0 && (
-                    <div className="bg-rose-400/60 rounded-full" style={{ flex: againstOps.length }} />
+                    <div
+                      className="bg-rose-400/60 rounded-full"
+                      style={{ flex: againstOps.length }}
+                    />
                   )}
                 </div>
                 <div className="flex gap-4 mb-4 text-[10px] text-white/30">
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-400/60" />賛成 {forOps.length}</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-white/20" />中立 {neutralOps.length}</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-rose-400/60" />反対 {againstOps.length}</span>
-                  {clusters.length > 0 && <span className="ml-auto">{clusters.length} clusters</span>}
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400/60" />
+                    賛成 {forOps.length}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-white/20" />
+                    中立 {neutralOps.length}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full bg-rose-400/60" />
+                    反対 {againstOps.length}
+                  </span>
+                  {clusters.length > 0 && (
+                    <span className="ml-auto">{clusters.length} clusters</span>
+                  )}
                 </div>
 
                 {/* Opinion Mosaic Grid */}
                 <div className="grid gap-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {[...opinions].sort((a, b) => b.fitness - a.fitness).map((op) => {
-                    const stanceColor = op.stance === "FOR" ? "emerald" : op.stance === "AGAINST" ? "rose" : "slate";
-                    const borderColor = stanceColor === "emerald" ? "border-emerald-400/20" : stanceColor === "rose" ? "border-rose-400/20" : "border-white/[0.06]";
-                    const glowColor = stanceColor === "emerald" ? "rgba(52,211,153,0.06)" : stanceColor === "rose" ? "rgba(251,113,133,0.06)" : "rgba(255,255,255,0.02)";
-                    const dotColor = stanceColor === "emerald" ? "bg-emerald-400" : stanceColor === "rose" ? "bg-rose-400" : "bg-white/40";
-                    const clusterBg = op.clusterColor ? `${op.clusterColor}08` : "transparent";
+                  {[...opinions]
+                    .sort((a, b) => b.fitness - a.fitness)
+                    .map((op) => {
+                      const stanceColor =
+                        op.stance === "FOR"
+                          ? "emerald"
+                          : op.stance === "AGAINST"
+                            ? "rose"
+                            : "slate";
+                      const borderColor =
+                        stanceColor === "emerald"
+                          ? "border-emerald-400/20"
+                          : stanceColor === "rose"
+                            ? "border-rose-400/20"
+                            : "border-white/[0.06]";
+                      const glowColor =
+                        stanceColor === "emerald"
+                          ? "rgba(52,211,153,0.06)"
+                          : stanceColor === "rose"
+                            ? "rgba(251,113,133,0.06)"
+                            : "rgba(255,255,255,0.02)";
+                      const dotColor =
+                        stanceColor === "emerald"
+                          ? "bg-emerald-400"
+                          : stanceColor === "rose"
+                            ? "bg-rose-400"
+                            : "bg-white/40";
+                      const clusterBg = op.clusterColor ? `${op.clusterColor}08` : "transparent";
 
-                    return (
-                      <div
-                        key={op.id}
-                        className={`relative rounded-xl border ${borderColor} p-3 transition-all duration-300 hover:scale-[1.02] hover:border-white/15 cursor-default group`}
-                        style={{ background: `linear-gradient(135deg, ${glowColor}, ${clusterBg})` }}
-                      >
-                        {/* Stance dot */}
-                        <div className={`absolute top-2 right-2 h-1.5 w-1.5 rounded-full ${dotColor}`} />
+                      return (
+                        <div
+                          key={op.id}
+                          className={`relative rounded-xl border ${borderColor} p-3 transition-all duration-300 hover:scale-[1.02] hover:border-white/15 cursor-default group`}
+                          style={{
+                            background: `linear-gradient(135deg, ${glowColor}, ${clusterBg})`,
+                          }}
+                        >
+                          {/* Stance dot */}
+                          <div
+                            className={`absolute top-2 right-2 h-1.5 w-1.5 rounded-full ${dotColor}`}
+                          />
 
-                        {/* Opinion text */}
-                        <p className="text-[11px] text-white/50 leading-relaxed line-clamp-4 group-hover:text-white/70 transition-colors">
-                          {op.content}
-                        </p>
+                          {/* Opinion text */}
+                          <p className="text-[11px] text-white/50 leading-relaxed line-clamp-4 group-hover:text-white/70 transition-colors">
+                            {op.content}
+                          </p>
 
-                        {/* Meta */}
-                        <div className="mt-2 flex items-center gap-2 text-[9px] text-white/15">
-                          <span className="font-mono">f={op.fitness.toFixed(2)}</span>
-                          {op.clusterLabel && (
-                            <span
-                              className="truncate max-w-[80px] px-1 py-0.5 rounded text-[8px]"
-                              style={{ background: op.clusterColor ? `${op.clusterColor}15` : undefined, color: op.clusterColor ? `${op.clusterColor}80` : undefined }}
-                            >
-                              {op.clusterLabel}
-                            </span>
-                          )}
-                          {op.supportCount > 0 && <span className="ml-auto">♥{op.supportCount}</span>}
+                          {/* Meta */}
+                          <div className="mt-2 flex items-center gap-2 text-[9px] text-white/15">
+                            <span className="font-mono">f={op.fitness.toFixed(2)}</span>
+                            {op.clusterLabel && (
+                              <span
+                                className="truncate max-w-[80px] px-1 py-0.5 rounded text-[8px]"
+                                style={{
+                                  background: op.clusterColor ? `${op.clusterColor}15` : undefined,
+                                  color: op.clusterColor ? `${op.clusterColor}80` : undefined,
+                                }}
+                              >
+                                {op.clusterLabel}
+                              </span>
+                            )}
+                            {op.supportCount > 0 && (
+                              <span className="ml-auto">♥{op.supportCount}</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             ) : (
@@ -603,7 +758,11 @@ export default function TopicDetailPage() {
           <FadeIn>
             <div className="glass-card overflow-hidden" style={{ minHeight: 500 }}>
               {opinions.length > 0 ? (
-                <EcosystemView opinions={opinions} clusters={clusters} className="h-[560px] w-full" />
+                <EcosystemView
+                  opinions={opinions}
+                  clusters={clusters}
+                  className="h-[560px] w-full"
+                />
               ) : (
                 <EmptyState onAi={handleAi} aiRunning={aiRunning} />
               )}
@@ -623,10 +782,21 @@ export default function TopicDetailPage() {
                     className="w-24 h-24 rounded-full mb-8 flex items-center justify-center"
                     style={{
                       background: "radial-gradient(circle, rgba(34,211,238,0.08), transparent 70%)",
-                      animationName: "bubble-float", animationDuration: "6s", animationTimingFunction: "ease-in-out", animationIterationCount: "infinite",
+                      animationName: "bubble-float",
+                      animationDuration: "6s",
+                      animationTimingFunction: "ease-in-out",
+                      animationIterationCount: "infinite",
                     }}
                   >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-cyan-400/40">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      className="text-cyan-400/40"
+                    >
                       <circle cx="6" cy="6" r="3" />
                       <circle cx="18" cy="18" r="3" />
                       <circle cx="18" cy="6" r="3" />
@@ -638,7 +808,12 @@ export default function TopicDetailPage() {
                     「LLM分析」を実行すると、意見からClaim・Premise・Evidence・Rebuttalが自動抽出され、
                     Attack/Support関係がグラフ化されます。
                   </p>
-                  <button onClick={handleAnalyze} disabled={analyzing || opinions.length === 0} className="btn-glow text-xs py-2.5 px-5">
+                  <button
+                    type="button"
+                    onClick={handleAnalyze}
+                    disabled={analyzing || opinions.length === 0}
+                    className="btn-glow text-xs py-2.5 px-5"
+                  >
                     {analyzing ? "分析中..." : "LLM分析を実行"}
                   </button>
                 </div>
@@ -687,7 +862,12 @@ export default function TopicDetailPage() {
                 <p className="text-xs text-white/25 mb-3">
                   クラスタリングにはLLM分析が必要です。APIキーを設定して分析を実行してください。
                 </p>
-                <button onClick={handleAnalyze} disabled={analyzing} className="btn-glow text-xs py-2 px-5">
+                <button
+                  type="button"
+                  onClick={handleAnalyze}
+                  disabled={analyzing}
+                  className="btn-glow text-xs py-2 px-5"
+                >
                   {analyzing ? "分析中..." : "LLM分析を実行"}
                 </button>
               </div>
@@ -700,7 +880,9 @@ export default function TopicDetailPage() {
       {isOpen && (
         <div className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
           <FadeIn delay={0.2}>
-            <div className={`glass-card p-6 transition-all duration-500 ${submitted ? "submit-flash" : ""}`}>
+            <div
+              className={`glass-card p-6 transition-all duration-500 ${submitted ? "submit-flash" : ""}`}
+            >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xs font-bold text-white/30 uppercase tracking-widest">
                   Post your opinion
@@ -754,7 +936,7 @@ export default function TopicDetailPage() {
 }
 
 /* ── Stance Column for Grid View ── */
-function StanceColumn({
+function _StanceColumn({
   title,
   color,
   opinions,
@@ -800,9 +982,7 @@ function StanceColumn({
           </div>
         ))}
         {opinions.length === 0 && (
-          <div className="text-center py-8 text-xs text-white/15">
-            まだ意見がありません
-          </div>
+          <div className="text-center py-8 text-xs text-white/15">まだ意見がありません</div>
         )}
       </div>
     </div>
@@ -842,9 +1022,22 @@ function EmptyState({ onAi, aiRunning }: { onAi: () => void; aiRunning: boolean 
 
       <div
         className="relative h-20 w-20 rounded-2xl bg-white/[0.03] flex items-center justify-center mb-6"
-        style={{ animationName: "bubble-float", animationDuration: "5s", animationTimingFunction: "ease-in-out", animationIterationCount: "infinite" }}
+        style={{
+          animationName: "bubble-float",
+          animationDuration: "5s",
+          animationTimingFunction: "ease-in-out",
+          animationIterationCount: "infinite",
+        }}
       >
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/15">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          className="text-white/15"
+        >
           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z" />
           <circle cx="12" cy="12" r="3" />
         </svg>
@@ -854,7 +1047,12 @@ function EmptyState({ onAi, aiRunning }: { onAi: () => void; aiRunning: boolean 
         意見を投稿するか、AIに多角的な視点から意見を生成させましょう。
         投稿された意見はストリームに合流し、リアルタイムに可視化されます。
       </p>
-      <button onClick={onAi} disabled={aiRunning} className="btn-glow text-xs py-2.5 px-5">
+      <button
+        type="button"
+        onClick={onAi}
+        disabled={aiRunning}
+        className="btn-glow text-xs py-2.5 px-5"
+      >
         {aiRunning ? "AI生成中..." : "AIに意見を生成させる（3つの視点）"}
       </button>
     </div>

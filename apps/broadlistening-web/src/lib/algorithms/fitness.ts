@@ -30,7 +30,7 @@ export function rankByFitness(fitnesses: number[]): number[] {
   return fitnesses
     .map((f, i) => ({ fitness: f, index: i }))
     .sort((a, b) => b.fitness - a.fitness)
-    .map(item => item.index);
+    .map((item) => item.index);
 }
 
 /** Calculate fitness landscape statistics */

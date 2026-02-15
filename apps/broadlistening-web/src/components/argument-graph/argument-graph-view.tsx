@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ArgumentNode {
   id: string;
@@ -53,7 +53,7 @@ function hexToRgb(hex: string): [number, number, number] {
 }
 
 function truncate(text: string, maxLen: number): string {
-  return text.length > maxLen ? text.slice(0, maxLen - 1) + "\u2026" : text;
+  return text.length > maxLen ? `${text.slice(0, maxLen - 1)}\u2026` : text;
 }
 
 function drawDiamond(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
@@ -85,7 +85,13 @@ function drawTriangle(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: 
   ctx.closePath();
 }
 
-function drawNodeShape(ctx: CanvasRenderingContext2D, type: ArgumentNode["type"], cx: number, cy: number, r: number) {
+function drawNodeShape(
+  ctx: CanvasRenderingContext2D,
+  type: ArgumentNode["type"],
+  cx: number,
+  cy: number,
+  r: number,
+) {
   switch (type) {
     case "CLAIM":
       ctx.beginPath();
@@ -136,8 +142,8 @@ export function ArgumentGraphView({ nodes, edges, className }: ArgumentGraphView
       type: n.type,
       content: n.content,
       confidence: n.confidence,
-      x: w / 2 + (Math.cos((i / nodes.length) * Math.PI * 2) * w * 0.3),
-      y: h / 2 + (Math.sin((i / nodes.length) * Math.PI * 2) * h * 0.3),
+      x: w / 2 + Math.cos((i / nodes.length) * Math.PI * 2) * w * 0.3,
+      y: h / 2 + Math.sin((i / nodes.length) * Math.PI * 2) * h * 0.3,
       vx: 0,
       vy: 0,
     }));
@@ -179,8 +185,8 @@ export function ArgumentGraphView({ nodes, edges, className }: ArgumentGraphView
       for (let j = i + 1; j < simNodes.length; j++) {
         const a = simNodes[i];
         const b = simNodes[j];
-        let dx = b.x - a.x;
-        let dy = b.y - a.y;
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
         let dist = Math.hypot(dx, dy);
         if (dist < 1) dist = 1;
         const force = repulsionStrength / (dist * dist);
@@ -198,8 +204,8 @@ export function ArgumentGraphView({ nodes, edges, className }: ArgumentGraphView
       const src = nodeMap.get(edge.sourceId);
       const tgt = nodeMap.get(edge.targetId);
       if (!src || !tgt) continue;
-      let dx = tgt.x - src.x;
-      let dy = tgt.y - src.y;
+      const dx = tgt.x - src.x;
+      const dy = tgt.y - src.y;
       let dist = Math.hypot(dx, dy);
       if (dist < 1) dist = 1;
       const displacement = dist - springLength;
@@ -268,11 +274,11 @@ export function ArgumentGraphView({ nodes, edges, className }: ArgumentGraphView
       ctx.moveTo(arrowX, arrowY);
       ctx.lineTo(
         arrowX - arrowLen * Math.cos(angle - 0.4),
-        arrowY - arrowLen * Math.sin(angle - 0.4)
+        arrowY - arrowLen * Math.sin(angle - 0.4),
       );
       ctx.lineTo(
         arrowX - arrowLen * Math.cos(angle + 0.4),
-        arrowY - arrowLen * Math.sin(angle + 0.4)
+        arrowY - arrowLen * Math.sin(angle + 0.4),
       );
       ctx.closePath();
       ctx.fillStyle = `rgba(${er}, ${eg}, ${eb}, ${0.5 + edge.weight * 0.3})`;
@@ -320,8 +326,16 @@ export function ArgumentGraphView({ nodes, edges, className }: ArgumentGraphView
   }, [renderFrame]);
 
   return (
-    <div ref={containerRef} className={`relative h-full w-full ${className ?? ""}`} style={{ minHeight: 400 }}>
-      <canvas ref={canvasRef} style={{ width: size.width, height: size.height }} className="block" />
+    <div
+      ref={containerRef}
+      className={`relative h-full w-full ${className ?? ""}`}
+      style={{ minHeight: 400 }}
+    >
+      <canvas
+        ref={canvasRef}
+        style={{ width: size.width, height: size.height }}
+        className="block"
+      />
     </div>
   );
 }
@@ -396,7 +410,14 @@ function drawLegend(ctx: CanvasRenderingContext2D, w: number, _h: number) {
   });
 }
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);

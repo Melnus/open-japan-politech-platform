@@ -1,10 +1,10 @@
 // k-means++ clustering with automatic k determination (elbow method)
 
 export interface ClusterResult {
-  assignments: number[];     // cluster index for each point
-  centroids: number[][];    // centroid vectors
+  assignments: number[]; // cluster index for each point
+  centroids: number[][]; // centroid vectors
   k: number;
-  inertia: number;          // sum of squared distances
+  inertia: number; // sum of squared distances
 }
 
 /** Euclidean distance between two vectors */
@@ -26,8 +26,8 @@ function initCentroids(points: number[][], k: number): number[][] {
 
   for (let c = 1; c < k; c++) {
     // Calculate distances to nearest centroid
-    const distances = points.map(p => {
-      const minDist = Math.min(...centroids.map(c => euclidean(p, c)));
+    const distances = points.map((p) => {
+      const minDist = Math.min(...centroids.map((c) => euclidean(p, c)));
       return minDist * minDist;
     });
 
@@ -55,7 +55,7 @@ export function kmeans(points: number[][], k: number, maxIter = 100): ClusterRes
   if (points.length <= k) {
     return {
       assignments: points.map((_, i) => i),
-      centroids: points.map(p => [...p]),
+      centroids: points.map((p) => [...p]),
       k: points.length,
       inertia: 0,
     };
@@ -67,7 +67,7 @@ export function kmeans(points: number[][], k: number, maxIter = 100): ClusterRes
 
   for (let iter = 0; iter < maxIter; iter++) {
     // Assignment step
-    const newAssignments = points.map(p => {
+    const newAssignments = points.map((p) => {
       let minDist = Infinity;
       let minIdx = 0;
       for (let c = 0; c < k; c++) {
@@ -95,7 +95,7 @@ export function kmeans(points: number[][], k: number, maxIter = 100): ClusterRes
       for (const m of members) {
         for (let d = 0; d < dim; d++) centroid[d] += m[d];
       }
-      return centroid.map(v => v / members.length);
+      return centroid.map((v) => v / members.length);
     });
   }
 

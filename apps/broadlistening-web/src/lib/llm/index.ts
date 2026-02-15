@@ -1,8 +1,8 @@
-export { getClient, complete, extractApiKey } from "./client";
+export type { ArgumentRelation, ExtractedArguments } from "./argument-extractor";
 export { extractArguments } from "./argument-extractor";
-export type { ExtractedArguments, ArgumentRelation } from "./argument-extractor";
-export { buildVocabulary, embed, normalize, cosineSimilarity } from "./embeddings";
+export { complete, extractApiKey, getClient } from "./client";
 export type { Vocabulary } from "./embeddings";
-export { generateClusterLabel } from "./label-generator";
+export { buildVocabulary, cosineSimilarity, embed, normalize } from "./embeddings";
+export type { ArgumentGap, GapDetectionInput, GapDetectionResult } from "./gap-detector";
 export { detectGaps } from "./gap-detector";
-export type { ArgumentGap, GapDetectionResult, GapDetectionInput } from "./gap-detector";
+export { generateClusterLabel } from "./label-generator";

@@ -8,7 +8,10 @@ Rules:
 - Return ONLY the label text, nothing else
 - Be specific and descriptive`;
 
-export async function generateClusterLabel(representativeTexts: string[], apiKey?: string): Promise<string> {
+export async function generateClusterLabel(
+  representativeTexts: string[],
+  apiKey?: string,
+): Promise<string> {
   const userPrompt = `Generate a short label (max 20 chars) for this opinion cluster:\n\n${representativeTexts.map((t, i) => `${i + 1}. ${t}`).join("\n")}`;
 
   const raw = await complete(SYSTEM_PROMPT, userPrompt, apiKey);

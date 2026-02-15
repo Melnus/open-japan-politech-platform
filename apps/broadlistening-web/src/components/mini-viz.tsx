@@ -127,7 +127,7 @@ export function OpinionBubbles({ className }: { className?: string }) {
         }
 
         if (o.entryProgress > 0) {
-          const ease = 1 - Math.pow(1 - o.entryProgress, 3);
+          const ease = 1 - (1 - o.entryProgress) ** 3;
           const target = targets[i];
           const floatX = Math.sin(t * 0.015 + o.phase) * 8;
           const floatY = Math.cos(t * 0.012 + o.phase * 1.4) * 6;
@@ -170,7 +170,7 @@ export function OpinionBubbles({ className }: { className?: string }) {
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             const maxWidth = r * 1.6;
-            const txt = o.text.length > 8 ? o.text.slice(0, 8) + "…" : o.text;
+            const txt = o.text.length > 8 ? `${o.text.slice(0, 8)}…` : o.text;
             ctx.fillText(txt, o.x, o.y, maxWidth);
           }
         }
@@ -221,8 +221,8 @@ export function ArgumentMiniGraph({ className }: { className?: string }) {
     const H = rect.height;
 
     const TYPES = {
-      CLAIM:    { color: "#22d3ee", shape: "circle" as const, label: "Claim" },
-      PREMISE:  { color: "#a78bfa", shape: "rounded" as const, label: "Premise" },
+      CLAIM: { color: "#22d3ee", shape: "circle" as const, label: "Claim" },
+      PREMISE: { color: "#a78bfa", shape: "rounded" as const, label: "Premise" },
       EVIDENCE: { color: "#34d399", shape: "diamond" as const, label: "Evidence" },
       REBUTTAL: { color: "#fb7185", shape: "hexagon" as const, label: "Rebuttal" },
     };
@@ -239,13 +239,76 @@ export function ArgumentMiniGraph({ className }: { className?: string }) {
     }
 
     const nodes: GraphNode[] = [
-      { id: "c1", type: "CLAIM", x: 0, y: 0, targetX: W * 0.50, targetY: H * 0.12, size: 20, phase: 0 },
-      { id: "p1", type: "PREMISE", x: 0, y: 0, targetX: W * 0.25, targetY: H * 0.38, size: 16, phase: 1.2 },
-      { id: "p2", type: "PREMISE", x: 0, y: 0, targetX: W * 0.72, targetY: H * 0.36, size: 16, phase: 2.4 },
-      { id: "e1", type: "EVIDENCE", x: 0, y: 0, targetX: W * 0.12, targetY: H * 0.62, size: 13, phase: 3.1 },
-      { id: "e2", type: "EVIDENCE", x: 0, y: 0, targetX: W * 0.38, targetY: H * 0.65, size: 13, phase: 4.0 },
-      { id: "r1", type: "REBUTTAL", x: 0, y: 0, targetX: W * 0.82, targetY: H * 0.60, size: 15, phase: 5.2 },
-      { id: "c2", type: "CLAIM", x: 0, y: 0, targetX: W * 0.55, targetY: H * 0.85, size: 17, phase: 6.0 },
+      {
+        id: "c1",
+        type: "CLAIM",
+        x: 0,
+        y: 0,
+        targetX: W * 0.5,
+        targetY: H * 0.12,
+        size: 20,
+        phase: 0,
+      },
+      {
+        id: "p1",
+        type: "PREMISE",
+        x: 0,
+        y: 0,
+        targetX: W * 0.25,
+        targetY: H * 0.38,
+        size: 16,
+        phase: 1.2,
+      },
+      {
+        id: "p2",
+        type: "PREMISE",
+        x: 0,
+        y: 0,
+        targetX: W * 0.72,
+        targetY: H * 0.36,
+        size: 16,
+        phase: 2.4,
+      },
+      {
+        id: "e1",
+        type: "EVIDENCE",
+        x: 0,
+        y: 0,
+        targetX: W * 0.12,
+        targetY: H * 0.62,
+        size: 13,
+        phase: 3.1,
+      },
+      {
+        id: "e2",
+        type: "EVIDENCE",
+        x: 0,
+        y: 0,
+        targetX: W * 0.38,
+        targetY: H * 0.65,
+        size: 13,
+        phase: 4.0,
+      },
+      {
+        id: "r1",
+        type: "REBUTTAL",
+        x: 0,
+        y: 0,
+        targetX: W * 0.82,
+        targetY: H * 0.6,
+        size: 15,
+        phase: 5.2,
+      },
+      {
+        id: "c2",
+        type: "CLAIM",
+        x: 0,
+        y: 0,
+        targetX: W * 0.55,
+        targetY: H * 0.85,
+        size: 17,
+        phase: 6.0,
+      },
     ];
 
     // Initialize positions at center
@@ -266,12 +329,23 @@ export function ArgumentMiniGraph({ className }: { className?: string }) {
     const nodeMap = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
     // Pulse particles along edges
-    const pulses = edges.map(() => ({ progress: Math.random(), speed: 0.003 + Math.random() * 0.004 }));
+    const pulses = edges.map(() => ({
+      progress: Math.random(),
+      speed: 0.003 + Math.random() * 0.004,
+    }));
 
     let t = 0;
     let animId: number;
 
-    function drawShape(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, shape: string, color: string, alpha: number) {
+    function drawShape(
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      size: number,
+      shape: string,
+      color: string,
+      alpha: number,
+    ) {
       const [r, g, b] = hexToRgb(color);
 
       // Outer glow
@@ -440,7 +514,7 @@ export function ConvergenceDots({ className }: { className?: string }) {
     const CLUSTER_LABELS = ["経済", "教育", "環境"];
     const centers = [
       { x: W * 0.22, y: H * 0.35 },
-      { x: W * 0.72, y: H * 0.30 },
+      { x: W * 0.72, y: H * 0.3 },
       { x: W * 0.48, y: H * 0.72 },
     ];
 
@@ -518,7 +592,7 @@ export function ConvergenceDots({ className }: { className?: string }) {
           if (convergeFactor > 0.6) {
             ctx.beginPath();
             ctx.arc(c.x, c.y, 38, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(${r},${g},${b},${0.12 * (convergeFactor - 0.6) / 0.4})`;
+            ctx.strokeStyle = `rgba(${r},${g},${b},${(0.12 * (convergeFactor - 0.6)) / 0.4})`;
             ctx.lineWidth = 0.8;
             ctx.setLineDash([3, 5]);
             ctx.stroke();
@@ -595,8 +669,14 @@ export function ConvergenceDots({ className }: { className?: string }) {
       ctx.fillText("Shannon Diversity", W - 12, 22);
 
       // Phase indicator
-      const phaseLabel = convergeFactor < 0.3 ? "OPEN" : convergeFactor < 0.8 ? "CONVERGING" : "CONSENSUS";
-      const phaseColor = convergeFactor < 0.3 ? "rgba(52,211,153,0.4)" : convergeFactor < 0.8 ? "rgba(251,191,36,0.4)" : "rgba(34,211,238,0.5)";
+      const phaseLabel =
+        convergeFactor < 0.3 ? "OPEN" : convergeFactor < 0.8 ? "CONVERGING" : "CONSENSUS";
+      const phaseColor =
+        convergeFactor < 0.3
+          ? "rgba(52,211,153,0.4)"
+          : convergeFactor < 0.8
+            ? "rgba(251,191,36,0.4)"
+            : "rgba(34,211,238,0.5)";
       ctx.fillStyle = phaseColor;
       ctx.font = "bold 8px monospace";
       ctx.textAlign = "left";
@@ -648,8 +728,14 @@ export function FitnessCurveGraph({ className }: { className?: string }) {
       for (let i = 0; i <= 5; i++) {
         const x = pad.left + (gW / 5) * i;
         const y = pad.top + (gH / 5) * i;
-        ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + gH); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, pad.top + gH);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + gW, y);
+        ctx.stroke();
       }
 
       // Axes
@@ -778,7 +864,7 @@ export function DecayCurveGraph({ className }: { className?: string }) {
     const curves = [
       { lambda: 0.02, color: "#22d3ee", label: "λ=0.02" },
       { lambda: 0.05, color: "#34d399", label: "λ=0.05" },
-      { lambda: 0.10, color: "#a78bfa", label: "λ=0.10" },
+      { lambda: 0.1, color: "#a78bfa", label: "λ=0.10" },
     ];
 
     function draw() {
@@ -791,8 +877,14 @@ export function DecayCurveGraph({ className }: { className?: string }) {
       for (let i = 0; i <= 5; i++) {
         const x = pad.left + (gW / 5) * i;
         const y = pad.top + (gH / 5) * i;
-        ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + gH); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top);
+        ctx.lineTo(x, pad.top + gH);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + gW, y);
+        ctx.stroke();
       }
 
       // Axes
@@ -830,7 +922,7 @@ export function DecayCurveGraph({ className }: { className?: string }) {
         ctx.shadowBlur = 0;
 
         // Pulse point
-        const pulsePos = ((t * 0.8) % (gW * 0.9));
+        const pulsePos = (t * 0.8) % (gW * 0.9);
         if (pulsePos <= maxPx) {
           const tVal = (pulsePos / gW) * maxT;
           const I = Math.exp(-curve.lambda * tVal);
@@ -923,7 +1015,10 @@ export function DiversityBarsGraph({ className }: { className?: string }) {
       ctx.lineWidth = 0.5;
       for (let i = 0; i <= 4; i++) {
         const y = pad.top + (gH / 4) * i;
-        ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + gW, y); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left + gW, y);
+        ctx.stroke();
       }
 
       // Axes
@@ -936,9 +1031,9 @@ export function DiversityBarsGraph({ className }: { className?: string }) {
 
       // Animate bar growth
       const growth = Math.min(t / 60, 1);
-      const eased = 1 - Math.pow(1 - growth, 3); // ease-out cubic
+      const eased = 1 - (1 - growth) ** 3; // ease-out cubic
 
-      const barW = gW / clusters.length * 0.65;
+      const barW = (gW / clusters.length) * 0.65;
       const gap = gW / clusters.length;
 
       for (let i = 0; i < clusters.length; i++) {

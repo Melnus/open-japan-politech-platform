@@ -1,5 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { buildVocabulary, embed, normalize, cosineSimilarity, generateEmbeddings } from "../embeddings";
+import { describe, expect, it } from "vitest";
+import {
+  buildVocabulary,
+  cosineSimilarity,
+  embed,
+  generateEmbeddings,
+  normalize,
+} from "../embeddings";
 
 describe("embeddings", () => {
   describe("buildVocabulary", () => {

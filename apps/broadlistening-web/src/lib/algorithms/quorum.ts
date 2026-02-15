@@ -8,9 +8,9 @@ export interface QuorumState {
   phase: Phase;
   totalOpinions: number;
   totalSupports: number;
-  clusterSizes: number[];       // sizes of each cluster
+  clusterSizes: number[]; // sizes of each cluster
   avgPheromone: number;
-  convergenceScore: number;     // max cluster fraction
+  convergenceScore: number; // max cluster fraction
 }
 
 /** Calculate Shannon diversity index H = -Σ(pi * ln(pi)) */
@@ -30,14 +30,15 @@ export function shannonDiversity(clusterSizes: number[]): number {
 
 /** Calculate normalized Shannon evenness (0-1) */
 export function shannonEvenness(clusterSizes: number[]): number {
-  const k = clusterSizes.filter(s => s > 0).length;
+  const k = clusterSizes.filter((s) => s > 0).length;
   if (k <= 1) return 1;
   return shannonDiversity(clusterSizes) / Math.log(k);
 }
 
 /** Determine next phase based on quorum sensing */
 export function determinePhase(state: QuorumState, threshold: number): Phase {
-  const { phase, totalOpinions, totalSupports, clusterSizes, avgPheromone, convergenceScore } = state;
+  const { phase, totalOpinions, totalSupports, clusterSizes, avgPheromone, convergenceScore } =
+    state;
 
   switch (phase) {
     case "OPEN":
