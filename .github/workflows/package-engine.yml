@@ -1,10 +1,11 @@
-name: Package SBCM Integrated System
+name: Package SBCM Master System
 
 on:
   push:
     paths:
       - 'packages/sbcm-engine/**'
       - 'apps/moneyglass-web/**'
+      - 'apps/portal-web/**' # ポータル（メソスキャナー）も監視対象に追加
 
 jobs:
   build:
@@ -12,20 +13,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create Integrated ZIP
+      - name: Create Master ZIP
         run: |
-          # エンジンとアプリの修正分を一つのフォルダにまとめる
-          mkdir -p dist/packages
-          mkdir -p dist/apps
+          # 出力用フォルダの作成
+          mkdir -p sbcm-master/packages
+          mkdir -p sbcm-master/apps
           
-          cp -r packages/sbcm-engine dist/packages/
-          cp -r apps/moneyglass-web dist/apps/
+          # 1. 物理エンジンをコピー
+          cp -r packages/sbcm-engine sbcm-master/packages/
           
-          # 不要な node_modules や .next を除外してZIP化
-          zip -r sbcm-moneyflow-v0.1.0.zip dist/ -x "*/node_modules/*" "*/.next/*"
+          # 2. マネーグラス（接続済み）をコピー
+          cp -r apps/moneyglass-web sbcm-master/apps/
+          
+          # 3. ポータル（メソスキャナー内蔵）をコピー
+          cp -r apps/portal-web sbcm-master/apps/
+          
+          # 不要な巨大ファイル（node_modulesやビルド済みデータ）を除外して圧縮
+          zip -r sbcm-master-v0.2.0.zip sbcm-master/ -x "*/node_modules/*" "*/.next/*" "*/.turbo/*"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sbcm-complete-package
-          path: sbcm-moneyflow-v0.1.0.zip
+          name: sbcm-master-package # パッケージ名を「マスター」に変更
+          path: sbcm-master-v0.2.0.zip
